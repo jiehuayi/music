@@ -1,12 +1,14 @@
-#include "iostream"
+#include <iostream>
 
 #include "Window.hpp"
+#include "Playlist.hpp"
 
 int main() {
 
   std::cout << "Hello World\n";
 
-  Window window = Window();
+  Playlist playlist = Playlist();
+  Window window = Window(playlist);
 
   window.renderWindowTemplate();
   window.renderWindowList();
@@ -15,8 +17,7 @@ int main() {
   window.processInput();
 
 
-  for (;;) {
-  }
+  for (;;) {}
 
   return 0;
 

@@ -1,6 +1,8 @@
 #include "Window.hpp"
 
-Window::Window() {
+Window::Window(Playlist& playlist) : _playlist(playlist) {
+  _playlist.readPlaylist();
+  
   initscr();
   // nodelay(stdscr, true);
   cbreak();
@@ -24,6 +26,7 @@ Window::Window() {
   _visualFrame = std::unique_ptr<WINDOW, FrameDeleter>(visualFrame);
 
   keypad(listFrame, true);
+  keypad(visualFrame, true);
 }
 
 Window::~Window() {
@@ -36,7 +39,23 @@ void Window::renderWindowTemplate() {
 }
 
 void Window::renderWindowList() {
-  
+  std::vector<std::string> items = _playlist.getPlaylistSongs();
+  int entryIndex = 0;
+  int tmpPos = 1;
+
+  for (auto &entry: items) {
+
+	if (entryIndex < _listFrameY - 2) {
+
+	  if (entryIndex == tmpPos) wattron(_listFrame.get(), A_REVERSE);
+	  
+	  mvwprintw(_listFrame.get(), entryIndex + 1, 1, FORMAT_PTR(entry.c_str()));
+
+	  wattroff(_listFrame.get(), A_REVERSE);
+	}
+	
+	entryIndex++;
+  }
 }
 
 void Window::renderWindowCursor() {

@@ -2,21 +2,29 @@
 
 #include <iostream>
 #include <memory>
+#include <vector>
+#include <string>
 
 #include <ncurses.h>
+
+#include "Playlist.hpp"
 
 #define MODE_NAVIGATE				1
 #define MODE_COMMAND 				0
 
+#define FORMAT_PTR(char_ptr) ("%s", char_ptr)
+
 struct FrameDeleter {
-  void operator()(WINDOW* frame) { delwin(frame); }
+  void operator()(WINDOW* frame) {
+	delwin(frame);
+  }
 };
 
 class Window {
 
 public:
 
-  Window();
+  Window(Playlist& playlist);
 
   ~Window();
 
@@ -48,6 +56,8 @@ private:
 
   std::unique_ptr<WINDOW, FrameDeleter> _listFrame;
   std::unique_ptr<WINDOW, FrameDeleter> _visualFrame;
+
+  Playlist _playlist;
 
   // WINDOW* _listFrame;
   // WINDOW* _visualFrame;
