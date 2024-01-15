@@ -3,6 +3,8 @@
 Window::Window(Playlist& playlist) : _playlist(playlist) {
   _playlist.readPlaylist();
   _playlistSize = _playlist.getPlaylistSongs().size();
+
+  setlocale(LC_ALL, "");
   
   initscr();
   cbreak();
@@ -46,12 +48,20 @@ void Window::renderWindowList() {
   int entryIndex = 0;
 
   for (auto &entry: items) {
-
 	if (entryIndex < _listFrameY - 2) {
-
 	  if (entryIndex == _cursorPosition) wattron(_listFrame.get(), A_REVERSE);
+
+	  std::string display = "";
+
+	  if (entry.length() <= _listFrameX - 2) {
+		display = entry;
+	  }
+
+	  else {
+		display = entry.substr(0, _listFrameX - 5) += "...";
+	  }
 	  
-	  mvwprintw(_listFrame.get(), entryIndex + 1, 1, FORMAT_PTR(entry.c_str()));
+	  mvwprintw(_listFrame.get(), entryIndex + 1, 1, FORMAT_PTR(display.c_str()));
 
 	  wattroff(_listFrame.get(), A_REVERSE);
 	}
