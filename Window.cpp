@@ -80,7 +80,7 @@ void Window::refreshFrames() {
   wrefresh(_visualFrame.get());
 }
 
-void Window::processInput() {
+int Window::processInput() {
   char in = wgetch(_listFrame.get());
 
   if (in == 'p') {
@@ -89,5 +89,11 @@ void Window::processInput() {
 
   else if (in == 'n') {
 	_cursorPosition = std::min(_cursorPosition + 1, _playlistSize - 1);
-  }  
+  }
+
+  else if (in == 'Q') {
+	return APP_STATE_TERMINATED;
+  }
+
+  return APP_STATE_RUNNING;
 }

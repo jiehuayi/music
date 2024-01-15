@@ -10,8 +10,11 @@
 
 #include "Playlist.hpp"
 
-#define MODE_NAVIGATE				1
 #define MODE_COMMAND 				0
+#define MODE_NAVIGATE				1
+
+#define APP_STATE_TERMINATED	   	0
+#define APP_STATE_RUNNING			1
 
 #define FORMAT_PTR(char_ptr) ("%s", char_ptr)
 
@@ -35,7 +38,7 @@ public:
 
   void renderWindowCursor();
 
-  void processInput();
+  int processInput();
 
   void refreshFrames();
 

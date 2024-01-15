@@ -16,9 +16,11 @@ int main() {
 
   for (;;) {
 	window.renderWindowList();
-	window.processInput();
-
 	window.refreshFrames();
+
+	int status = window.processInput();
+
+	if (status == APP_STATE_TERMINATED) break;
   }
 
   return 0;
