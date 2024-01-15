@@ -5,7 +5,7 @@
 #include <string>
 #include <filesystem>
 
-#define STD_MPATH "/home/jason/Music"
+#define STD_MPATH "/home/jason/Music/"
 
 #define EXT_OGG ".ogg"
 #define EXT_WAV ".wav"

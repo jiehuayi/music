@@ -4,6 +4,7 @@
 #include <memory>
 #include <vector>
 #include <string>
+#include <cmath>
 
 #include <ncurses.h>
 
@@ -58,6 +59,8 @@ private:
   std::unique_ptr<WINDOW, FrameDeleter> _visualFrame;
 
   Playlist _playlist;
+
+  int _playlistSize;
 
   // WINDOW* _listFrame;
   // WINDOW* _visualFrame;

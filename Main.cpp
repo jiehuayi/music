@@ -11,13 +11,15 @@ int main() {
   Window window = Window(playlist);
 
   window.renderWindowTemplate();
-  window.renderWindowList();
   window.renderWindowCursor();
-  window.refreshFrames();
-  window.processInput();
 
 
-  for (;;) {}
+  for (;;) {
+	window.renderWindowList();
+	window.processInput();
+
+	window.refreshFrames();
+  }
 
   return 0;
 

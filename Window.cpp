@@ -2,17 +2,18 @@
 
 Window::Window(Playlist& playlist) : _playlist(playlist) {
   _playlist.readPlaylist();
+  _playlistSize = _playlist.getPlaylistSongs().size();
   
   initscr();
-  // nodelay(stdscr, true);
   cbreak();
   noecho();
+  nodelay(stdscr, true);
   keypad(stdscr, true);
 
   getmaxyx(stdscr, _windowY, _windowX);
   
   _inputMode = MODE_NAVIGATE;
-  _cursorPosition = -1;
+  _cursorPosition = 0;
   
   _listFrameX = 0.3 * _windowX;
   _listFrameY = _windowY - 1;
@@ -27,6 +28,8 @@ Window::Window(Playlist& playlist) : _playlist(playlist) {
 
   keypad(listFrame, true);
   keypad(visualFrame, true);
+  nodelay(listFrame, true);
+  nodelay(visualFrame, true);
 }
 
 Window::~Window() {
@@ -41,13 +44,12 @@ void Window::renderWindowTemplate() {
 void Window::renderWindowList() {
   std::vector<std::string> items = _playlist.getPlaylistSongs();
   int entryIndex = 0;
-  int tmpPos = 1;
 
   for (auto &entry: items) {
 
 	if (entryIndex < _listFrameY - 2) {
 
-	  if (entryIndex == tmpPos) wattron(_listFrame.get(), A_REVERSE);
+	  if (entryIndex == _cursorPosition) wattron(_listFrame.get(), A_REVERSE);
 	  
 	  mvwprintw(_listFrame.get(), entryIndex + 1, 1, FORMAT_PTR(entry.c_str()));
 
@@ -59,10 +61,8 @@ void Window::renderWindowList() {
 }
 
 void Window::renderWindowCursor() {
-  if (_cursorPosition < 0) {
-	curs_set(0);
-	wmove(_listFrame.get(), 0, 0);
-  }
+  curs_set(0);
+  wmove(_listFrame.get(), 0, 0);
 }
 
 void Window::refreshFrames() {
@@ -73,12 +73,11 @@ void Window::refreshFrames() {
 void Window::processInput() {
   char in = wgetch(_listFrame.get());
 
-  if (in == KEY_RESIZE || in == ERR) {
-	// TODO
+  if (in == 'p') {
+	_cursorPosition = std::max(_cursorPosition - 1, 0);		
   }
 
-  else if (in == 's') {
-	mvwprintw(_listFrame.get(), 0, 0, "ENTER");
-	refreshFrames();
-  }
+  else if (in == 'n') {
+	_cursorPosition = std::min(_cursorPosition + 1, _playlistSize - 1);
+  }  
 }
