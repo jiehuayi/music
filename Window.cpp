@@ -81,18 +81,31 @@ void Window::refreshFrames() {
 }
 
 int Window::processInput() {
-  char in = wgetch(_listFrame.get());
 
-  if (in == 'p') {
-	_cursorPosition = std::max(_cursorPosition - 1, 0);		
+  char buffer[1024];
+  ssize_t size = read(0, buffer, sizeof(buffer) - 1);
+
+  if (size == -1) {
+	return APP_STATE_RUNNING;
   }
 
-  else if (in == 'n') {
-	_cursorPosition = std::min(_cursorPosition + 1, _playlistSize - 1);
-  }
-
-  else if (in == 'Q') {
+  if (size == 1 && buffer[0] == 0x1B)
 	return APP_STATE_TERMINATED;
+  
+  chtype in = wgetch(_listFrame.get());
+
+  switch(in) {
+  case 'p':
+	_cursorPosition = std::max(_cursorPosition - 1, 0);
+	break;
+
+  case 'n':
+	_cursorPosition = std::min(_cursorPosition + 1, _playlistSize - 1);
+	break;
+
+  case 'Q':
+	return APP_STATE_TERMINATED;
+	break;
   }
 
   return APP_STATE_RUNNING;

@@ -5,6 +5,7 @@
 #include <vector>
 #include <string>
 #include <cmath>
+#include <csignal>
 
 #include <ncurses.h>
 
