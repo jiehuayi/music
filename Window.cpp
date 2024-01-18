@@ -83,16 +83,13 @@ void Window::refreshFrames() {
 int Window::processInput() {
 
   char buffer[1024];
-  ssize_t size = read(0, buffer, sizeof(buffer) - 1);
+  ssize_t size = read(0, buffer, sizeof(buffer) - 1); // read stdin
 
-  if (size == -1) {
+  if (size == -1 || size == 0) {
 	return APP_STATE_RUNNING;
   }
 
-  if (size == 1 && buffer[0] == 0x1B)
-	return APP_STATE_TERMINATED;
-  
-  chtype in = wgetch(_listFrame.get());
+  char in = buffer[0];
 
   switch(in) {
   case 'p':
@@ -103,9 +100,8 @@ int Window::processInput() {
 	_cursorPosition = std::min(_cursorPosition + 1, _playlistSize - 1);
 	break;
 
-  case 'Q':
+  case 0x1B:
 	return APP_STATE_TERMINATED;
-	break;
   }
 
   return APP_STATE_RUNNING;
