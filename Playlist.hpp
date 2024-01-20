@@ -5,6 +5,17 @@
 #include <string>
 #include <filesystem>
 
+#undef KEY_ENTER
+#undef KEY_BACKSPACE
+#undef KEY_UP
+#undef KEY_DOWN
+#undef KEY_RIGHT
+#undef KEY_LEFT
+#undef KEY_HOME
+#undef KEY_END
+
+#include <raylib.h>
+
 #define STD_MPATH "/home/jason/Music/"
 
 #define EXT_OGG ".ogg"
@@ -28,10 +39,12 @@ public:
 
   std::vector<std::string> getPlaylistSongs();
 
+  void playSong(int index);
+
 private:
 
   std::string _path;
 
-  std::vector<std::filesystem::path> _songs; 
+  std::vector<std::filesystem::path> _songs;
   
 };
