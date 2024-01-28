@@ -1,6 +1,7 @@
 #pragma once
 
 #include <iostream>
+#include <sstream>
 #include <memory>
 #include <vector>
 #include <string>
@@ -57,11 +58,15 @@ private:
   int _inputMode;
   int _cursorPosition;
 
+  std::stringstream _inputBuffer;
+
   int _listFrameX, _listFrameY;
   int _visualFrameX, _visualFrameY;
+  int _commandFrameX, _commandFrameY;
 
   std::unique_ptr<WINDOW, FrameDeleter> _listFrame;
   std::unique_ptr<WINDOW, FrameDeleter> _visualFrame;
+  std::unique_ptr<WINDOW, FrameDeleter> _commandFrame;
 
   Playlist _playlist;
 
