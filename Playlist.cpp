@@ -2,7 +2,7 @@
 
 Playlist::Playlist() {
   _songs = {};
-  _path = STD_MPATH;
+  _path = STD_MMPATH;
 }
 
 Playlist::Playlist(std::string path) {

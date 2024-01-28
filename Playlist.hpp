@@ -15,6 +15,7 @@
 #undef KEY_END
 
 #define STD_MPATH "/home/jason/Music/"
+#define STD_MMPATH "/Users/jason/Music/"
 
 #define EXT_OGG ".ogg"
 #define EXT_WAV ".wav"

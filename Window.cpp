@@ -81,7 +81,6 @@ void Window::refreshFrames() {
 }
 
 int Window::processInput() {
-
   char buffer[1024];
   ssize_t size = read(0, buffer, sizeof(buffer) - 1); // read stdin
 
@@ -91,17 +90,19 @@ int Window::processInput() {
 
   char in = buffer[0];
 
+  mvwprintw(_listFrame.get(), _listFrameY - 1, 1, "%x", in); // debugging only
+
   switch(in) {
-  case 'p':
-	_cursorPosition = std::max(_cursorPosition - 1, 0);
-	break;
+  case 0x10:
+    _cursorPosition = std::max(_cursorPosition - 1, 0);
+    break;
 
-  case 'n':
-	_cursorPosition = std::min(_cursorPosition + 1, _playlistSize - 1);
-	break;
-
+  case 0x0E:
+    _cursorPosition = std::min(_cursorPosition + 1, _playlistSize - 1);
+    break;
+    
   case 0x1B:
-	return APP_STATE_TERMINATED;
+    return APP_STATE_TERMINATED;
   }
 
   return APP_STATE_RUNNING;
