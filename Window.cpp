@@ -90,13 +90,7 @@ void Window::refreshFrames() {
 }
 
 static bool isValidCommandChar(char input) {
-  switch(input) {
-  case '\t':
-    return false;
-    
-  default:
-    return true;
-  }
+  return (input > 21 && input < 127) ? true : false;
 }
 
 int Window::processInput() {
@@ -138,7 +132,6 @@ int Window::processInput() {
   goto RET;
 
  CMD:
-  
   switch(in) {
   case 0x1B:
     _inputMode = MODE_NAVIGATE;
@@ -147,15 +140,18 @@ int Window::processInput() {
 
   case 0x7F:
   case 0x08:
-    _inputBuffer.str(inputBufferString
-		   .substr(0, inputBufferString.length() - 1));
+    if (inputBufferString.length() > 1) {
+      _inputBuffer.str(std::string());
+      _inputBuffer << inputBufferString
+		       .substr(0, inputBufferString.length() - 1);
+    }
 
     werase(_commandFrame.get());
     mvwprintw(_commandFrame.get(), 0, 0, "%s", _inputBuffer.str().c_str());
     break;
 
   default:
-    if (isValidCommandChar(in))  {
+    if (isValidCommandChar(in)) {
       _inputBuffer << in;
       mvwprintw(_commandFrame.get(), 0, 0, "%s", _inputBuffer.str().c_str());
     }

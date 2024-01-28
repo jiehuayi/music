@@ -7,6 +7,8 @@
 #include <string>
 #include <cmath>
 #include <csignal>
+#include <cctype>
+
 #include <unistd.h>
 
 #include <ncurses.h>
