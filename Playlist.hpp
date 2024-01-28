@@ -14,8 +14,6 @@
 #undef KEY_HOME
 #undef KEY_END
 
-#include <raylib.h>
-
 #define STD_MPATH "/home/jason/Music/"
 
 #define EXT_OGG ".ogg"
