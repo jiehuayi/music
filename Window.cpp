@@ -124,6 +124,12 @@ int Window::processInput() {
     _inputBuffer << in;
     mvwprintw(_commandFrame.get(), 0, 0, "%s", _inputBuffer.str().c_str());
     break;
+
+  case 'l':
+    _playlist.play(_cursorPosition);
+    break;
+    
+    
     
   case 0x1B:
     return APP_STATE_TERMINATED;

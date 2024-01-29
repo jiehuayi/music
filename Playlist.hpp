@@ -6,8 +6,9 @@
 #include <filesystem>
 
 #include <SDL2/SDL.h>
-
 #include <unistd.h>
+
+#include "Track.hpp"
 
 #undef KEY_ENTER
 #undef KEY_BACKSPACE

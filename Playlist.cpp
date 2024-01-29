@@ -41,8 +41,9 @@ std::vector<std::string> Playlist::getPlaylistSongs() {
   return ret;
 }
 
-void play(int index) {
-  
+void Playlist::play(int index) {
+  Track* t = new Track(_songs[index].string());
+  t->play();
 }
 
 
