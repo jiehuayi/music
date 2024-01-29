@@ -5,6 +5,8 @@
 #include <string>
 #include <filesystem>
 
+#include <SDL2/SDL.h>
+
 #include <unistd.h>
 
 #undef KEY_ENTER
@@ -38,7 +40,7 @@ public:
 
   std::vector<std::string> getPlaylistSongs();
 
-  void playSong(int index);
+  void play(int index);
 
 private:
 

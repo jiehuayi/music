@@ -3,9 +3,8 @@
 #include "Window.hpp"
 #include "Playlist.hpp"
 
-int main() {
-
-  std::cout << "Hello World\n";
+int main(int argc, char** argv) {
+  SDL_Init(SDL_INIT_AUDIO);
 
   Playlist playlist = Playlist();
   Window window = Window(playlist);
@@ -23,6 +22,8 @@ int main() {
 	if (status == APP_STATE_TERMINATED) break;
   }
 
-  return 0;
+  SDL_Quit();
+
+  return EXIT_SUCCESS;
 
 }

@@ -41,3 +41,10 @@ std::vector<std::string> Playlist::getPlaylistSongs() {
   return ret;
 }
 
+void play(int index) {
+  
+}
+
+
+
+
