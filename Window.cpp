@@ -1,11 +1,7 @@
 #include "Window.hpp"
 
-Window::Window(Playlist& playlist) : _playlist(playlist) {
-  _playlist.readPlaylist();
-  _playlistSize = _playlist.getPlaylistSongs().size();
-
-  setlocale(LC_ALL, "");
-  
+Window::Window(int playlistSize) {
+  setlocale(LC_ALL, "");  
   initscr();
   cbreak();
   noecho();
@@ -20,6 +16,7 @@ Window::Window(Playlist& playlist) : _playlist(playlist) {
   
   _inputMode = MODE_NAVIGATE;
   _cursorPosition = 0;
+  _playlistSize = playlistSize;
   
   _listFrameX = 0.3 * _windowX;
   _listFrameY = _windowY - 1;
@@ -53,8 +50,7 @@ void Window::renderWindowTemplate() {
   box(_visualFrame.get(), 0, 0);
 }
 
-void Window::renderWindowList() {
-  std::vector<std::string> items = _playlist.getPlaylistSongs();
+void Window::renderWindowList(std::vector<std::string> items) {
   int entryIndex = 0;
 
   for (auto &entry: items) {
@@ -93,7 +89,7 @@ static bool isValidCommandChar(char input) {
   return (input > 21 && input < 127) ? true : false;
 }
 
-int Window::processInput() {
+int Window::processInput(Playlist& playlist) {
   char buffer[1024];
   ssize_t size = read(0, buffer, sizeof(buffer) - 1); // read stdin
 
@@ -126,7 +122,7 @@ int Window::processInput() {
     break;
 
   case 'l':
-    _playlist.play(_cursorPosition);
+    playlist.play(_cursorPosition);
     break;
     
     

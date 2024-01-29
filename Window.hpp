@@ -33,17 +33,17 @@ class Window {
 
 public:
 
-  Window(Playlist& playlist);
+  Window(int playlistSize);
 
   ~Window();
 
   void renderWindowTemplate();
 
-  void renderWindowList();
+  void renderWindowList(std::vector<std::string> items);
 
   void renderWindowCursor();
 
-  int processInput();
+  int processInput(Playlist& playlist);
 
   void refreshFrames();
 
@@ -69,8 +69,6 @@ private:
   std::unique_ptr<WINDOW, FrameDeleter> _listFrame;
   std::unique_ptr<WINDOW, FrameDeleter> _visualFrame;
   std::unique_ptr<WINDOW, FrameDeleter> _commandFrame;
-
-  Playlist _playlist;
 
   int _playlistSize;
 

@@ -17,6 +17,10 @@ public:
   ~Track();
 
   void play();
+
+  void pause();
+
+  std::string path();
   
 private:
   std::string _path;

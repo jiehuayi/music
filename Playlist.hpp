@@ -39,6 +39,8 @@ public:
 
   int readPlaylist();
 
+  int size();
+
   std::vector<std::string> getPlaylistSongs();
 
   void play(int index);
@@ -47,6 +49,10 @@ private:
 
   std::string _path;
 
+  bool _isTrackPlaying;
+
   std::vector<std::filesystem::path> _songs;
+
+  std::unique_ptr<Track> _activeTrack;
   
 };

@@ -45,3 +45,11 @@ Track::~Track() {
 void Track::play() {
   SDL_PauseAudioDevice(_audioDevice, 0);
 }
+
+void Track::pause() {
+  
+}
+
+std::string Track::path() {
+  return _path;
+}

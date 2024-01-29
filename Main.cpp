@@ -7,19 +7,19 @@ int main(int argc, char** argv) {
   SDL_Init(SDL_INIT_AUDIO);
 
   Playlist playlist = Playlist();
-  Window window = Window(playlist);
+  playlist.readPlaylist();
 
+  Window window = Window(playlist.size());
   window.renderWindowTemplate();
   window.renderWindowCursor();
-
-
+  
   for (;;) {
-	window.renderWindowList();
-	window.refreshFrames();
+    window.renderWindowList(playlist.getPlaylistSongs());
+    window.refreshFrames();
 
-	int status = window.processInput();
+    int status = window.processInput(playlist);
 
-	if (status == APP_STATE_TERMINATED) break;
+    if (status == APP_STATE_TERMINATED) break;
   }
 
   SDL_Quit();

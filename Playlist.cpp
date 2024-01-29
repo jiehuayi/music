@@ -3,11 +3,15 @@
 Playlist::Playlist() {
   _songs = {};
   _path = std::string(getenv("HOME")) + "/Music/";
+  _activeTrack = nullptr;
+  _isTrackPlaying = false;
 }
 
 Playlist::Playlist(std::string path) {
   _songs = {};
   _path = path;
+  _activeTrack = nullptr;
+  _isTrackPlaying = false;
 }
 
 Playlist::~Playlist() {}
@@ -41,11 +45,18 @@ std::vector<std::string> Playlist::getPlaylistSongs() {
   return ret;
 }
 
-void Playlist::play(int index) {
-  Track* t = new Track(_songs[index].string());
-  t->play();
+int Playlist::size() {
+  return _songs.size();
 }
 
-
-
-
+void Playlist::play(int index) {
+  std::string selectedTrackPath = _songs[index].string();
+  
+  if (_activeTrack == nullptr || selectedTrackPath != _activeTrack->path()) {
+    _activeTrack = std::make_unique<Track>(selectedTrackPath);
+    _activeTrack->play();
+    
+    return;
+  }
+  
+}
