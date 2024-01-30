@@ -1,55 +1,37 @@
 #include "Track.hpp"
 
-static
-void trackReadCallback(void* track, Uint8* stream, int streamLength) {
-  TrackData* audio = (TrackData*)track;
-  
-  if (audio->length == 0) {
-    return;
-  }
+Track::Track(std::string path) : _path(std::move(path)) {
+    // Initialize BASS
+    if (!BASS_Init(-1, 44100, 0, 0, NULL)) {
+        std::cerr << "BASS_Init failed\n";
+        // You might want to throw an exception or handle the error in some way
+    }
 
-  Uint32 length = (Uint32)streamLength;
-  length = (length > audio->length) ? audio->length : length;
-
-  SDL_memcpy(stream, audio->pos, length);
-
-  audio->pos += length;
-  audio->length -= length;
-}
-
-Track::Track(std::string path) {
-  _path = path;
-  
-  if (SDL_LoadWAV(_path.c_str(), &_wavSpec, &_wavStart, &_wavLength) == NULL) {
-    // TODO: ERROR HANDLING
-    std::cerr << "ERROR: " << _path << " could not be loaded" << std::endl;
-  }
-  
-  _data = {.pos = _wavStart, .length = _wavLength};
-  _wavSpec.callback = trackReadCallback;
-  _wavSpec.userdata = &_data;
-  
-  _audioDevice = SDL_OpenAudioDevice(NULL, 0, &_wavSpec, NULL,
-				     SDL_AUDIO_ALLOW_ANY_CHANGE);
-  if (_audioDevice == 0) {
-    // TODO: ERROR HANDLING
-    std::cerr << "ERROR: " << SDL_GetError() << std::endl;
-  }
+    // Load the track
+    _channel = BASS_StreamCreateFile(FALSE, _path.c_str(), 0, 0, BASS_SAMPLE_FLOAT);
+    if (!_channel) {
+        std::cerr << "BASS_StreamCreateFile failed\n";
+        BASS_Free(); // Clean up BASS on failure
+        // You might want to throw an exception or handle the error in some way
+    }
 }
 
 Track::~Track() {
-  SDL_FreeWAV(_wavStart);
-  SDL_CloseAudioDevice(_audioDevice);
+    // Free resources and close BASS
+    BASS_StreamFree(_channel);
+    BASS_Free();
 }
 
 void Track::play() {
-  SDL_PauseAudioDevice(_audioDevice, 0);
+    // Play the track
+    BASS_ChannelPlay(_channel, FALSE);
 }
 
 void Track::pause() {
-  SDL_PauseAudioDevice(_audioDevice, 1);
+    // Pause the track
+    BASS_ChannelPause(_channel);
 }
 
 std::string Track::path() {
-  return _path;
+    return _path;
 }
