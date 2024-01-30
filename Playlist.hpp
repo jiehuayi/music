@@ -45,6 +45,8 @@ public:
 
   void play(int index);
 
+  void trigger();
+
 private:
 
   std::string _path;

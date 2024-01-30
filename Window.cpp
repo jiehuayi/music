@@ -125,7 +125,9 @@ int Window::processInput(Playlist& playlist) {
     playlist.play(_cursorPosition);
     break;
     
-    
+  case ' ':
+    playlist.trigger();
+    break;
     
   case 0x1B:
     return APP_STATE_TERMINATED;

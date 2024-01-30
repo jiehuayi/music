@@ -55,8 +55,16 @@ void Playlist::play(int index) {
   if (_activeTrack == nullptr || selectedTrackPath != _activeTrack->path()) {
     _activeTrack = std::make_unique<Track>(selectedTrackPath);
     _activeTrack->play();
-    
-    return;
-  }
-  
+  }  
 }
+
+void Playlist::trigger() {
+  if (_isTrackPlaying) {
+    _activeTrack->pause();
+  } else {
+    _activeTrack->play();
+  }
+
+  _isTrackPlaying = !_isTrackPlaying;
+}
+

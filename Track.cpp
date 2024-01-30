@@ -47,7 +47,7 @@ void Track::play() {
 }
 
 void Track::pause() {
-  
+  SDL_PauseAudioDevice(_audioDevice, 1);
 }
 
 std::string Track::path() {
