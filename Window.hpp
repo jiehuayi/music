@@ -41,6 +41,8 @@ public:
 
   void renderWindowList(std::vector<std::string> items);
 
+  void renderWindowVisual(Playlist& playlist);
+
   void renderWindowCursor();
 
   int processInput(Playlist& playlist);

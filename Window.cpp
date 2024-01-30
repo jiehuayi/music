@@ -74,6 +74,10 @@ void Window::renderWindowList(std::vector<std::string> items) {
   }
 }
 
+void Window::renderWindowVisual(Playlist& playlist) {
+  
+}
+
 void Window::renderWindowCursor() {
   curs_set(0);
   wmove(_listFrame.get(), 0, 0);
@@ -121,7 +125,7 @@ int Window::processInput(Playlist& playlist) {
     mvwprintw(_commandFrame.get(), 0, 0, "%s", _inputBuffer.str().c_str());
     break;
 
-  case 'l':
+  case 0x0D:
     playlist.play(_cursorPosition);
     break;
     

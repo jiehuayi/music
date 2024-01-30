@@ -4,6 +4,7 @@
 #include <string>
 
 #include <SDL2/SDL.h>
+#include <bass.h>
 
 struct TrackData {
   Uint8* pos;
