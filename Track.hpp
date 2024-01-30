@@ -6,6 +6,7 @@
 #include <bass.h>
 
 class Track {
+  
 public:
   Track(std::string path);
   
