@@ -4,25 +4,22 @@
 #include "Playlist.hpp"
 
 int main(int argc, char** argv) {
-  SDL_Init(SDL_INIT_AUDIO);
+  Playlist pl = Playlist();
+  pl.readPlaylist();
 
-  Playlist playlist = Playlist();
-  playlist.readPlaylist();
-
-  Window window = Window(playlist.size());
+  Window window = Window(pl.size());
   window.renderWindowTemplate();
   window.renderWindowCursor();
   
   for (;;) {
-    window.renderWindowList(playlist.getPlaylistSongs());
+    window.renderWindowList(pl.getPlaylistSongs());
+    window.renderWindowVisual(pl);
     window.refreshFrames();
 
-    int status = window.processInput(playlist);
+    int status = window.processInput(pl);
 
     if (status == APP_STATE_TERMINATED) break;
   }
-
-  SDL_Quit();
 
   return EXIT_SUCCESS;
 

@@ -1,11 +1,11 @@
 #include "Window.hpp"
 
 Window::Window(int playlistSize) {
-  setlocale(LC_ALL, "");  
   initscr();
+  setlocale(LC_ALL, "");  
   cbreak();
   noecho();
-  nodelay(stdscr, true);
+  // nodelay(stdscr, false);
   keypad(stdscr, true);
   start_color();
 
@@ -37,8 +37,8 @@ Window::Window(int playlistSize) {
 
   keypad(listFrame, true);
   keypad(visualFrame, true);
-  nodelay(listFrame, true);
-  nodelay(visualFrame, true);
+  // nodelay(listFrame, false);
+  // nodelay(visualFrame, false);
 }
 
 Window::~Window() {
@@ -66,16 +66,37 @@ void Window::renderWindowList(std::vector<std::string> items) {
       }
 	  
       mvwprintw(_listFrame.get(), entryIndex + 1, 1, FORMAT_PTR(display.c_str()));
-
+      
       wattroff(_listFrame.get(), A_REVERSE);
-    }
-	
+    }	
     entryIndex++;
   }
 }
 
 void Window::renderWindowVisual(Playlist& playlist) {
+  std::stringstream progressBarBuffer;
   
+  // including decorative square brackets
+  int progressBarTotalLength = _visualFrameX - 2;
+  int progressBarLength = progressBarTotalLength - 2;
+  int fillAmount = std::floor(playlist.progress() * progressBarLength);
+
+  std::ofstream outFile("log.log", std::ios::app);
+  outFile << playlist.progress() << "\n";
+  outFile.close();
+
+  // account for two square brackets at the end of the progress bar
+  for (int i = 0; i < progressBarLength; i++) {
+    if (i <= fillAmount)
+      progressBarBuffer << "0";
+    else
+      progressBarBuffer << "-";
+  }
+
+  mvwprintw(_visualFrame.get(),
+	    _visualFrameY - 2, 1, "[%s]", progressBarBuffer.str().c_str());
+
+  wrefresh(_visualFrame.get());
 }
 
 void Window::renderWindowCursor() {
@@ -135,9 +156,10 @@ int Window::processInput(Playlist& playlist) {
     
   case 0x1B:
     return APP_STATE_TERMINATED;
-  }
 
-  goto RET;
+  default:
+    goto RET;
+  }
 
  CMD:
   switch(in) {
@@ -162,13 +184,10 @@ int Window::processInput(Playlist& playlist) {
     if (isValidCommandChar(in)) {
       _inputBuffer << in;
       mvwprintw(_commandFrame.get(), 0, 0, "%s", _inputBuffer.str().c_str());
-    }
-    
+    }  
     break;
   }
   
-
  RET:
-
   return APP_STATE_RUNNING;
 }

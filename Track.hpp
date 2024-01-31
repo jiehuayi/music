@@ -17,6 +17,10 @@ public:
   void pause();
 
   std::string path();
+
+  double getDuration();
+
+  double getPosition();
   
 private:
   std::string _path;

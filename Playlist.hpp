@@ -4,9 +4,8 @@
 #include <vector>
 #include <string>
 #include <filesystem>
-
-#include <SDL2/SDL.h>
 #include <unistd.h>
+#include <bass.h>
 
 #include "Track.hpp"
 
@@ -46,6 +45,8 @@ public:
   void play(int index);
 
   void trigger();
+
+  double progress();
 
 private:
 

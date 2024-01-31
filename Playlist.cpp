@@ -1,6 +1,14 @@
 #include "Playlist.hpp"
 
 Playlist::Playlist() {
+  BOOL bassInit = BASS_Init(-1, 44100, 0, 0, NULL);
+  
+  if (!bassInit) {
+    std::cerr
+      << "ERROR: Failed to init BASS library."
+      << std::endl;
+  }
+  
   _songs = {};
   _path = std::string(getenv("HOME")) + "/Music/";
   _activeTrack = nullptr;
@@ -14,7 +22,9 @@ Playlist::Playlist(std::string path) {
   _isTrackPlaying = false;
 }
 
-Playlist::~Playlist() {}
+Playlist::~Playlist() {
+  BASS_Free();
+}
 
 int Playlist::readPlaylist() {
   try {
@@ -68,3 +78,18 @@ void Playlist::trigger() {
   _isTrackPlaying = !_isTrackPlaying;
 }
 
+double Playlist::progress() {
+  if (!_activeTrack) {
+    return 0.0;
+  }
+  
+  double pos = _activeTrack->getPosition();
+  double dur = _activeTrack->getDuration();
+
+  if (pos < 0 || dur < 0) {
+    return 0.0;
+  }
+
+  return pos;
+  return pos / dur;
+}

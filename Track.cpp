@@ -1,14 +1,6 @@
 #include "Track.hpp"
 
 Track::Track(std::string path) : _path(std::move(path)) {
-  BOOL bassInit = BASS_Init(-1, 44100, 0, 0, NULL);
-  
-  if (!bassInit) {
-    std::cerr
-      << "ERROR: Failed to init BASS library."
-      << std::endl;
-  }
-
   _channel = BASS_StreamCreateFile(FALSE, _path.c_str(), 0, 0, BASS_SAMPLE_FLOAT);
   
   if (!_channel) {
@@ -19,7 +11,6 @@ Track::Track(std::string path) : _path(std::move(path)) {
 
 Track::~Track() {
   BASS_StreamFree(_channel);
-  BASS_Free();
 }
 
 void Track::play() {
@@ -32,4 +23,24 @@ void Track::pause() {
 
 std::string Track::path() {
   return _path;
+}
+
+double Track::getDuration() {
+  QWORD pos = BASS_ChannelGetLength(_channel, BASS_POS_BYTE);
+  
+  if (pos < 0) {
+    return pos;
+  }
+  
+  return BASS_ChannelBytes2Seconds(_channel, pos);
+}
+
+double Track::getPosition() {
+  QWORD pos = BASS_ChannelGetPosition(_channel, BASS_POS_BYTE);
+
+  if (pos < 0) {
+    return pos;
+  }
+  
+  return BASS_ChannelBytes2Seconds(_channel, pos);
 }
