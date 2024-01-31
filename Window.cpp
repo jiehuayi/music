@@ -159,10 +159,9 @@ int Window::processInput(Playlist& playlist) {
     
   case 0x1B:
     return APP_STATE_TERMINATED;
-
-  default:
-    goto RET;
   }
+
+  goto RET;
 
  CMD:
   switch(in) {
