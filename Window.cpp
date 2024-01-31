@@ -5,7 +5,7 @@ Window::Window(int playlistSize) {
   setlocale(LC_ALL, "");  
   cbreak();
   noecho();
-  // nodelay(stdscr, false);
+  nodelay(stdscr, true);
   keypad(stdscr, true);
   start_color();
 
@@ -37,8 +37,8 @@ Window::Window(int playlistSize) {
 
   keypad(listFrame, true);
   keypad(visualFrame, true);
-  // nodelay(listFrame, false);
-  // nodelay(visualFrame, false);
+  nodelay(listFrame, true);
+  nodelay(visualFrame, true);
 }
 
 Window::~Window() {
@@ -108,6 +108,7 @@ void Window::refreshFrames() {
   wrefresh(_listFrame.get());
   wrefresh(_visualFrame.get());
   wrefresh(_commandFrame.get());
+  // mvwprintw(_commandFrame.get(), 0, 0, "%d", rand());
 }
 
 static bool isValidCommandChar(char input) {
@@ -115,14 +116,15 @@ static bool isValidCommandChar(char input) {
 }
 
 int Window::processInput(Playlist& playlist) {
-  char buffer[1024];
-  ssize_t size = read(0, buffer, sizeof(buffer) - 1); // read stdin
+  // char buffer[1024];
+  // ssize_t size = read(STDIN_FILENO, buffer, sizeof(buffer) - 1); // read stdin
 
-  if (size == -1 || size == 0) {
-    return APP_STATE_RUNNING;
-  }
+  // if (size == -1 || size == 0) {
+  //   return APP_STATE_RUNNING;
+  // }
 
-  char in = buffer[0];
+  // char in = buffer[0];
+  char in = wgetch(_listFrame.get());
   std::string inputBufferString = _inputBuffer.str();
 
   // mvwprintw(_commandFrame.get(), 0, 0, "%x", in); // debugging only
@@ -147,6 +149,7 @@ int Window::processInput(Playlist& playlist) {
     break;
 
   case 0x0D:
+  case 'q':
     playlist.play(_cursorPosition);
     break;
     

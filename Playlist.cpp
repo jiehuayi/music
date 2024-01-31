@@ -89,7 +89,6 @@ double Playlist::progress() {
   if (pos < 0 || dur < 0) {
     return 0.0;
   }
-
-  return pos;
+  
   return pos / dur;
 }
