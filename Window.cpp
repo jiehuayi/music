@@ -18,7 +18,7 @@ Window::Window(int playlistSize) {
   _cursorPosition = 0;
   _playlistSize = playlistSize;
   
-  _listFrameX = 0.3 * _windowX;
+  _listFrameX = 0.4 * _windowX;
   _listFrameY = _windowY - 1;
   _visualFrameX = _windowX - _listFrameX;
   _visualFrameY = _windowY - 1;
@@ -118,7 +118,11 @@ void Window::renderWindowVisual(Playlist& playlist) {
   }
 
   mvwprintw(_visualFrame.get(),
-	    _visualFrameY - 2, 1, "[%s]", progressBarBuffer.str().c_str());
+	    _visualFrameY - 3, 1, "[%s]", progressBarBuffer.str().c_str());
+  
+  mvwprintw(_visualFrame.get(),
+	    _visualFrameY - 2, 1, "Now Playing: %s...",
+	    playlist.activeSongName().substr(0, _visualFrameX - 18).c_str());
 
   wrefresh(_visualFrame.get());
 }

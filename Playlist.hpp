@@ -48,6 +48,8 @@ public:
 
   double progress();
 
+  std::string activeSongName();
+
 private:
 
   std::string _path;

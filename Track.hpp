@@ -1,6 +1,7 @@
- #pragma once
+#pragma once
 
 #include <iostream>
+#include <filesystem>
 #include <string>
 
 #include <bass.h>
@@ -8,7 +9,7 @@
 class Track {
   
 public:
-  Track(std::string path);
+  Track(std::filesystem::path path);
   
   ~Track();
 
@@ -16,14 +17,18 @@ public:
 
   void pause();
 
-  std::string path();
+  std::filesystem::path path();
+
+  std::string name();
 
   double getDuration();
 
   double getPosition();
   
 private:
-  std::string _path;
+  std::filesystem::path _path;
+  std::string _trackPath;
+  std::string _trackName;
 
   HSTREAM _channel;
 };

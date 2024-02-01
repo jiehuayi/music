@@ -1,7 +1,11 @@
 #include "Track.hpp"
 
-Track::Track(std::string path) : _path(std::move(path)) {
-  _channel = BASS_StreamCreateFile(FALSE, _path.c_str(), 0, 0, BASS_SAMPLE_FLOAT);
+Track::Track(std::filesystem::path path) : _path(path) {
+  _trackPath = _path.string();
+  _trackName = _path.filename().string();
+  _channel = BASS_StreamCreateFile(FALSE,
+				   _trackPath.c_str(),
+				   0, 0, BASS_SAMPLE_FLOAT);
   
   if (!_channel) {
     std::cerr << "BASS_StreamCreateFile failed\n";
@@ -21,8 +25,12 @@ void Track::pause() {
   BASS_ChannelPause(_channel);
 }
 
-std::string Track::path() {
+std::filesystem::path Track::path() {
   return _path;
+}
+
+std::string Track::name() {
+  return _trackName;
 }
 
 double Track::getDuration() {

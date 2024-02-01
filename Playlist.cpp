@@ -59,16 +59,21 @@ int Playlist::size() {
   return _songs.size();
 }
 
+
 void Playlist::play(int index) {
-  std::string selectedTrackPath = _songs[index].string();
+  std::filesystem::path selectedTrack = _songs[index];
+
+  _isTrackPlaying = true;
   
-  if (_activeTrack == nullptr || selectedTrackPath != _activeTrack->path()) {
-    _activeTrack = std::make_unique<Track>(selectedTrackPath);
+  if (_activeTrack == nullptr || selectedTrack != _activeTrack->path()) {
+    _activeTrack = std::make_unique<Track>(selectedTrack);
     _activeTrack->play();
   }  
 }
 
 void Playlist::trigger() {
+  if (!_activeTrack) return;
+  
   if (_isTrackPlaying) {
     _activeTrack->pause();
   } else {
@@ -91,4 +96,12 @@ double Playlist::progress() {
   }
   
   return pos / dur;
+}
+
+std::string Playlist::activeSongName() {
+  if (_activeTrack) {
+    return _activeTrack->name();
+  }
+
+  return "?";
 }
