@@ -1,8 +1,8 @@
 #include "Window.hpp"
 
 Window::Window(int playlistSize) {
+  setlocale(LC_ALL, "en_US.UTF-8");  
   initscr();
-  setlocale(LC_ALL, "");  
   cbreak();
   noecho();
   nodelay(stdscr, true);
@@ -79,18 +79,42 @@ void Window::renderWindowVisual(Playlist& playlist) {
   // including decorative square brackets
   int progressBarTotalLength = _visualFrameX - 2;
   int progressBarLength = progressBarTotalLength - 2;
-  int fillAmount = std::floor(playlist.progress() * progressBarLength);
 
-  std::ofstream outFile("log.log", std::ios::app);
-  outFile << playlist.progress() << "\n";
-  outFile.close();
+  double fillWhole, fillFrac;
+  double progress = playlist.progress() * progressBarLength;
+
+  fillFrac = std::modf(progress, &fillWhole);
 
   // account for two square brackets at the end of the progress bar
-  for (int i = 0; i < progressBarLength; i++) {
-    if (i <= fillAmount)
-      progressBarBuffer << "0";
-    else
+  for (int i = 1; i < progressBarLength + 1; i++) {
+    if (progress < 0) {
       progressBarBuffer << "-";
+      continue;
+    }
+    
+    if (i <= fillWhole) {
+      progressBarBuffer << "\u2588";
+    } else if (i == static_cast<int>(std::ceil(progress))) {
+      if (fillFrac <= 0.125) {
+	progressBarBuffer << "\u258F";
+      } else if (fillFrac <= 0.250) {
+	progressBarBuffer << "\u258E";
+      } else if (fillFrac <= 0.375) {
+	progressBarBuffer << "\u258D";
+      } else if (fillFrac <= 0.500) {
+	progressBarBuffer << "\u258C";
+      } else if (fillFrac <= 0.625) {
+	progressBarBuffer << "\u258B";
+      } else if (fillFrac <= 0.750) {
+	progressBarBuffer << "\u258A";
+      } else if (fillFrac <= 0.875) {
+	progressBarBuffer << "\u2589";
+      } else {
+	progressBarBuffer << "\u2588";
+      }
+    } else {
+      progressBarBuffer << "-";
+    }
   }
 
   mvwprintw(_visualFrame.get(),
