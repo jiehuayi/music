@@ -50,6 +50,8 @@ public:
 
   std::string activeSongName();
 
+  std::vector<float> getFFT();
+
 private:
 
   std::string _path;

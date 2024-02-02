@@ -6,11 +6,13 @@ Window::Window(int playlistSize) {
   cbreak();
   noecho();
   nodelay(stdscr, true);
+  // halfdelay(true);
   keypad(stdscr, true);
   start_color();
 
-  init_pair(2, COLOR_WHITE, COLOR_BLACK);
   init_pair(1, COLOR_BLACK, COLOR_YELLOW);
+  init_pair(2, COLOR_WHITE, COLOR_BLACK);
+  init_pair(3, COLOR_BLUE, COLOR_BLACK);
 
   getmaxyx(stdscr, _windowY, _windowX);
   
@@ -123,6 +125,73 @@ void Window::renderWindowVisual(Playlist& playlist) {
   mvwprintw(_visualFrame.get(),
 	    _visualFrameY - 2, 1, "Now Playing: %s...",
 	    playlist.activeSongName().substr(0, _visualFrameX - 18).c_str());
+
+  // visualizer
+  int visualizerY = _visualFrameY - 4;
+  int visualizerX = _visualFrameX - 2;
+  std::vector<float> dataBuffer = playlist.getFFT();
+  std::vector<float> dataBufferCompact;
+  
+  // downSample
+  int step = BUFF_SZ / visualizerY;
+  float maxMagnitude = 0.0;
+  for (int i = 0; i < BUFF_SZ; i+=step) {
+    float sum = 0.0;
+    int j = i;
+    for (; j < std::min(j + step, BUFF_SZ); j++) {
+      sum += dataBuffer[j];
+    }
+    float avg = sum / (j - 1 + 1);
+
+    if (avg > maxMagnitude) {
+      maxMagnitude = avg;
+    }
+    
+    dataBufferCompact.push_back(avg);
+  }
+
+  int printPositionY = 1;
+  for (auto& freq : dataBufferCompact) {
+    float height = freq * visualizerX / maxMagnitude;
+    float whole, frac;
+    frac = std::modf(height, &whole);
+
+    std::stringstream bar;
+    for (int i = 0; i < visualizerX; i++) {
+      if (i <= whole) {
+	bar << "\u2588";
+      } else if (i == std::ceil(height)) {
+	if (frac <= 0.125) {
+	  bar << "\u258F";
+	} else if (frac <= 0.250) {
+	  bar << "\u258E";
+	} else if (frac <= 0.375) {
+	  bar << "\u258D";
+	} else if (frac <= 0.500) {
+	  bar << "\u258C";
+	} else if (frac <= 0.625) {
+	  bar << "\u258B";
+	} else if (frac <= 0.750) {
+	  bar << "\u258A";
+	} else if (frac <= 0.875) {
+	  bar << "\u2589";
+	} else {
+	  bar << "\u2588";
+	}
+      } else {
+	bar << " ";
+      }
+    }
+
+    if (printPositionY % 2) {
+      mvwprintw(_visualFrame.get(), printPositionY++, 1, bar.str().c_str());
+    } else {
+      wattron(_visualFrame.get(), COLOR_PAIR(3));
+      mvwprintw(_visualFrame.get(), printPositionY++, 1, "%s",
+		bar.str().c_str());
+      wattroff(_visualFrame.get(), COLOR_PAIR(3));
+    }
+  }
 
   wrefresh(_visualFrame.get());
 }

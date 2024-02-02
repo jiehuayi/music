@@ -94,6 +94,8 @@ double Playlist::progress() {
   if (pos < 0 || dur < 0) {
     return 0.0;
   }
+
+  if (pos == dur) _activeTrack = nullptr;
   
   return pos / dur;
 }
@@ -104,4 +106,12 @@ std::string Playlist::activeSongName() {
   }
 
   return "?";
+}
+
+std::vector<float> Playlist::getFFT() {
+  if (_activeTrack) {
+    return _activeTrack->getChannelFFT();
+  }
+
+  return std::vector<float>(BUFF_SZ, 0.0);
 }

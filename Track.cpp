@@ -52,3 +52,21 @@ double Track::getPosition() {
   
   return BASS_ChannelBytes2Seconds(_channel, pos);
 }
+
+std::vector<float> Track::getChannelFFT() {
+  float fftBuffer[BUFF_SZ];
+  std::vector<float> fftBufferLite;
+  
+  bzero(&fftBuffer, BUFF_SZ);
+
+  if (BASS_ChannelGetData(_channel, fftBuffer,
+			  BASS_DATA_FFT8192) == -1) {
+    fftBufferLite = std::vector<float>(BUFF_SZ, 0.0);
+    goto RET;
+  }
+
+  fftBufferLite = std::vector<float>(fftBuffer, fftBuffer + BUFF_SZ);
+
+ RET:
+  return fftBufferLite;
+}

@@ -3,8 +3,11 @@
 #include <iostream>
 #include <filesystem>
 #include <string>
+#include <cstring>
 
 #include <bass.h>
+
+#define BUFF_SZ 4096
 
 class Track {
   
@@ -24,6 +27,8 @@ public:
   double getDuration();
 
   double getPosition();
+
+  std::vector<float> getChannelFFT();
   
 private:
   std::filesystem::path _path;
