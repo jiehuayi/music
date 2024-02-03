@@ -16,6 +16,10 @@ int main(int argc, char** argv) {
   //   perror("fcntl");
   //   return 1;
   // }
+
+
+  int fps = 60;
+  int delayMillis = 1000 / fps; 
   
   Playlist pl = Playlist();
   pl.readPlaylist();
@@ -32,6 +36,7 @@ int main(int argc, char** argv) {
     int status = window.processInput(pl);
     
     if (status == APP_STATE_TERMINATED) break;
+    napms(delayMillis);
   }
 
   return EXIT_SUCCESS;

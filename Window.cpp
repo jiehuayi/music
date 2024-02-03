@@ -13,6 +13,7 @@ Window::Window(int playlistSize) {
   init_pair(1, COLOR_BLACK, COLOR_YELLOW);
   init_pair(2, COLOR_WHITE, COLOR_BLACK);
   init_pair(3, COLOR_BLUE, COLOR_BLACK);
+  init_pair(4, COLOR_CYAN, COLOR_BLACK);
 
   getmaxyx(stdscr, _windowY, _windowX);
   
@@ -127,27 +128,34 @@ void Window::renderWindowVisual(Playlist& playlist) {
 	    playlist.activeSongName().substr(0, _visualFrameX - 18).c_str());
 
   // visualizer
-  int visualizerY = _visualFrameY - 4;
+  int visualizerY = _visualFrameY - 5;
   int visualizerX = _visualFrameX - 2;
   std::vector<float> dataBuffer = playlist.getFFT();
   std::vector<float> dataBufferCompact;
   
   // downSample
-  int step = BUFF_SZ / visualizerY;
+  // int step = BUFF_SZ / visualizerY;
   float maxMagnitude = 0.0;
-  for (int i = 0; i < BUFF_SZ; i+=step) {
-    float sum = 0.0;
-    int j = i;
-    for (; j < std::min(j + step, BUFF_SZ); j++) {
-      sum += dataBuffer[j];
-    }
-    float avg = sum / (j - 1 + 1);
+  // for (int i = 0; i < BUFF_SZ; i+=step) {    
+  //   float sum = 0.0;
+  //   int j = i;
+  //   for (; j < std::min(j + step, BUFF_SZ); j++) {
+  //     sum += dataBuffer[j];
+  //   }
+  //   float avg = sum / (j - i + 1);
 
-    if (avg > maxMagnitude) {
-      maxMagnitude = avg;
+  //   if (avg > maxMagnitude) {
+  //     maxMagnitude = avg;
+  //   }
+    
+  //   dataBufferCompact.push_back(avg);
+  // }
+  for (int i = 0; i < visualizerY; i++) {    
+    if (dataBuffer[i] > maxMagnitude) {
+      maxMagnitude = dataBuffer[i];
     }
     
-    dataBufferCompact.push_back(avg);
+    dataBufferCompact.push_back(dataBuffer[i]);
   }
 
   int printPositionY = 1;
@@ -159,32 +167,18 @@ void Window::renderWindowVisual(Playlist& playlist) {
     std::stringstream bar;
     for (int i = 0; i < visualizerX; i++) {
       if (i <= whole) {
-	bar << "\u2588";
+	bar << "•";
       } else if (i == std::ceil(height)) {
-	if (frac <= 0.125) {
-	  bar << "\u258F";
-	} else if (frac <= 0.250) {
-	  bar << "\u258E";
-	} else if (frac <= 0.375) {
-	  bar << "\u258D";
-	} else if (frac <= 0.500) {
-	  bar << "\u258C";
-	} else if (frac <= 0.625) {
-	  bar << "\u258B";
-	} else if (frac <= 0.750) {
-	  bar << "\u258A";
-	} else if (frac <= 0.875) {
-	  bar << "\u2589";
-	} else {
-	  bar << "\u2588";
-	}
+	bar << "⁍";
       } else {
 	bar << " ";
       }
     }
 
     if (printPositionY % 2) {
+      wattron(_visualFrame.get(), COLOR_PAIR(4));
       mvwprintw(_visualFrame.get(), printPositionY++, 1, bar.str().c_str());
+      wattroff(_visualFrame.get(), COLOR_PAIR(4));
     } else {
       wattron(_visualFrame.get(), COLOR_PAIR(3));
       mvwprintw(_visualFrame.get(), printPositionY++, 1, "%s",

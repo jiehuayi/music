@@ -59,8 +59,27 @@ std::vector<float> Track::getChannelFFT() {
   
   bzero(&fftBuffer, BUFF_SZ);
 
-  if (BASS_ChannelGetData(_channel, fftBuffer,
-			  BASS_DATA_FFT8192) == -1) {
+  DWORD lengthFFT;
+
+  switch(BUFF_SZ) {
+  case 128:
+    lengthFFT = BASS_DATA_FFT256;
+    break;
+  case 256:
+    lengthFFT = BASS_DATA_FFT512;
+    break;
+  case 512:
+    lengthFFT = BASS_DATA_FFT1024;
+    break;
+  case 1024:
+    lengthFFT = BASS_DATA_FFT2048;
+    break;
+  case 2048:
+    lengthFFT = BASS_DATA_FFT4096;
+    break;
+  }
+
+  if (BASS_ChannelGetData(_channel, fftBuffer, lengthFFT) == -1) {
     fftBufferLite = std::vector<float>(BUFF_SZ, 0.0);
     goto RET;
   }
