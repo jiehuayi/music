@@ -20,6 +20,8 @@ Window::Window(int playlistSize) {
   _inputMode = MODE_NAVIGATE;
   _cursorPosition = 0;
   _playlistSize = playlistSize;
+  _runningScaleSum = 0.0;
+  _runningCount = 1.0;
   
   _listFrameX = 0.4 * _windowX;
   _listFrameY = _windowY - 1;
@@ -58,9 +60,11 @@ void Window::renderWindowList(std::vector<std::string> items) {
 
   for (auto &entry: items) {
     if (entryIndex < _listFrameY - 2) {
-      if (entryIndex == _cursorPosition) wattron(_listFrame.get(), A_REVERSE);
-
       std::string display = "";
+      
+      if (entryIndex == _cursorPosition) {
+	wattron(_listFrame.get(), A_REVERSE);
+      }
 
       if (entry.length() <= _listFrameX - 2) {
 	display = entry;
@@ -68,7 +72,8 @@ void Window::renderWindowList(std::vector<std::string> items) {
 	display = entry.substr(0, _listFrameX - 5) += "...";
       }
 	  
-      mvwprintw(_listFrame.get(), entryIndex + 1, 1, FORMAT_PTR(display.c_str()));
+      mvwprintw(_listFrame.get(), entryIndex + 1, 1,
+		FORMAT_PTR(display.c_str()));
       
       wattroff(_listFrame.get(), A_REVERSE);
     }	
@@ -125,7 +130,8 @@ void Window::renderWindowVisual(Playlist& playlist) {
   
   mvwprintw(_visualFrame.get(),
 	    _visualFrameY - 2, 1, "Now Playing: %s...",
-	    playlist.activeSongName().substr(0, _visualFrameX - 18).c_str());
+	    playlist.activeSongName()
+	    .substr(0, _visualFrameX - 18).c_str());
 
   // visualizer
   int visualizerY = _visualFrameY - 5;
@@ -135,7 +141,6 @@ void Window::renderWindowVisual(Playlist& playlist) {
   
   // downSample
   // int step = BUFF_SZ / visualizerY;
-  float maxMagnitude = 0.0;
   // for (int i = 0; i < BUFF_SZ; i+=step) {    
   //   float sum = 0.0;
   //   int j = i;
@@ -150,17 +155,20 @@ void Window::renderWindowVisual(Playlist& playlist) {
     
   //   dataBufferCompact.push_back(avg);
   // }
+  float maxMagnitude = 0.0;
   for (int i = 0; i < visualizerY; i++) {    
     if (dataBuffer[i] > maxMagnitude) {
       maxMagnitude = dataBuffer[i];
-    }
-    
+    }  
     dataBufferCompact.push_back(dataBuffer[i]);
   }
 
+  _runningScaleSum += maxMagnitude;
+  float runningScaleAverage = _runningScaleSum / _runningCount++;
+
   int printPositionY = 1;
   for (auto& freq : dataBufferCompact) {
-    float height = freq * visualizerX / maxMagnitude;
+    float height = freq * visualizerX / runningScaleAverage;
     float whole, frac;
     frac = std::modf(height, &whole);
 
@@ -242,6 +250,8 @@ int Window::processInput(Playlist& playlist) {
   case 0x0D:
   case 'q':
     playlist.play(_cursorPosition);
+    _runningScaleSum = 0.0;
+    _runningCount = 1.0;
     break;
     
   case ' ':

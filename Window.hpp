@@ -75,6 +75,8 @@ private:
   std::unique_ptr<WINDOW, FrameDeleter> _commandFrame;
 
   int _playlistSize;
+  float _runningScaleSum;
+  float _runningCount;
 
   // WINDOW* _listFrame;
   // WINDOW* _visualFrame;
