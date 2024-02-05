@@ -20,7 +20,7 @@ Window::Window(int playlistSize) {
   _inputMode = MODE_NAVIGATE;
   _cursorPosition = 0;
   _playlistSize = playlistSize;
-  _runningScaleSum = 0.0;
+  _runningScaleSum = 10.0;
   _runningCount = 1.0;
   
   _listFrameX = 0.4 * _windowX;
@@ -89,7 +89,9 @@ void Window::renderWindowVisual(Playlist& playlist) {
   int progressBarLength = progressBarTotalLength - 2;
 
   double fillWhole, fillFrac;
-  double progress = playlist.progress() * progressBarLength;
+  double posNow = playlist.getPosition();
+  double posEnd = playlist.getDuration();
+  double progress = (posNow / posEnd) * progressBarLength;
 
   fillFrac = std::modf(progress, &fillWhole);
 
@@ -126,15 +128,19 @@ void Window::renderWindowVisual(Playlist& playlist) {
   }
 
   mvwprintw(_visualFrame.get(),
-	    _visualFrameY - 3, 1, "[%s]", progressBarBuffer.str().c_str());
+	    _visualFrameY - 4, 1, "[%s]", progressBarBuffer.str().c_str());
+
+  mvwprintw(_visualFrame.get(),
+	    _visualFrameY - 3, 1, "[ %s / %s ]",
+	    getTimeStamp(posNow).c_str(), getTimeStamp(posEnd).c_str());
   
   mvwprintw(_visualFrame.get(),
-	    _visualFrameY - 2, 1, "Now Playing: %s...",
+	    _visualFrameY - 2, 1, "> %s...",
 	    playlist.activeSongName()
 	    .substr(0, _visualFrameX - 18).c_str());
 
   // visualizer
-  int visualizerY = _visualFrameY - 5;
+  int visualizerY = _visualFrameY - 6;
   int visualizerX = _visualFrameX - 2;
   std::vector<float> dataBuffer = playlist.getFFT();
   std::vector<float> dataBufferCompact;
@@ -189,8 +195,8 @@ void Window::renderWindowVisual(Playlist& playlist) {
       wattroff(_visualFrame.get(), COLOR_PAIR(4));
     } else {
       wattron(_visualFrame.get(), COLOR_PAIR(3));
-      mvwprintw(_visualFrame.get(), printPositionY++, 1, "%s",
-		bar.str().c_str());
+      mvwprintw(_visualFrame.get(), printPositionY++, 1,
+		FORMAT_PTR(bar.str().c_str()));
       wattroff(_visualFrame.get(), COLOR_PAIR(3));
     }
   }
@@ -215,20 +221,12 @@ static bool isValidCommandChar(char input) {
 }
 
 int Window::processInput(Playlist& playlist) {
-  // char buffer[1024];
-  // ssize_t size = read(STDIN_FILENO, buffer, sizeof(buffer) - 1); // read stdin
-
-  // if (size == -1 || size == 0) {
-  //   return APP_STATE_RUNNING;
-  // }
-
-  // char in = buffer[0];
   char in = wgetch(_listFrame.get());
   std::string inputBufferString = _inputBuffer.str();
 
-  // mvwprintw(_commandFrame.get(), 0, 0, "%x", in); // debugging only
-
-  if (_inputMode == MODE_COMMAND) goto CMD;
+  if (_inputMode == MODE_COMMAND) {
+    goto CMD;
+  }
 
   switch(in) {
   case 0x10:
@@ -241,16 +239,15 @@ int Window::processInput(Playlist& playlist) {
 
   case ':':
     _inputMode = MODE_COMMAND;
-    wbkgd(_commandFrame.get(), COLOR_PAIR(1)); // command color
-    
     _inputBuffer << in;
-    mvwprintw(_commandFrame.get(), 0, 0, "%s", _inputBuffer.str().c_str());
+    wbkgd(_commandFrame.get(), COLOR_PAIR(1)); // Command color    
+    mvwprintw(_commandFrame.get(), 0, 0, _inputBuffer.str().c_str());
     break;
 
   case 0x0D:
   case 'q':
     playlist.play(_cursorPosition);
-    _runningScaleSum = 0.0;
+    _runningScaleSum = 10.0;
     _runningCount = 1.0;
     break;
     
@@ -267,8 +264,11 @@ int Window::processInput(Playlist& playlist) {
  CMD:
   switch(in) {
   case 0x1B:
+  case '!':
     _inputMode = MODE_NAVIGATE;
+    _inputBuffer.str("");
     wbkgd(_commandFrame.get(), COLOR_PAIR(2)); // reset color
+    werase(_commandFrame.get());
     break;
 
   case 0x7F:
@@ -293,4 +293,25 @@ int Window::processInput(Playlist& playlist) {
   
  RET:
   return APP_STATE_RUNNING;
+}
+
+std::string Window::getTimeStamp(double timeInSeconds) {
+  std::stringstream ssFormat;  
+  int hours = static_cast<int>(timeInSeconds / 3600);
+  int minutes = static_cast<int>((timeInSeconds - hours * 3600) / 60);
+  int seconds = static_cast<int>(timeInSeconds - hours * 3600
+				 - minutes * 60);
+
+  // Format hours (if greater than 0)
+  if (hours > 0) {
+    ssFormat << std::setw(2) << std::setfill('0') << hours << ":";
+  }
+
+  // Format minutes
+  ssFormat << std::setw(2) << std::setfill('0') << minutes << ":";
+
+  // Format seconds
+  ssFormat << std::setw(2) << std::setfill('0') << seconds;
+
+  return ssFormat.str();
 }

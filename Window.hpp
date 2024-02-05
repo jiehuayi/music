@@ -57,6 +57,8 @@ private:
 
   void processInputCommandMode();
 
+  std::string getTimeStamp(double timeInSeconds);
+
 private:
 
   int _windowX, _windowY;

@@ -83,23 +83,6 @@ void Playlist::trigger() {
   _isTrackPlaying = !_isTrackPlaying;
 }
 
-double Playlist::progress() {
-  if (!_activeTrack) {
-    return 0.0;
-  }
-  
-  double pos = _activeTrack->getPosition();
-  double dur = _activeTrack->getDuration();
-
-  if (pos < 0 || dur < 0) {
-    return 0.0;
-  }
-
-  if (pos == dur) _activeTrack = nullptr;
-  
-  return pos / dur;
-}
-
 std::string Playlist::activeSongName() {
   if (_activeTrack) {
     return _activeTrack->name();
@@ -114,4 +97,24 @@ std::vector<float> Playlist::getFFT() {
   }
 
   return std::vector<float>(BUFF_SZ, 0.0);
+}
+
+double Playlist::getDuration() {
+  if (!_activeTrack) {
+    return 0.0;
+  }
+
+  double ret = _activeTrack->getDuration();
+
+  return ret < 0 ? 0.0 : ret;
+}
+
+double Playlist::getPosition() {
+  if (!_activeTrack) {
+    return 0.0;
+  }
+
+  double ret = _activeTrack->getPosition();
+
+  return ret < 0 ? 0.0 : ret;
 }

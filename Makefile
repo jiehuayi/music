@@ -1,6 +1,6 @@
 CXX := g++
 CXXFLAGS := -std=c++17 -w -O2 -I./libraries/bass/include
-LDFLAGS := -L./libraries/bass/bin -lncurses -lbass
+LDFLAGS :=  -lncurses -lbass -L./libraries/bass/bin/
 
 # List of source files
 SRCS := Main.cpp Window.cpp Track.cpp Playlist.cpp 
@@ -20,6 +20,11 @@ $(TARGET): $(OBJS)
 
 %.o: %.cpp
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
+
+run: $(TARGET)
+	export DYLD_LIBRARY_PATH=./libraries/bass/bin:$DYLD_LIBRARY_PATH	
+	./main.out
+
 
 clean:
 	rm -f $(OBJS) $(TARGET) *~

@@ -46,11 +46,11 @@ public:
 
   void trigger();
 
-  double progress();
-
   std::string activeSongName();
 
   std::vector<float> getFFT();
+  double getDuration();
+  double getPosition();
 
 private:
 
