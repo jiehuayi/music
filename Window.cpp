@@ -18,6 +18,7 @@ Window::Window(int playlistSize) {
   getmaxyx(stdscr, _windowY, _windowX);
   
   _inputMode = MODE_NAVIGATE;
+  _listStartingIndex = 0;
   _cursorPosition = 0;
   _playlistSize = playlistSize;
   _runningScaleSum = 10.0;
@@ -51,33 +52,52 @@ Window::~Window() {
 }
 
 void Window::renderWindowTemplate() {
-  box(_listFrame.get(), 0, 0);
+  box(_listFrame.get(), 0, 0);  
   box(_visualFrame.get(), 0, 0);
 }
 
 void Window::renderWindowList(std::vector<std::string> items) {
-  int entryIndex = 0;
+  int renderableSize = _listFrameY - 2; // accounting for borders
+  bool overflow = renderableSize < items.size();
 
-  for (auto &entry: items) {
-    if (entryIndex < _listFrameY - 2) {
-      std::string display = "";
-      
-      if (entryIndex == _cursorPosition) {
-	wattron(_listFrame.get(), A_REVERSE);
-      }
+  if (_cursorPosition >= renderableSize - 5 &&
+      _listStartingIndex + renderableSize < items.size()) {
+    _listStartingIndex++;
+    _cursorPosition--; // maintian cursor position
+  }
+  
+  auto entryIt = items.begin() + _listStartingIndex;
+  int pos = 0;
 
-      if (entry.length() <= _listFrameX - 2) {
-	display = entry;
-      } else {
-	display = entry.substr(0, _listFrameX - 5) += "...";
-      }
-	  
-      mvwprintw(_listFrame.get(), entryIndex + 1, 1,
-		FORMAT_PTR(display.c_str()));
-      
-      wattroff(_listFrame.get(), A_REVERSE);
-    }	
-    entryIndex++;
+  for (auto it = entryIt; it != items.end(); ++it) {
+    // int pos = entryIt - it;
+
+    // no more space (pos is zero indexed, so stop when ==)
+    if (pos >= renderableSize) {
+      break;
+    }
+    
+    std::string display = "";
+    auto& entry = *it;
+
+    // account for extension
+    if (entry.length() < _listFrameX - 2) {
+      display = entry;
+    } else {
+      // display song file title in short form
+      display = entry.substr(0, _listFrameX - 5) += "...";
+    }
+
+    if (pos == _cursorPosition) {
+      wattron(_listFrame.get(), A_REVERSE);
+    }
+    
+    mvwprintw(_listFrame.get(), pos + 1, 1,
+	      FORMAT_PTR(display.c_str()));
+    
+    wattroff(_listFrame.get(), A_REVERSE);
+
+    pos++;
   }
 }
 
@@ -246,7 +266,7 @@ int Window::processInput(Playlist& playlist) {
 
   case 0x0D:
   case 'q':
-    playlist.play(_cursorPosition);
+    playlist.play(_listStartingIndex + _cursorPosition);
     _runningScaleSum = 10.0;
     _runningCount = 1.0;
     break;

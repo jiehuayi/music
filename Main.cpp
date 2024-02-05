@@ -25,10 +25,10 @@ int main(int argc, char** argv) {
   pl.readPlaylist();
 
   Window window = Window(pl.size());
-  window.renderWindowTemplate();
-  window.renderWindowCursor();
   
   for (;;) {
+    window.renderWindowTemplate();
+    window.renderWindowCursor(); 
     window.renderWindowList(pl.getPlaylistSongs());
     window.renderWindowVisual(pl);
     window.refreshFrames();

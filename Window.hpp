@@ -64,6 +64,8 @@ private:
   int _windowX, _windowY;
 
   int _inputMode;
+  
+  int _listStartingIndex;
   int _cursorPosition;
 
   std::stringstream _inputBuffer;
