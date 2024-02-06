@@ -82,19 +82,18 @@ void Window::renderWindowList(std::vector<std::string> items) {
 
     // account for extension
     if (entry.length() < _listFrameX - 2) {
-      display = entry + std::string(_listFrameX - 2 - entry.length(), ' ');
+      display = entry;
     } else {
       // display song file title in short form
       display = entry.substr(0, _listFrameX - 5) += "...";
     }
 
-    if (pos == _cursorPosition) {
-      wattron(_listFrame.get(), A_REVERSE);
-    }
+    std::string clearLine = std::string(_listFrameX - 2, ' ');
+    mvwprintw(_listFrame.get(), pos + 1, 1, clearLine.c_str());
     
+    (pos == _cursorPosition) ? wattron(_listFrame.get(), A_REVERSE) : 0;
     mvwprintw(_listFrame.get(), pos + 1, 1,
-	      FORMAT_PTR(display.c_str()));
-    
+	      FORMAT_PTR(display.c_str()));    
     wattroff(_listFrame.get(), A_REVERSE);
 
     pos++;
