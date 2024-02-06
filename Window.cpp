@@ -82,7 +82,7 @@ void Window::renderWindowList(std::vector<std::string> items) {
 
     // account for extension
     if (entry.length() < _listFrameX - 2) {
-      display = entry;
+      display = entry + std::string(_listFrameX - 2 - entry.length(), ' ');
     } else {
       // display song file title in short form
       display = entry.substr(0, _listFrameX - 5) += "...";
