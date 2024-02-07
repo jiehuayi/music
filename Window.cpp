@@ -149,9 +149,15 @@ void Window::renderWindowVisual(Playlist& playlist) {
   mvwprintw(_visualFrame.get(),
 	    _visualFrameY - 4, 1, "[%s]", progressBarBuffer.str().c_str());
 
+  // Add extra space in the back of formatted string
+  // because it will override (visually) the extra % sign
+  // if volume goes up to 100%, then going back down
+  // (3 digit to 2 digit number without clearing line)
   mvwprintw(_visualFrame.get(),
-	    _visualFrameY - 3, 1, "[ %s / %s ]",
-	    getTimeStamp(posNow).c_str(), getTimeStamp(posEnd).c_str());
+	    _visualFrameY - 3, 1, "[ %s / %s ] VOL: %d%% ",
+	    getTimeStamp(posNow).c_str(),
+	    getTimeStamp(posEnd).c_str(),
+	    static_cast<int>(playlist.getVolume() * 100));
   
   mvwprintw(_visualFrame.get(),
 	    _visualFrameY - 2, 1, "> %s...",
@@ -272,6 +278,14 @@ int Window::processInput(Playlist& playlist) {
     
   case ' ':
     playlist.trigger();
+    break;
+
+  case '+':
+    playlist.incVolume();
+    break;
+
+  case '-':
+    playlist.decVolume();
     break;
     
   case 0x1B:

@@ -25,6 +25,11 @@ void Track::pause() {
   BASS_ChannelPause(_channel);
 }
 
+void Track::setVolume(float volume) {
+  BASS_ChannelSetAttribute(_channel,
+			   BASS_ATTRIB_VOL, volume);
+}
+
 std::filesystem::path Track::path() {
   return _path;
 }

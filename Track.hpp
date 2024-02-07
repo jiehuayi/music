@@ -20,6 +20,8 @@ public:
 
   void pause();
 
+  void setVolume(float volume);
+
   std::filesystem::path path();
 
   std::string name();

@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include <filesystem>
+#include <algorithm>
 #include <unistd.h>
 #include <bass.h>
 
@@ -25,6 +26,8 @@
 #define READ_DIR_SUCCESS 		0
 #define READ_DIR_ERROR			1
 
+#define VOLUME_STEP			0.05
+
 
 class Playlist {
 
@@ -40,6 +43,11 @@ public:
 
   int size();
 
+  void incVolume();
+  void decVolume();
+  void setVolume(float volume);
+  float getVolume();
+
   std::vector<std::string> getPlaylistSongs();
 
   void play(int index);
@@ -53,6 +61,8 @@ public:
   double getPosition();
 
 private:
+
+  float _volume;
 
   std::string _path;
 

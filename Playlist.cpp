@@ -10,6 +10,7 @@ Playlist::Playlist() {
   }
   
   _songs = {};
+  _volume = 0.5;
   _path = std::string(getenv("HOME")) + "/Music/";
   _activeTrack = nullptr;
   _isTrackPlaying = false;
@@ -17,6 +18,7 @@ Playlist::Playlist() {
 
 Playlist::Playlist(std::string path) {
   _songs = {};
+  _volume = 0.5;
   _path = path;
   _activeTrack = nullptr;
   _isTrackPlaying = false;
@@ -59,6 +61,25 @@ int Playlist::size() {
   return _songs.size();
 }
 
+void Playlist::incVolume() {
+  setVolume(_volume + VOLUME_STEP);
+}
+
+void Playlist::decVolume() {
+  setVolume(_volume - VOLUME_STEP);
+}
+
+void Playlist::setVolume(float volume) {
+  _volume = std::fmax(std::fmin(1.0, volume), 0.0);
+
+  if (_activeTrack) {
+    _activeTrack->setVolume(_volume);
+  }
+}
+
+float Playlist::getVolume() {
+  return _volume;
+}
 
 void Playlist::play(int index) {
   std::filesystem::path selectedTrack = _songs[index];
@@ -68,6 +89,7 @@ void Playlist::play(int index) {
   if (_activeTrack == nullptr || selectedTrack != _activeTrack->path()) {
     _activeTrack = std::make_unique<Track>(selectedTrack);
     _activeTrack->play();
+    _activeTrack->setVolume(_volume);
   }  
 }
 
