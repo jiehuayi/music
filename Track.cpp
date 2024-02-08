@@ -8,7 +8,9 @@ Track::Track(std::filesystem::path path) : _path(path) {
 				   0, 0, BASS_SAMPLE_FLOAT);
   
   if (!_channel) {
-    std::cerr << "BASS_StreamCreateFile failed\n";
+    std::cerr << "BASS_StreamCreateFile failed for path: "
+	      << _trackPath << " [Code: "
+	      << BASS_ErrorGetCode() << "]" << std::endl;
     BASS_Free();
   }
 }

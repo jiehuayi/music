@@ -3,7 +3,7 @@ CXXFLAGS := -std=c++17 -w -O2 -I./libraries/bass/include
 LDFLAGS :=  -lncurses -lbass -L./libraries/bass/bin/
 
 # List of source files
-SRCS := Main.cpp Window.cpp Track.cpp Playlist.cpp 
+SRCS := Main.cpp Window.cpp Track.cpp Playlist.cpp Library.cpp
 
 # List of object files
 OBJS := $(SRCS:.cpp=.o)

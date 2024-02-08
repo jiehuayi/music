@@ -1,32 +1,26 @@
 #include <iostream>
-// #include <fcntl.h>
+#include <memory>
+#include <dlfcn.h>
 
 #include "Window.hpp"
+#include "Library.hpp"
 #include "Playlist.hpp"
 
+#define BASS_DLL_PATH "./libraries/bass/bin/libbass.dylib"
+
 int main(int argc, char** argv) {
-  // int flags = fcntl(STDIN_FILENO, F_GETFL, 0);
-  
-  // if (flags == -1) {
-  //   perror("fcntl");
-  //   return 1;
-  // }
-
-  // if (fcntl(STDIN_FILENO, F_SETFL, flags | O_NONBLOCK) == -1) {
-  //   perror("fcntl");
-  //   return 1;
-  // }
-
-
+  // Load BASS library
+  // std::shared_ptr<void> bass(dlopen(BASS_DLL_PATH,
+  // 				    RTLD_LAZY), dlclose);
   int fps = 60;
-  int delayMillis = 1000 / fps; 
+  int delayMillis = 1000 / fps;
   
-  Playlist pl = Playlist();
-  pl.readPlaylist();
+  Library lib = Library();
 
-  Window window = Window(pl.size());
+  Window window = Window(lib.getActivePlaylist().size());
   
   for (;;) {
+    Playlist& pl = lib.getActivePlaylist();
     window.renderWindowTemplate();
     window.renderWindowCursor(); 
     window.renderWindowList(pl.getPlaylistSongs());

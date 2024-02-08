@@ -6,7 +6,6 @@
 #include <filesystem>
 #include <algorithm>
 #include <unistd.h>
-#include <bass.h>
 
 #include "Track.hpp"
 
@@ -28,20 +27,17 @@
 
 #define VOLUME_STEP			0.05
 
-
 class Playlist {
-
 public:
-
   Playlist();
-
   Playlist(std::string path);
-  
   ~Playlist();
 
   int readPlaylist();
 
   int size();
+
+  std::string path();
 
   void incVolume();
   void decVolume();
@@ -61,7 +57,6 @@ public:
   double getPosition();
 
 private:
-
   float _volume;
 
   std::string _path;
@@ -70,6 +65,6 @@ private:
 
   std::vector<std::filesystem::path> _songs;
 
-  std::unique_ptr<Track> _activeTrack;
+  std::shared_ptr<Track> _activeTrack;
   
 };

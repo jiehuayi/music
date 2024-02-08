@@ -1,14 +1,7 @@
 #include "Playlist.hpp"
 
 Playlist::Playlist() {
-  BOOL bassInit = BASS_Init(-1, 44100, 0, 0, NULL);
-  
-  if (!bassInit) {
-    std::cerr
-      << "ERROR: Failed to init BASS library."
-      << std::endl;
-  }
-  
+  // BASS_Init(-1, 44100, 0, nullptr, nullptr);
   _songs = {};
   _volume = 0.5;
   _path = std::string(getenv("HOME")) + "/Music/";
@@ -25,7 +18,6 @@ Playlist::Playlist(std::string path) {
 }
 
 Playlist::~Playlist() {
-  BASS_Free();
 }
 
 int Playlist::readPlaylist() {
@@ -61,6 +53,10 @@ int Playlist::size() {
   return _songs.size();
 }
 
+std::string Playlist::path() {
+  return _path;
+}
+
 void Playlist::incVolume() {
   setVolume(_volume + VOLUME_STEP);
 }
@@ -87,7 +83,7 @@ void Playlist::play(int index) {
   _isTrackPlaying = true;
   
   if (_activeTrack == nullptr || selectedTrack != _activeTrack->path()) {
-    _activeTrack = std::make_unique<Track>(selectedTrack);
+    _activeTrack = std::make_shared<Track>(selectedTrack);
     _activeTrack->play();
     _activeTrack->setVolume(_volume);
   }  
