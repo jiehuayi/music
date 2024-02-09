@@ -28,43 +28,43 @@
 #define VOLUME_STEP			0.05
 
 class Playlist {
-public:
-  Playlist();
-  Playlist(std::string path);
-  ~Playlist();
+    public:
+        Playlist();
+        Playlist(std::string path);
+        ~Playlist();
 
-  int readPlaylist();
+        int readPlaylist();
 
-  int size();
+        int size();
 
-  std::string path();
+        std::string path();
 
-  void incVolume();
-  void decVolume();
-  void setVolume(float volume);
-  float getVolume();
+        void incVolume();
+        void decVolume();
+        void setVolume(float volume);
+        float getVolume();
 
-  std::vector<std::string> getPlaylistSongs();
+        std::vector<std::string> getPlaylistSongs();
 
-  void play(int index);
+        void play(int index);
 
-  void trigger();
+        void trigger();
 
-  std::string activeSongName();
+        std::string activeSongName();
 
-  std::vector<float> getFFT();
-  double getDuration();
-  double getPosition();
+        std::vector<float> getFFT();
+        double getDuration();
+        double getPosition();
 
-private:
-  float _volume;
+    private:
+        float _volume;
 
-  std::string _path;
+        std::string _path;
 
-  bool _isTrackPlaying;
+        bool _isTrackPlaying;
 
-  std::vector<std::filesystem::path> _songs;
+        std::vector<std::filesystem::path> _songs;
 
-  std::shared_ptr<Track> _activeTrack;
-  
+        std::shared_ptr<Track> _activeTrack;
+
 };

@@ -10,33 +10,33 @@
 #define BUFF_SZ 2048
 
 class Track {
-  
-public:
-  Track(std::filesystem::path path);
-  
-  ~Track();
 
-  void play();
+    public:
+        Track(std::filesystem::path path);
 
-  void pause();
+        ~Track();
 
-  void setVolume(float volume);
+        void play();
 
-  std::filesystem::path path();
+        void pause();
 
-  std::string name();
+        void setVolume(float volume);
 
-  double getDuration();
+        std::filesystem::path path();
 
-  double getPosition();
+        std::string name();
 
-  std::vector<float> getChannelFFT();
-  
-private:
-  std::filesystem::path _path;
-  std::string _trackPath;
-  std::string _trackName;
+        double getDuration();
 
-  HSTREAM _channel;
+        double getPosition();
+
+        std::vector<float> getChannelFFT();
+
+    private:
+        std::filesystem::path _path;
+        std::string _trackPath;
+        std::string _trackName;
+
+        HSTREAM _channel;
 };
- 
+

@@ -1,48 +1,48 @@
 #include "Library.hpp"
 
 Library::Library() {
-  BASS_Init(-1, 44100, 0, nullptr, nullptr);
-  std::string defaultPath = std::string(getenv("HOME")) + "/Music/";
-  initActivePlaylist();
+    BASS_Init(-1, 44100, 0, nullptr, nullptr);
+    std::string defaultPath = std::string(getenv("HOME")) + "/Music/";
+    initActivePlaylist();
 }
 
 Library::~Library() {
-  BASS_Free();
+    BASS_Free();
 }
 
 void Library::newPlaylist(std::string path) {
-  _playlists[path] = Playlist(path);
-  // _activePlaylist = path;
+    _playlists[path] = Playlist(path);
+    // _activePlaylist = path;
 
-  initActivePlaylist();
+    initActivePlaylist();
 }
 
 void Library::newPlaylist() {
-  Playlist defPlaylist = Playlist();
-  
-  _playlists[defPlaylist.path()] = defPlaylist;
-  _activePlaylist = defPlaylist.path();
+    Playlist defPlaylist = Playlist();
 
-  initActivePlaylist();
+    _playlists[defPlaylist.path()] = defPlaylist;
+    _activePlaylist = defPlaylist.path();
+
+    initActivePlaylist();
 }
 
 void Library::killPlaylist(std::string path) {
-  
+
 }
 
 void Library::killActivePlaylist() {
-  killPlaylist(_activePlaylist);
-  _activePlaylist = "";
+    killPlaylist(_activePlaylist);
+    _activePlaylist = "";
 }
 
 Playlist& Library::getActivePlaylist() {
-  return _playlists[_activePlaylist];
+    return _playlists[_activePlaylist];
 }
 
 int Library::playlistCount() {
-  return _playlists.size();
+    return _playlists.size();
 }
 
 void Library::initActivePlaylist() {
-  _playlists[_activePlaylist].readPlaylist(); 
+    _playlists[_activePlaylist].readPlaylist(); 
 }

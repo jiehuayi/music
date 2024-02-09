@@ -26,63 +26,63 @@
 #define FORMAT_PTR(char_ptr) ("%s", char_ptr)
 
 struct FrameDeleter {
-  void operator()(WINDOW* frame) {
-	delwin(frame);
-  }
+    void operator()(WINDOW* frame) {
+        delwin(frame);
+    }
 };
 
 class Window {
 
-public:
+    public:
 
-  Window(int playlistSize);
+        Window(int playlistSize);
 
-  ~Window();
+        ~Window();
 
-  void renderWindowTemplate();
+        void renderWindowTemplate();
 
-  void renderWindowList(std::vector<std::string> items);
+        void renderWindowList(std::vector<std::string> items);
 
-  void renderWindowVisual(Playlist& playlist);
+        void renderWindowVisual(Playlist& playlist);
 
-  void renderWindowCursor();
+        void renderWindowCursor();
 
-  int processInput(Playlist& playlist);
+        int processInput(Playlist& playlist);
 
-  void refreshFrames();
+        void refreshFrames();
 
-private:
+    private:
 
-  void processInputNavigateMode();
+        void processInputNavigateMode();
 
-  void processInputCommandMode();
+        void processInputCommandMode();
 
-  std::string getTimeStamp(double timeInSeconds);
+        std::string getTimeStamp(double timeInSeconds);
 
-private:
+    private:
 
-  int _windowX, _windowY;
+        int _windowX, _windowY;
 
-  int _inputMode;
-  
-  int _listStartingIndex;
-  int _cursorPosition;
+        int _inputMode;
 
-  std::stringstream _inputBuffer;
+        int _listStartingIndex;
+        int _cursorPosition;
 
-  int _listFrameX, _listFrameY;
-  int _visualFrameX, _visualFrameY;
-  int _commandFrameX, _commandFrameY;
+        std::stringstream _inputBuffer;
 
-  std::unique_ptr<WINDOW, FrameDeleter> _listFrame;
-  std::unique_ptr<WINDOW, FrameDeleter> _visualFrame;
-  std::unique_ptr<WINDOW, FrameDeleter> _commandFrame;
+        int _listFrameX, _listFrameY;
+        int _visualFrameX, _visualFrameY;
+        int _commandFrameX, _commandFrameY;
 
-  int _playlistSize;
-  float _runningScaleSum;
-  float _runningCount;
+        std::unique_ptr<WINDOW, FrameDeleter> _listFrame;
+        std::unique_ptr<WINDOW, FrameDeleter> _visualFrame;
+        std::unique_ptr<WINDOW, FrameDeleter> _commandFrame;
 
-  // WINDOW* _listFrame;
-  // WINDOW* _visualFrame;
+        int _playlistSize;
+        float _runningScaleSum;
+        float _runningCount;
+
+        // WINDOW* _listFrame;
+        // WINDOW* _visualFrame;
 
 };
