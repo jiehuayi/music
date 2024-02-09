@@ -259,7 +259,7 @@ int Window::processInput(Playlist& playlist) {
     break;
 
   case 0x0E:
-    _cursorPosition = std::min(_cursorPosition + 1, _playlistSize - 1);
+    _cursorPosition = std::min(_cursorPosition + 1, _listFrameY - 3);
     break;
 
   case ':':
