@@ -1,16 +1,12 @@
 #include <iostream>
 #include <memory>
-#include <dlfcn.h>
+#include <dlfcn.h> // dlopen(), dlsym, dlclose()
 
 #include "Window.hpp"
 #include "Library.hpp"
 #include "Playlist.hpp"
 
-#define BASS_DLL_PATH "./libraries/bass/bin/libbass.dylib"
-
 int main(int argc, char** argv) {
-    std::shared_ptr<void> bass(dlopen(BASS_DLL_PATH,
-                RTLD_LAZY), dlclose);
     int fps = 60;
     int delayMillis = 1000 / fps;
 

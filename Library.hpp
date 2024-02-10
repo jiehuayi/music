@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <string>
+#include <memory>
 #include <unordered_map>
 #include <bass.h>
 
