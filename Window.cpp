@@ -1,28 +1,12 @@
 #include "Window.hpp"
+#include "Log.hpp"
 
-void LOG(const std::string& filename, const std::string& content) { 
-    std::ofstream file(filename); 
-    if (file) { 
-        file << content; 
-    } 
-}
-
-void CLEAR(const std::string& filename) {
-   LOG(filename, ""); 
-}
-
-void APPEND(const std::string& filename, const std::string& content) { 
-    std::ofstream file(filename, std::ios::app); 
-    if (file) { 
-        file << content; 
-    } 
-}
-
-Window::Window(int playlistSize) {
+Window::Window() {
     setlocale(LC_ALL, "en_US.UTF-8");  
     initscr();
     cbreak();
     noecho();
+    raw();
     nodelay(stdscr, true);
     // halfdelay(true);
     keypad(stdscr, true);
@@ -39,8 +23,8 @@ Window::Window(int playlistSize) {
     _listStartingIndex = 0;
     _visualOrientation = V_BOTTOM;
     _cursorPosition = 0;
-    _playlistSize = playlistSize;
-    _runningMaxFreq = 0.5;
+    _runningMaxFreq = 0.25;
+    _numbered = true;
 
     _listFrameX = 0.4 * _windowX;
     _listFrameY = _windowY - 1;
@@ -76,39 +60,47 @@ void Window::renderWindowTemplate() {
 
 void Window::renderWindowList(std::vector<std::string> items) {
     int renderableSize = _listFrameY - 2; // accounting for borders
-    bool overflow = renderableSize < items.size();
 
     if (_cursorPosition >= renderableSize - 5 &&
             _listStartingIndex + renderableSize < items.size()) {
         _listStartingIndex++;
         _cursorPosition--; // maintian cursor position
+    } else if (_cursorPosition <= 5 &&
+            _listStartingIndex > 0) {
+        _listStartingIndex--;
+        _cursorPosition++;
     }
 
     auto entryIt = items.begin() + _listStartingIndex;
     int pos = 0;
 
     for (auto it = entryIt; it != items.end(); ++it) {
-        // int pos = entryIt - it;
-
         // no more space (pos is zero indexed, so stop when ==)
         if (pos >= renderableSize) {
             break;
         }
 
-        std::string display = "";
         auto& entry = *it;
+        std::string display = "";
+        std::string prefix = "";
+
+        if (_numbered) {
+           prefix = "[" + std::to_string(pos + _listStartingIndex + 1) + "] ";
+        }
 
         // account for extension
         if (entry.length() < _listFrameX - 2) {
             display = entry;
         } else {
             // display song file title in short form
-            display = entry.substr(0, _listFrameX - 5) += "...";
+            display = entry.substr(0, _listFrameX - 5 
+                    - prefix.size()) += "...";
         }
 
         std::string clearLine = std::string(_listFrameX - 2, ' ');
         mvwprintw(_listFrame.get(), pos + 1, 1, clearLine.c_str());
-
+        
+        display = prefix + display;
         (pos == _cursorPosition) ? wattron(_listFrame.get(), A_REVERSE) : 0;
         mvwprintw(_listFrame.get(), pos + 1, 1,
                 FORMAT_PTR(display.c_str()));    
@@ -258,7 +250,7 @@ int Window::processInput(Playlist& playlist) {
         case 0x0D:
         case 'q':
             playlist.play(_listStartingIndex + _cursorPosition);
-            _runningMaxFreq = 0.5;
+            _runningMaxFreq = 0.25;
             break;
 
         case ' ':
@@ -327,7 +319,7 @@ std::vector<std::wstring> Window::visualize(int cy, int cx, std::vector<float>& 
         dataBufferCompact.push_back(data[i]);
     }
 
-    APPEND("ml.log", "\n ------------------------------------------------------- \n");
+    Log::append("\n ------------------------------------------------------- \n");
 
     _runningMaxFreq = maxMagnitude > _runningMaxFreq ? maxMagnitude :
         _runningMaxFreq;
@@ -341,7 +333,7 @@ std::vector<std::wstring> Window::visualize(int cy, int cx, std::vector<float>& 
         float whole, frac;
         frac = std::modf(height, &whole);
 
-        APPEND("ml.log", std::to_string(height) + "\n");
+        Log::append(std::to_string(height) + "\n");
         
         // Base logical index
         int bl;
@@ -352,10 +344,10 @@ std::vector<std::wstring> Window::visualize(int cy, int cx, std::vector<float>& 
             int gl;
 
             if (isRB) {
-                bl = baseMax - 1 - b;
+                bl = b;
                 gl = growMax - 1 - g;
             } else {
-                bl = b;
+                bl = baseMax - 1 - b;
                 gl = g;
             }
 

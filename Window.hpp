@@ -14,8 +14,12 @@
 #include <wchar.h>
 #include <unistd.h>
 
+#ifdef __APPLE__
+
 #define _XOPEN_SOURCE_EXTENDED 1
 #include <curses.h>
+
+#endif
 
 #include "Playlist.hpp"
 
@@ -40,7 +44,7 @@ struct FrameDeleter {
 
 class Window {
     public:
-        Window(int playlistSize);
+        Window();
         ~Window();
         void renderWindowTemplate();
         void renderWindowList(std::vector<std::string> items);
@@ -57,18 +61,22 @@ class Window {
         std::string getTimeStamp(double timeInSeconds);
 
     private:
+        std::unique_ptr<WINDOW, FrameDeleter> _listFrame;
+        std::unique_ptr<WINDOW, FrameDeleter> _visualFrame;
+        std::unique_ptr<WINDOW, FrameDeleter> _commandFrame;
+
         int _windowX, _windowY;
+        int _listFrameX, _listFrameY;
+        int _visualFrameX, _visualFrameY;
+        int _commandFrameX, _commandFrameY;
+        
+        std::stringstream _inputBuffer;
+
         int _inputMode;
         int _listStartingIndex;
         int _visualOrientation;
         int _cursorPosition;
-        std::stringstream _inputBuffer;
-        int _listFrameX, _listFrameY;
-        int _visualFrameX, _visualFrameY;
-        int _commandFrameX, _commandFrameY;
-        std::unique_ptr<WINDOW, FrameDeleter> _listFrame;
-        std::unique_ptr<WINDOW, FrameDeleter> _visualFrame;
-        std::unique_ptr<WINDOW, FrameDeleter> _commandFrame;
-        int _playlistSize;
         float _runningMaxFreq;
+
+        bool _numbered;
 };
