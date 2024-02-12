@@ -4,7 +4,6 @@
 #include <vector>
 #include <string>
 #include <filesystem>
-#include <algorithm>
 #include <unistd.h>
 
 #include "Track.hpp"
@@ -34,7 +33,6 @@ class Playlist {
         ~Playlist();
 
         int readPlaylist();
-
         int size();
 
         std::string path();
@@ -47,10 +45,10 @@ class Playlist {
         std::vector<std::string> getPlaylistSongs();
 
         void play(int index);
-
         void trigger();
 
         std::string activeSongName();
+        bool isPlaying();
 
         std::vector<float> getFFT();
         double getDuration();
@@ -58,13 +56,9 @@ class Playlist {
 
     private:
         float _volume;
-
         std::string _path;
-
         bool _isTrackPlaying;
-
         std::vector<std::filesystem::path> _songs;
-
         std::shared_ptr<Track> _activeTrack;
 
 };

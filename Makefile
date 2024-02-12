@@ -1,6 +1,6 @@
 CXX := g++
-CXXFLAGS := -std=c++17 -w -O2 -I./libraries/bass/include
-LDFLAGS :=  -lncurses -lbass -L./libraries/bass/bin/
+CXXFLAGS := -std=c++17 -w -O2 -I./libraries/bass/include -I/usr/local/Cellar/ncurses/6.4/include/
+LDFLAGS := -D_XOPEN_SOURCE_EXTENDED -L/usr/local/Cellar/ncurses/6.4/lib -lncurses -lbass -L./libraries/bass/bin/
 
 # List of source files
 SRCS := Main.cpp Window.cpp Track.cpp Playlist.cpp Library.cpp

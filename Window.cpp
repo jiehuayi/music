@@ -1,5 +1,23 @@
 #include "Window.hpp"
 
+void LOG(const std::string& filename, const std::string& content) { 
+    std::ofstream file(filename); 
+    if (file) { 
+        file << content; 
+    } 
+}
+
+void CLEAR(const std::string& filename) {
+   LOG(filename, ""); 
+}
+
+void APPEND(const std::string& filename, const std::string& content) { 
+    std::ofstream file(filename, std::ios::app); 
+    if (file) { 
+        file << content; 
+    } 
+}
+
 Window::Window(int playlistSize) {
     setlocale(LC_ALL, "en_US.UTF-8");  
     initscr();
@@ -19,10 +37,10 @@ Window::Window(int playlistSize) {
 
     _inputMode = MODE_NAVIGATE;
     _listStartingIndex = 0;
+    _visualOrientation = V_BOTTOM;
     _cursorPosition = 0;
     _playlistSize = playlistSize;
-    _runningScaleSum = 10.0;
-    _runningCount = 1.0;
+    _runningMaxFreq = 0.0;
 
     _listFrameX = 0.4 * _windowX;
     _listFrameY = _windowY - 1;
@@ -165,64 +183,27 @@ void Window::renderWindowVisual(Playlist& playlist) {
             .substr(0, _visualFrameX - 18).c_str());
 
     // visualizer
-    int visualizerY = _visualFrameY - 6;
-    int visualizerX = _visualFrameX - 2;
-    std::vector<float> dataBuffer = playlist.getFFT();
-    std::vector<float> dataBufferCompact;
+    
+    if (playlist.isPlaying()) {
+        int visualizerY = _visualFrameY- 6;
+        int visualizerX = _visualFrameX - 2;
+        std::vector<float> databuffer = playlist.getFFT();
 
-    // downSample
-    // int step = BUFF_SZ / visualizerY;
-    // for (int i = 0; i < BUFF_SZ; i+=step) {    
-    //   float sum = 0.0;
-    //   int j = i;
-    //   for (; j < std::min(j + step, BUFF_SZ); j++) {
-    //     sum += dataBuffer[j];
-    //   }
-    //   float avg = sum / (j - i + 1);
+        std::vector<std::wstring> visFrame = 
+            visualize(visualizerY, visualizerX, databuffer);
 
-    //   if (avg > maxMagnitude) {
-    //     maxMagnitude = avg;
-    //   }
-
-    //   dataBufferCompact.push_back(avg);
-    // }
-    float maxMagnitude = 0.0;
-    for (int i = 0; i < visualizerY; i++) {    
-        if (dataBuffer[i] > maxMagnitude) {
-            maxMagnitude = dataBuffer[i];
-        }  
-        dataBufferCompact.push_back(dataBuffer[i]);
-    }
-
-    _runningScaleSum += maxMagnitude;
-    float runningScaleAverage = _runningScaleSum / _runningCount++;
-
-    int printPositionY = 1;
-    for (auto& freq : dataBufferCompact) {
-        float height = freq * visualizerX / runningScaleAverage;
-        float whole, frac;
-        frac = std::modf(height, &whole);
-
-        std::stringstream bar;
-        for (int i = 0; i < visualizerX; i++) {
-            if (i <= whole) {
-                bar << "•";
-            } else if (i == std::ceil(height)) {
-                bar << "⁍";
+        int cur = 1;
+        for (auto& line : visFrame) {
+            const wchar_t* cstr = line.c_str();
+            if (cur % 2) {
+                wattron(_visualFrame.get(), COLOR_PAIR(4));
+                mvwaddwstr(_visualFrame.get(), cur++, 1, cstr);
+                wattroff(_visualFrame.get(), COLOR_PAIR(4));
             } else {
-                bar << " ";
+                wattron(_visualFrame.get(), COLOR_PAIR(3));
+                mvwaddwstr(_visualFrame.get(), cur++, 1, cstr);
+                wattroff(_visualFrame.get(), COLOR_PAIR(3));
             }
-        }
-
-        if (printPositionY % 2) {
-            wattron(_visualFrame.get(), COLOR_PAIR(4));
-            mvwprintw(_visualFrame.get(), printPositionY++, 1, bar.str().c_str());
-            wattroff(_visualFrame.get(), COLOR_PAIR(4));
-        } else {
-            wattron(_visualFrame.get(), COLOR_PAIR(3));
-            mvwprintw(_visualFrame.get(), printPositionY++, 1,
-                    FORMAT_PTR(bar.str().c_str()));
-            wattroff(_visualFrame.get(), COLOR_PAIR(3));
         }
     }
 
@@ -238,7 +219,6 @@ void Window::refreshFrames() {
     wrefresh(_listFrame.get());
     wrefresh(_visualFrame.get());
     wrefresh(_commandFrame.get());
-    // mvwprintw(_commandFrame.get(), 0, 0, "%d", rand());
 }
 
 static bool isValidCommandChar(char input) {
@@ -272,8 +252,7 @@ int Window::processInput(Playlist& playlist) {
         case 0x0D:
         case 'q':
             playlist.play(_listStartingIndex + _cursorPosition);
-            _runningScaleSum = 10.0;
-            _runningCount = 1.0;
+            _runningMaxFreq = 0.0;
             break;
 
         case ' ':
@@ -326,6 +305,70 @@ CMD:
 
 RET:
     return APP_STATE_RUNNING;
+}
+
+std::vector<std::wstring> Window::visualize(int cy, int cx, 
+        std::vector<float>& data) {
+    std::vector<std::wstring> canvas(cy, std::wstring(cx, L' '));
+    std::vector<float> dataBufferCompact;
+
+    int growMax = (_visualOrientation == V_BOTTOM ||
+            _visualOrientation == V_TOP) ? cy : cx;
+    int baseMax = growMax == cy ? cx : cy;
+
+    float maxMagnitude = 0.0;
+    for (int i = 0; i < baseMax; ++i) {
+        maxMagnitude = maxMagnitude < data[i] ? data[i] : maxMagnitude; 
+        dataBufferCompact.push_back(data[i]);
+    }
+
+    APPEND("ml.log", "\n ------------------------------------------------------- \n");
+
+    _runningMaxFreq = maxMagnitude > _runningMaxFreq ? maxMagnitude :
+        _runningMaxFreq;
+
+    int b = 0;
+    bool isRB = _visualOrientation == V_BOTTOM ||
+        _visualOrientation == V_RIGHT;
+
+    for (auto& freq : dataBufferCompact) {
+        float height = freq * (growMax)/ _runningMaxFreq;
+        float whole, frac;
+        frac = std::modf(height, &whole);
+
+        APPEND("ml.log", std::to_string(height) + "\n");
+        // Base logical index
+        int bl;
+        
+        bool eol = false;
+        for (int g = 0; g < growMax && !eol; ++g) {
+            wchar_t px;
+            int gl;
+
+            if (isRB) {
+                bl = baseMax - 1 - b;
+                gl = growMax - 1 - g;
+            } else {
+                bl = b;
+                gl = g;
+            }
+
+            if (g <= whole) {
+                px = L'\u2590';
+            } else if (g == std::ceil(height)) {
+                px = L'\u2597'; // Need change because orientation matters now...
+                eol = true;
+            }
+            if (_visualOrientation == V_LEFT || _visualOrientation == V_RIGHT) {
+                canvas[bl][gl] = px;
+            } else {
+                canvas[gl][bl] = px;
+            }
+        }
+        ++b;
+    }
+
+    return canvas; 
 }
 
 std::string Window::getTimeStamp(double timeInSeconds) {

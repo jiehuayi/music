@@ -109,6 +109,10 @@ std::string Playlist::activeSongName() {
     return "?";
 }
 
+bool Playlist::isPlaying() {
+    return _isTrackPlaying;
+}
+
 std::vector<float> Playlist::getFFT() {
     if (_activeTrack) {
         return _activeTrack->getChannelFFT();

@@ -43,14 +43,13 @@ std::string CommandHandler::getHandlerError() {
     return _error;
 }
 
+// Command structure:
+// <command_name>=[<value_list>]
+// 
+// Value list structure:
+// [<value1>,<value2>, ... ,<valueN>]
 int CommandHandler::parse(std::string raw) {
     _error = "";
-
-    // Command structure:
-    // <command_name>=[<value_list>]
-    // 
-    // Value list structure:
-    // [<value1>,<value2>, ... ,<valueN>]
 
     size_t delimPosition = raw.find('=');
     if (delimPosition == std::string::npos) {
