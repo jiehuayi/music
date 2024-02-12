@@ -26,7 +26,7 @@ Window::Window(int playlistSize) {
     nodelay(stdscr, true);
     // halfdelay(true);
     keypad(stdscr, true);
-    start_color();
+    // start_color();
 
     init_pair(1, COLOR_BLACK, COLOR_YELLOW);
     init_pair(2, COLOR_WHITE, COLOR_BLACK);
@@ -40,7 +40,7 @@ Window::Window(int playlistSize) {
     _visualOrientation = V_BOTTOM;
     _cursorPosition = 0;
     _playlistSize = playlistSize;
-    _runningMaxFreq = 0.0;
+    _runningMaxFreq = 0.5;
 
     _listFrameX = 0.4 * _windowX;
     _listFrameY = _windowY - 1;
@@ -234,12 +234,18 @@ int Window::processInput(Playlist& playlist) {
     }
 
     switch(in) {
+        case 'k':
         case 0x10:
             _cursorPosition = std::max(_cursorPosition - 1, 0);
             break;
 
+        case 'j':
         case 0x0E:
             _cursorPosition = std::min(_cursorPosition + 1, _listFrameY - 3);
+            break;
+
+        case 'r':
+            _visualOrientation = (_visualOrientation + 1) % 4;
             break;
 
         case ':':
@@ -252,7 +258,7 @@ int Window::processInput(Playlist& playlist) {
         case 0x0D:
         case 'q':
             playlist.play(_listStartingIndex + _cursorPosition);
-            _runningMaxFreq = 0.0;
+            _runningMaxFreq = 0.5;
             break;
 
         case ' ':
@@ -307,8 +313,7 @@ RET:
     return APP_STATE_RUNNING;
 }
 
-std::vector<std::wstring> Window::visualize(int cy, int cx, 
-        std::vector<float>& data) {
+std::vector<std::wstring> Window::visualize(int cy, int cx, std::vector<float>& data) {
     std::vector<std::wstring> canvas(cy, std::wstring(cx, L' '));
     std::vector<float> dataBufferCompact;
 
@@ -337,6 +342,7 @@ std::vector<std::wstring> Window::visualize(int cy, int cx,
         frac = std::modf(height, &whole);
 
         APPEND("ml.log", std::to_string(height) + "\n");
+        
         // Base logical index
         int bl;
         
@@ -358,7 +364,10 @@ std::vector<std::wstring> Window::visualize(int cy, int cx,
             } else if (g == std::ceil(height)) {
                 px = L'\u2597'; // Need change because orientation matters now...
                 eol = true;
+            } else {
+                break;
             }
+
             if (_visualOrientation == V_LEFT || _visualOrientation == V_RIGHT) {
                 canvas[bl][gl] = px;
             } else {

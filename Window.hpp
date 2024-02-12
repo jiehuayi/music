@@ -25,10 +25,10 @@
 #define APP_STATE_TERMINATED	    0
 #define APP_STATE_RUNNING			1
 
-#define V_LEFT   0
+#define V_TOP    0
 #define V_RIGHT  1
-#define V_TOP    2
-#define V_BOTTOM 3
+#define V_BOTTOM 2
+#define V_LEFT   3
 
 #define FORMAT_PTR(char_ptr) ("%s", char_ptr)
 
