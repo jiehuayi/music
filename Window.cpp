@@ -1,7 +1,7 @@
 #include "Window.hpp"
 #include "Log.hpp"
 
-Window::Window() {
+Window::Window(Library& library) : _library(library) {
     setlocale(LC_ALL, "en_US.UTF-8");  
     initscr();
     cbreak();
@@ -58,7 +58,10 @@ void Window::renderWindowTemplate() {
     box(_visualFrame.get(), 0, 0);
 }
 
-void Window::renderWindowList(std::vector<std::string> items) {
+void Window::renderWindowList() {
+    std::vector<std::string> items = _library.getActivePlaylist()
+        .getPlaylistSongs();
+
     int renderableSize = _listFrameY - 2; // accounting for borders
 
     if (_cursorPosition >= renderableSize - 5 &&
@@ -110,7 +113,8 @@ void Window::renderWindowList(std::vector<std::string> items) {
     }
 }
 
-void Window::renderWindowVisual(Playlist& playlist) {
+void Window::renderWindowVisual() {
+    Playlist& playlist = _library.getActivePlaylist();
     std::stringstream progressBarBuffer;
 
     // including decorative square brackets
@@ -217,7 +221,8 @@ static bool isValidCommandChar(char input) {
     return (input > 21 && input < 127) ? true : false;
 }
 
-int Window::processInput(Playlist& playlist) {
+int Window::processInput() {
+    Playlist& playlist = _library.getActivePlaylist();
     char in = wgetch(_listFrame.get());
     std::string inputBufferString = _inputBuffer.str();
 

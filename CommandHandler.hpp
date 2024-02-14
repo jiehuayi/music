@@ -16,8 +16,8 @@ class CommandHandler {
         CommandHandler(Window& ctx);
         ~CommandHandler();
 
-        static std::vector<std::string> split(std::string& input, char delim);
-        static std::string trim(const std::string& input);
+        static std::vector<std::string> split(std::string input, char delim);
+        static std::string trim(const std::string input);
 
         void registerCommand(std::string identifier, std::function<Command* ()> cmd);
 

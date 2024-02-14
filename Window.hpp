@@ -21,6 +21,7 @@
 
 #endif
 
+#include "Library.hpp"
 #include "Playlist.hpp"
 
 #define MODE_COMMAND 				0
@@ -44,14 +45,14 @@ struct FrameDeleter {
 
 class Window {
     public:
-        Window();
+        Window(Library& library);
         ~Window();
         void renderWindowTemplate();
-        void renderWindowList(std::vector<std::string> items);
-        void renderWindowVisual(Playlist& playlist);
+        void renderWindowList();
+        void renderWindowVisual();
         void renderWindowCursor();
         void refreshFrames();
-        int processInput(Playlist& playlist);
+        int processInput();
 
     private:
         std::vector<std::wstring> visualize(int cy, int cx, 
@@ -61,6 +62,8 @@ class Window {
         std::string getTimeStamp(double timeInSeconds);
 
     private:
+        Library& _library;
+
         std::unique_ptr<WINDOW, FrameDeleter> _listFrame;
         std::unique_ptr<WINDOW, FrameDeleter> _visualFrame;
         std::unique_ptr<WINDOW, FrameDeleter> _commandFrame;

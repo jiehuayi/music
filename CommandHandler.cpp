@@ -5,7 +5,7 @@ CommandHandler::CommandHandler(Window& ctx) : _ctx(ctx) {}
 CommandHandler::~CommandHandler() {}
 
 std::vector<std::string> 
-CommandHandler::split(std::string& input, char delim) {
+CommandHandler::split(std::string input, char delim) {
     std::vector<std::string> pieces;
     std::string token;
     std::istringstream iss(input);
@@ -15,7 +15,7 @@ CommandHandler::split(std::string& input, char delim) {
     return pieces;
 }
 
-std::string CommandHandler::trim(const std::string& input) {
+std::string CommandHandler::trim(const std::string input) {
     size_t start = input.find_first_not_of(" \t\n\r\f\v");
     size_t end = input.find_last_not_of(" \t\n\r\f\v");
 

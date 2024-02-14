@@ -3,7 +3,14 @@ CXXFLAGS := -std=c++17 -w -O2 -I./libraries/bass/include -I/usr/local/Cellar/ncu
 LDFLAGS := -D_XOPEN_SOURCE_EXTENDED -L/usr/local/Cellar/ncurses/6.4/lib -lncurses -lbass -L./libraries/bass/bin/
 
 # List of source files
-SRCS := Main.cpp Window.cpp Track.cpp Playlist.cpp Library.cpp Log.cpp
+SRCS := Main.cpp \
+        Window.cpp \
+        Track.cpp \
+        Playlist.cpp \
+        Library.cpp \
+        Log.cpp \
+        CommandHandler.cpp \
+        Command.cpp
 
 # List of object files
 OBJS := $(SRCS:.cpp=.o)

@@ -6,6 +6,7 @@
 #include <iostream>
 
 #include "Window.hpp"
+#include "CommandHandler.hpp"
 #include "Library.hpp"
 #include "Playlist.hpp"
 #include "Log.hpp"
@@ -20,17 +21,17 @@ int main(int argc, char** argv) {
 
     Library lib = Library();
 
-    Window window = Window();
+    Window window = Window(lib);
+    CommandHandler commandHandler(window);
 
     for (;;) {
-        Playlist& pl = lib.getActivePlaylist();
         window.renderWindowTemplate();
         window.renderWindowCursor(); 
-        window.renderWindowList(pl.getPlaylistSongs());
-        window.renderWindowVisual(pl);
+        window.renderWindowList();
+        window.renderWindowVisual();
         window.refreshFrames();
 
-        int status = window.processInput(pl);
+        int status = window.processInput();
 
         if (status == APP_STATE_TERMINATED) break;
 
