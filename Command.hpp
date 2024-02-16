@@ -2,6 +2,7 @@
 
 #include "Window.hpp"
 
+
 struct Parameters {
     std::string name;
     std::vector<std::string> values; 

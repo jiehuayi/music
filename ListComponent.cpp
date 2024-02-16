@@ -27,7 +27,19 @@ ListComponent::ListComponent(int winy, int winx) : ComponentBase(winy, winx) {
 }
 
 void ListComponent::render(Library& library) {
-    box(_frame.get(), 0, 0); 
+    cchar_t left_upper_corner, right_upper_corner, left_bottom_corner, right_bottom_corner;
+    setcchar(&left_upper_corner, L"\u256d", COLOR_PAIR(0), 0, nullptr);
+    setcchar(&right_upper_corner, L"\u256e", COLOR_PAIR(0), 0, nullptr);
+    setcchar(&left_bottom_corner, L"\u2570", COLOR_PAIR(0), 0, nullptr);
+    setcchar(&right_bottom_corner, L"\u256f", COLOR_PAIR(0), 0, nullptr);
+
+    cchar_t vline, hline;
+    setcchar(&vline, L"\u2502", COLOR_PAIR(0), 0, nullptr);  // Vertical line
+    setcchar(&hline, L"\u2500", COLOR_PAIR(0), 0, nullptr);  // Horizontal line
+
+    wborder_set(_frame.get(), &vline, &vline, &hline, &hline,
+            &left_upper_corner, &right_upper_corner, 
+            &left_bottom_corner, &right_bottom_corner);
 
     std::vector<std::string> listItems = library.getActivePlaylist()
         .getPlaylistSongs();
@@ -70,11 +82,11 @@ void ListComponent::render(Library& library) {
                     - prefix.size()) += "...";
         }
 
+        (pos == _selectedPos) ? wattron(_frame.get(), A_REVERSE) : 0;
         std::string clearLine = std::string(_x - 2, ' ');
         mvwprintw(_frame.get(), pos + 1, 1, clearLine.c_str());
 
-        display = prefix + display;
-        (pos == _selectedPos) ? wattron(_frame.get(), A_REVERSE) : 0;
+        display += prefix;
         mvwprintw(_frame.get(), pos + 1, 1, display.c_str());
         wattroff(_frame.get(), A_REVERSE);
 

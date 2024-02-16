@@ -24,12 +24,7 @@ class ComponentBase {
 
     protected:
         std::shared_ptr<WINDOW> _frame;
-        int _y;
-        int _x;
-
-        int _oy;
-        int _ox;
-
-        int _winy;
-        int _winx;
+        int _y, _x;
+        int _oy, _ox;
+        int _winy, _winx;
 };

@@ -2,7 +2,7 @@
 #include "Log.hpp"
 
 Window::Window(Library& library) : _library(library) {
-    setlocale(LC_ALL, "en_US.UTF-8");  
+    setlocale(LC_ALL, "");  
     initscr();
     cbreak();
     noecho();
