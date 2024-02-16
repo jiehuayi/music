@@ -7,6 +7,11 @@ class ListComponent : public ComponentBase {
 
         void render(Library& library) override;
 
+        int getSelectedPosition();
+        int getFrom();
+
+        void setSelectedPosition(int pos);
+
     private:
         int _from;
         int _selectedPos;

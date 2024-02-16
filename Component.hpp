@@ -14,6 +14,9 @@ class ComponentBase {
 
         virtual void render(Library& library) = 0;
 
+        int getHeight();
+        int getWidth();
+
     protected:
         std::shared_ptr<WINDOW> _frame;
         int _y;

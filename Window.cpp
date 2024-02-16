@@ -176,12 +176,15 @@ int Window::processInput() {
     switch(in) {
         case 'k':
         case 0x10:
-            _cursorPosition = std::max(_cursorPosition - 1, 0);
+            _listView.setSelectedPosition(
+                    std::max(_listView.getSelectedPosition() - 1, 0));
             break;
 
         case 'j':
         case 0x0E:
-            _cursorPosition = std::min(_cursorPosition + 1, _listFrameY - 3);
+            _listView.setSelectedPosition(
+                    std::min(_listView.getSelectedPosition() + 1, 
+                        _listView.getHeight() - 3));
             break;
 
         case 'r':
@@ -197,7 +200,7 @@ int Window::processInput() {
 
         case 0x0D:
         case 'q':
-            playlist.play(_listStartingIndex + _cursorPosition);
+            playlist.play(_listView.getFrom() + _listView.getSelectedPosition());
             _runningMaxFreq = 0.25;
             break;
 

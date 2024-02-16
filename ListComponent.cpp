@@ -83,3 +83,15 @@ void ListComponent::render(Library& library) {
 
     wrefresh(_frame.get());
 }
+
+int ListComponent::getSelectedPosition() {
+    return _selectedPos;
+}
+
+int ListComponent::getFrom() {
+    return _from;
+}
+
+void ListComponent::setSelectedPosition(int pos) {
+    _selectedPos = pos;
+}
