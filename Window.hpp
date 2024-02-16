@@ -23,6 +23,7 @@
 
 #include "Library.hpp"
 #include "Playlist.hpp"
+#include "ListComponent.hpp"
 
 #define MODE_COMMAND 				0
 #define MODE_NAVIGATE				1
@@ -63,8 +64,8 @@ class Window {
 
     private:
         Library& _library;
+        ListComponent _listView;
 
-        std::unique_ptr<WINDOW, FrameDeleter> _listFrame;
         std::unique_ptr<WINDOW, FrameDeleter> _visualFrame;
         std::unique_ptr<WINDOW, FrameDeleter> _commandFrame;
 

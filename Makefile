@@ -10,7 +10,9 @@ SRCS := Main.cpp \
         Library.cpp \
         Log.cpp \
         CommandHandler.cpp \
-        Command.cpp
+        Command.cpp \
+		Component.cpp \
+		ListComponent.cpp
 
 # List of object files
 OBJS := $(SRCS:.cpp=.o)

@@ -1,5 +1,13 @@
 #include "ListComponent.hpp"
 
+ListComponent::ListComponent() : ComponentBase(0, 0) {
+    _oy = 0; _ox = 0; _y = 0; _x = 0;
+    _from = -1;
+    _selectedPos = -1;
+    _numbered = -1;
+    _frame = nullptr;
+}
+
 ListComponent::ListComponent(int winy, int winx) : ComponentBase(winy, winx) {
     _oy = 0;
     _ox = 0;
@@ -8,17 +16,19 @@ ListComponent::ListComponent(int winy, int winx) : ComponentBase(winy, winx) {
     _x = 0.4 * winx;
 
     _frame = std::shared_ptr<WINDOW>(
-            newwin(_y, _x, _oy, _x), windowDeleter);
+            newwin(_y, _x, _oy, _ox), windowDeleter);
 
     _from = 0;
     _selectedPos = 0;
     _numbered = 0;
 
-    keypad(_frame, true);
-    nodelay(_frame, true);
+    keypad(_frame.get(), true);
+    nodelay(_frame.get(), true);
 }
 
 void ListComponent::render(Library& library) {
+    box(_frame.get(), 0, 0); 
+
     std::vector<std::string> listItems = library.getActivePlaylist()
         .getPlaylistSongs();
     
@@ -70,4 +80,6 @@ void ListComponent::render(Library& library) {
 
         pos++;
     }
+
+    wrefresh(_frame.get());
 }

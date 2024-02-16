@@ -25,7 +25,8 @@ Window::Window(Library& library) : _library(library) {
     _cursorPosition = 0;
     _runningMaxFreq = 0.25;
     _numbered = true;
-
+    
+    _listView = ListComponent(_windowY, _windowX);
     _listFrameX = 0.4 * _windowX;
     _listFrameY = _windowY - 1;
     _visualFrameX = _windowX - _listFrameX;
@@ -35,17 +36,13 @@ Window::Window(Library& library) : _library(library) {
 
     _inputBuffer.str("");
 
-    WINDOW* listFrame = newwin(_listFrameY, _listFrameX, 0, 0);
     WINDOW* visualFrame = newwin(_visualFrameY, _visualFrameX, 0, _listFrameX);
     WINDOW* commandFrame = newwin(_commandFrameY, _commandFrameX, _windowY - 1, 0);
 
-    _listFrame = std::unique_ptr<WINDOW, FrameDeleter>(listFrame);
     _visualFrame = std::unique_ptr<WINDOW, FrameDeleter>(visualFrame);
     _commandFrame = std::unique_ptr<WINDOW, FrameDeleter>(commandFrame);
 
-    keypad(listFrame, true);
     keypad(visualFrame, true);
-    nodelay(listFrame, true);
     nodelay(visualFrame, true);
 }
 
@@ -54,63 +51,11 @@ Window::~Window() {
 }
 
 void Window::renderWindowTemplate() {
-    box(_listFrame.get(), 0, 0);  
     box(_visualFrame.get(), 0, 0);
 }
 
 void Window::renderWindowList() {
-    std::vector<std::string> items = _library.getActivePlaylist()
-        .getPlaylistSongs();
-
-    int renderableSize = _listFrameY - 2; // accounting for borders
-
-    if (_cursorPosition >= renderableSize - 5 &&
-            _listStartingIndex + renderableSize < items.size()) {
-        _listStartingIndex++;
-        _cursorPosition--; // maintian cursor position
-    } else if (_cursorPosition <= 5 &&
-            _listStartingIndex > 0) {
-        _listStartingIndex--;
-        _cursorPosition++;
-    }
-
-    auto entryIt = items.begin() + _listStartingIndex;
-    int pos = 0;
-
-    for (auto it = entryIt; it != items.end(); ++it) {
-        // no more space (pos is zero indexed, so stop when ==)
-        if (pos >= renderableSize) {
-            break;
-        }
-
-        auto& entry = *it;
-        std::string display = "";
-        std::string prefix = "";
-
-        if (_numbered) {
-           prefix = "[" + std::to_string(pos + _listStartingIndex + 1) + "] ";
-        }
-
-        // account for extension
-        if (entry.length() < _listFrameX - 2) {
-            display = entry;
-        } else {
-            // display song file title in short form
-            display = entry.substr(0, _listFrameX - 5 
-                    - prefix.size()) += "...";
-        }
-
-        std::string clearLine = std::string(_listFrameX - 2, ' ');
-        mvwprintw(_listFrame.get(), pos + 1, 1, clearLine.c_str());
-        
-        display = prefix + display;
-        (pos == _cursorPosition) ? wattron(_listFrame.get(), A_REVERSE) : 0;
-        mvwprintw(_listFrame.get(), pos + 1, 1,
-                FORMAT_PTR(display.c_str()));    
-        wattroff(_listFrame.get(), A_REVERSE);
-
-        pos++;
-    }
+    _listView.render(_library);    
 }
 
 void Window::renderWindowVisual() {
@@ -208,11 +153,9 @@ void Window::renderWindowVisual() {
 
 void Window::renderWindowCursor() {
     curs_set(0);
-    wmove(_listFrame.get(), 0, 0);
 }
 
 void Window::refreshFrames() {
-    wrefresh(_listFrame.get());
     wrefresh(_visualFrame.get());
     wrefresh(_commandFrame.get());
 }
@@ -223,7 +166,7 @@ static bool isValidCommandChar(char input) {
 
 int Window::processInput() {
     Playlist& playlist = _library.getActivePlaylist();
-    char in = wgetch(_listFrame.get());
+    char in = wgetch(stdscr);
     std::string inputBufferString = _inputBuffer.str();
 
     if (_inputMode == MODE_COMMAND) {

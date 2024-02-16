@@ -2,6 +2,7 @@
 
 class ListComponent : public ComponentBase {
     public:
+        ListComponent();
         ListComponent(int winy, int winx);
 
         void render(Library& library) override;
