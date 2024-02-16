@@ -78,12 +78,12 @@ void VisualComponent::render(Library& library) {
                 progressBarBuffer << "\u2588";
             }
         } else {
-            progressBarBuffer << "-";
+            progressBarBuffer << "\u2501";
         }
     }
 
     mvwprintw(_frame.get(),
-            _y - 4, 1, "[%s]", progressBarBuffer.str().c_str());
+            _y - 4, 1, "\u258c%s\u2590", progressBarBuffer.str().c_str());
 
     // Add extra space in the back of formatted string
     // because it will override (visually) the extra % sign
