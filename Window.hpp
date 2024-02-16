@@ -24,6 +24,7 @@
 #include "Library.hpp"
 #include "Playlist.hpp"
 #include "ListComponent.hpp"
+#include "VisualComponent.hpp"
 
 #define MODE_COMMAND 				0
 #define MODE_NAVIGATE				1
@@ -56,31 +57,20 @@ class Window {
         int processInput();
 
     private:
-        std::vector<std::wstring> visualize(int cy, int cx, 
-                std::vector<float>& data);
         void processInputNavigateMode();
         void processInputCommandMode();
-        std::string getTimeStamp(double timeInSeconds);
 
     private:
         Library& _library;
         ListComponent _listView;
+        VisualComponent _visualView;
 
-        std::unique_ptr<WINDOW, FrameDeleter> _visualFrame;
         std::unique_ptr<WINDOW, FrameDeleter> _commandFrame;
 
         int _windowX, _windowY;
-        int _listFrameX, _listFrameY;
-        int _visualFrameX, _visualFrameY;
         int _commandFrameX, _commandFrameY;
         
         std::stringstream _inputBuffer;
 
         int _inputMode;
-        int _listStartingIndex;
-        int _visualOrientation;
-        int _cursorPosition;
-        float _runningMaxFreq;
-
-        bool _numbered;
 };

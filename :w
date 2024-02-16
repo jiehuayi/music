@@ -1,9 +1,5 @@
 #include "VisualComponent.hpp"
 
-VisualComponent::VisualComponent() : ComponentBase(-1, -1) {
-    _oy = 0; _ox = 0; _y = 0; _x = 0;
-}
-
 VisualComponent::VisualComponent(int winy, int winx) : ComponentBase(winy, winx) {
     _oy = 0;
     _ox = winx * 0.4 + 1;
@@ -22,8 +18,6 @@ VisualComponent::VisualComponent(int winy, int winx) : ComponentBase(winy, winx)
 }
 
 void VisualComponent::render(Library& library) { 
-    box(_frame.get(), 0, 0);
-
     Playlist& playlist = library.getActivePlaylist();
     std::stringstream progressBarBuffer;
 
@@ -92,7 +86,7 @@ void VisualComponent::render(Library& library) {
     
     if (playlist.isPlaying()) {
         int visualizerY = _y - 6;
-        int visualizerX = _x - 2;
+        int visualizerX = _x  - 2;
         std::vector<float> databuffer = playlist.getFFT();
 
         std::vector<std::wstring> visFrame = 
@@ -120,15 +114,7 @@ int VisualComponent::getOrientation() {
    return _orientation; 
 }
 
-void VisualComponent::setOrientation(int orientation) {
-    _orientation = orientation;
-}
-
-void VisualComponent::setRunningMaxFrequency(float freq) {
-    _runningMaxFrequency = freq;
-}
-
-std::vector<std::wstring> VisualComponent::visualize(int cy, int cx, 
+std::vector<std::string> VisualComponent::visualize(int cx, int cy, 
         std::vector<float>& data) { 
     std::vector<std::wstring> canvas(cy, std::wstring(cx, L' '));
     std::vector<float> dataBufferCompact;
@@ -194,25 +180,4 @@ std::vector<std::wstring> VisualComponent::visualize(int cy, int cx,
     }
 
     return canvas; 
-}
-
-std::string VisualComponent::getTimeStamp(double timeInSeconds) {
-    std::stringstream ssFormat;  
-    int hours = static_cast<int>(timeInSeconds / 3600);
-    int minutes = static_cast<int>((timeInSeconds - hours * 3600) / 60);
-    int seconds = static_cast<int>(timeInSeconds - hours * 3600
-            - minutes * 60);
-
-    // Format hours (if greater than 0)
-    if (hours > 0) {
-        ssFormat << std::setw(2) << std::setfill('0') << hours << ":";
-    }
-
-    // Format minutes
-    ssFormat << std::setw(2) << std::setfill('0') << minutes << ":";
-
-    // Format seconds
-    ssFormat << std::setw(2) << std::setfill('0') << seconds;
-
-    return ssFormat.str();
 }

@@ -2,7 +2,12 @@
 
 #include <memory>
 
-#include <ncurses.h>
+#ifdef __APPLE__
+
+#define _XOPEN_SOURCE_EXTENDED 1
+#include <curses.h>
+
+#endif
 
 #include "Library.hpp"
 

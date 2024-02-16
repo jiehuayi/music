@@ -1,6 +1,5 @@
 #include <string>
 #include <sstream>
-#include <ncurses.h>
 
 #include "Component.hpp"
 #include "Log.hpp"
@@ -12,15 +11,22 @@
 
 class VisualComponent : public ComponentBase {
     public:
-       VisualComponent(int winy, int winx);
+        VisualComponent();
+        VisualComponent(int winy, int winx);
 
-       void render(Library& library) override;
+        void render(Library& library) override;
 
-       std::string getTimeStamp(double timeInSeconds);
+        int getOrientation();
 
-       std::vector<std::string> visualize(int cx, int cy, std::vector<float> data);
+        void setOrientation(int orientation);
+        void setRunningMaxFrequency(float freq);
+
+    private:
+        std::vector<std::wstring> visualize(int cy, int cx, std::vector<float>& data);
+
+        std::string getTimeStamp(double timeInSeconds);
 
     private:
         int _orientation;
-        int _runningMaxFrequency;
+        double _runningMaxFrequency;
 };
