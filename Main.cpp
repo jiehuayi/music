@@ -7,8 +7,17 @@
 
 #include "Window.hpp"
 #include "CommandHandler.hpp"
+#include "CoreCommands.hpp"
 #include "Library.hpp"
 #include "Log.hpp"
+
+static int initCommands(CommandHandler& handler, Window& window) {
+    int regStatus = 0;
+    regStatus |= handler.registerCommand("song-toggle", 
+            [&window]() -> Command* { return new PlayPauseCommand(window); });
+
+    return regStatus;
+}
 
 int main(int argc, char** argv) {
     std::cout << "Goodbye, penelope." << std::endl;
@@ -21,7 +30,11 @@ int main(int argc, char** argv) {
     Library lib = Library();
 
     Window wm = Window(lib);
-    CommandHandler commandHandler(wm);
+    CommandHandler ch(wm);
+
+    if (initCommands(ch, wm) > 0) {
+        return EXIT_FAILURE;
+    }
 
     for (;;) {
         wm.renderWindow();

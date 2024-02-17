@@ -9,6 +9,7 @@ SRCS := Main.cpp \
         Playlist.cpp \
         Library.cpp \
         Log.cpp \
+		CoreCommands.cpp \
         CommandHandler.cpp \
         Command.cpp \
 		Component.cpp \

@@ -26,13 +26,15 @@ std::string CommandHandler::trim(const std::string input) {
     }
 }
 
-void CommandHandler::registerCommand(std::string identifier, 
+int CommandHandler::registerCommand(std::string identifier, 
         std::function<Command* ()> cmd) {
     if (_registeredCommands.find(identifier) != _registeredCommands.end()) {
-        _registeredCommands[identifier] = cmd;
+        _registeredCommands[identifier] = cmd; 
+        return 0;
     }
 
-    // TODO: error handlong
+    // TODO: error handling
+    return 1;
 }
 
 int CommandHandler::processCommand(std::string command) {

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Window.hpp"
+#include "Library.hpp"
 
 
 struct Parameters {
@@ -15,6 +16,6 @@ class Command {
 
         virtual void execute(Parameters args) = 0;
 
-    private:
+    protected:
         Window& _ctx;
 };

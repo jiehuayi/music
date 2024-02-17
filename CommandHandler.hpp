@@ -19,7 +19,7 @@ class CommandHandler {
         static std::vector<std::string> split(std::string input, char delim);
         static std::string trim(const std::string input);
 
-        void registerCommand(std::string identifier, std::function<Command* ()> cmd);
+        int  registerCommand(std::string identifier, std::function<Command* ()> cmd);
 
         int processCommand(std::string command);
         std::string getHandlerError();

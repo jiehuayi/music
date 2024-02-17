@@ -194,9 +194,9 @@ std::vector<std::wstring> VisualComponent::visualize(int cy, int cx,
                 gl = g;
             }
 
-            if (g <= whole) {
+            if (g <= whole && whole != 0.0) {
                 px = L'\u2590';
-            } else if (g == std::ceil(height)) {
+            } else if (g == std::ceil(height) || whole == 0.0) {
                 px = L'\u2597'; // Need change because orientation matters now...
                 eol = true;
             } else {
