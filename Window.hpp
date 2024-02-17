@@ -25,6 +25,7 @@
 #include "Playlist.hpp"
 #include "ListComponent.hpp"
 #include "VisualComponent.hpp"
+#include "PopupComponent.hpp"
 
 #define MODE_COMMAND 				0
 #define MODE_NAVIGATE				1
@@ -64,6 +65,7 @@ class Window {
         Library& _library;
         ListComponent _listView;
         VisualComponent _visualView;
+        PopupComponent _popView;
 
         std::unique_ptr<WINDOW, FrameDeleter> _commandFrame;
 

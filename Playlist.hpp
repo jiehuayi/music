@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include <filesystem>
+#include <cmath>
 #include <unistd.h>
 
 #include "Track.hpp"

@@ -12,15 +12,15 @@ ListComponent::ListComponent(int winy, int winx) : ComponentBase(winy, winx) {
     _oy = 0;
     _ox = 0;
 
-    _y = winy - 1;
-    _x = 0.4 * winx;
+    _y = winy * 0.4;
+    _x = winx;
 
     _frame = std::shared_ptr<WINDOW>(
             newwin(_y, _x, _oy, _ox), windowDeleter);
 
     _from = 0;
     _selectedPos = 0;
-    _numbered = 0;
+    _numbered = true;
 
     keypad(_frame.get(), true);
     nodelay(_frame.get(), true);
@@ -64,8 +64,7 @@ void ListComponent::render(Library& library) {
             break;
         }
 
-        auto& entry = *it;
-        
+        auto& entry = *it; 
         std::string display = "";
         std::string prefix = "";
 
@@ -86,7 +85,7 @@ void ListComponent::render(Library& library) {
         std::string clearLine = std::string(_x - 2, ' ');
         mvwprintw(_frame.get(), pos + 1, 1, clearLine.c_str());
 
-        display += prefix;
+        display = prefix + display;
         mvwprintw(_frame.get(), pos + 1, 1, display.c_str());
         wattroff(_frame.get(), A_REVERSE);
 

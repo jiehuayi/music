@@ -1,5 +1,6 @@
 #include <string>
 #include <sstream>
+#include <cmath>
 
 #include "Component.hpp"
 #include "Log.hpp"

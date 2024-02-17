@@ -2,14 +2,15 @@
 
 VisualComponent::VisualComponent() : ComponentBase(-1, -1) {
     _oy = 0; _ox = 0; _y = 0; _x = 0;
+    _frame = nullptr;
 }
 
 VisualComponent::VisualComponent(int winy, int winx) : ComponentBase(winy, winx) {
-    _oy = 0;
-    _ox = winx * 0.4 + 1;
+    _oy = winy * 0.4;
+    _ox = 0;
 
-    _y = winy - 1;
-    _x = 0.6 * winx;
+    _y = winy * 0.6 - 1;
+    _x = winx;
 
     _frame = std::shared_ptr<WINDOW>(
             newwin(_y, _x, _oy, _ox), windowDeleter);
@@ -93,7 +94,7 @@ void VisualComponent::render(Library& library) {
             _y - 3, 1, "[ %s / %s ] VOL: %d%% ",
             getTimeStamp(posNow).c_str(),
             getTimeStamp(posEnd).c_str(),
-            static_cast<int>(playlist.getVolume() * 100));
+            static_cast<int>(std::ceil(playlist.getVolume() * 100)));
 
     mvwprintw(_frame.get(),
             _y - 2, 1, "> %s...",

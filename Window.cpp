@@ -23,6 +23,7 @@ Window::Window(Library& library) : _library(library) {
     
     _listView = ListComponent(_windowY, _windowX);
     _visualView = VisualComponent(_windowY, _windowX);
+    _popView = PopupComponent(_windowY, _windowX);
     _commandFrameX = _windowX;
     _commandFrameY = 1;
 
@@ -41,11 +42,12 @@ void Window::renderWindowTemplate() {
 }
 
 void Window::renderWindowList() {
-    _listView.render(_library);    
 }
 
 void Window::renderWindowVisual() {
     _visualView.render(_library);
+    _listView.render(_library);
+    _popView.render(_library);
 }
 
 void Window::renderWindowCursor() {

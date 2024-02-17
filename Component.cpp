@@ -1,6 +1,10 @@
 #include "Component.hpp"
 
 void windowDeleter(WINDOW* win) {
+    if (win == nullptr) {
+        return;
+    }
+
     delwin(win);
 }
 

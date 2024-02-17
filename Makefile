@@ -13,7 +13,8 @@ SRCS := Main.cpp \
         Command.cpp \
 		Component.cpp \
 		ListComponent.cpp \
-		VisualComponent.cpp
+		VisualComponent.cpp \
+		PopupComponent.cpp
 
 # List of object files
 OBJS := $(SRCS:.cpp=.o)
