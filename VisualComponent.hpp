@@ -25,6 +25,9 @@ class VisualComponent : public ComponentBase {
     private:
         std::vector<std::wstring> visualize(int cy, int cx, std::vector<float>& data);
 
+        void renderVisualizer(Playlist& playlist);
+        void renderControls(Playlist& playlist);
+
         std::string getTimeStamp(double timeInSeconds);
 
     private:

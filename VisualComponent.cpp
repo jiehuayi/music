@@ -38,6 +38,38 @@ void VisualComponent::render(Library& library) {
             &left_bottom_corner, &right_bottom_corner);
 
     Playlist& playlist = library.getActivePlaylist();
+    renderVisualizer(playlist);
+    renderControls(playlist);
+        
+    wrefresh(_frame.get());
+}
+
+void VisualComponent::renderVisualizer(Playlist& playlist) { 
+    if (playlist.isPlaying()) {
+        int visualizerY = _y - 6;
+        int visualizerX = _x - 2;
+        std::vector<float> databuffer = playlist.getFFT();
+
+        std::vector<std::wstring> visFrame = 
+            visualize(visualizerY, visualizerX, databuffer);
+
+        int cur = 1;
+        for (auto& line : visFrame) {
+            const wchar_t* cstr = line.c_str();
+            if (cur % 2) {
+                wattron(_frame.get(), COLOR_PAIR(4));
+                mvwaddwstr(_frame.get(), cur++, 1, cstr);
+                wattroff(_frame.get(), COLOR_PAIR(4));
+            } else {
+                wattron(_frame.get(), COLOR_PAIR(3));
+                mvwaddwstr(_frame.get(), cur++, 1, cstr);
+                wattroff(_frame.get(), COLOR_PAIR(3));
+            }
+        }
+    }
+}
+
+void VisualComponent::renderControls(Playlist& playlist) {
     std::stringstream progressBarBuffer;
 
     // including decorative square brackets
@@ -100,33 +132,7 @@ void VisualComponent::render(Library& library) {
             _y - 2, 1, "> %s...",
             playlist.activeSongName()
             .substr(0, _x - 18).c_str());
-
-    // visualizer
     
-    if (playlist.isPlaying()) {
-        int visualizerY = _y - 6;
-        int visualizerX = _x - 2;
-        std::vector<float> databuffer = playlist.getFFT();
-
-        std::vector<std::wstring> visFrame = 
-            visualize(visualizerY, visualizerX, databuffer);
-
-        int cur = 1;
-        for (auto& line : visFrame) {
-            const wchar_t* cstr = line.c_str();
-            if (cur % 2) {
-                wattron(_frame.get(), COLOR_PAIR(4));
-                mvwaddwstr(_frame.get(), cur++, 1, cstr);
-                wattroff(_frame.get(), COLOR_PAIR(4));
-            } else {
-                wattron(_frame.get(), COLOR_PAIR(3));
-                mvwaddwstr(_frame.get(), cur++, 1, cstr);
-                wattroff(_frame.get(), COLOR_PAIR(3));
-            }
-        }
-    }
-
-    wrefresh(_frame.get());
 }
 
 int VisualComponent::getOrientation() {
