@@ -73,11 +73,11 @@ void ListComponent::render(Library& library) {
         }
 
         // account for extension
-        if (entry.length() < _x - 2) {
+        if (entry.length() < _x - 4) {
             display = entry;
         } else {
             // display song file title in short form
-            display = entry.substr(0, _x - 5 
+            display = entry.substr(0, _x - 6 
                     - prefix.size()) += "...";
         }
 

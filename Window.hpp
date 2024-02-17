@@ -23,6 +23,7 @@
 
 #include "Library.hpp"
 #include "Playlist.hpp"
+#include "ConsoleComponent.hpp"
 #include "ListComponent.hpp"
 #include "VisualComponent.hpp"
 #include "PopupComponent.hpp"
@@ -50,11 +51,7 @@ class Window {
     public:
         Window(Library& library);
         ~Window();
-        void renderWindowTemplate();
-        void renderWindowList();
-        void renderWindowVisual();
-        void renderWindowCursor();
-        void refreshFrames();
+        void renderWindow();
         int processInput();
 
     private:
@@ -63,16 +60,12 @@ class Window {
 
     private:
         Library& _library;
+        ConsoleComponent _consoleView;
         ListComponent _listView;
         VisualComponent _visualView;
         PopupComponent _popView;
 
-        std::unique_ptr<WINDOW, FrameDeleter> _commandFrame;
-
         int _windowX, _windowY;
-        int _commandFrameX, _commandFrameY;
         
-        std::stringstream _inputBuffer;
-
         int _inputMode;
 };

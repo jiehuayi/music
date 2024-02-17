@@ -8,7 +8,6 @@
 #include "Window.hpp"
 #include "CommandHandler.hpp"
 #include "Library.hpp"
-#include "Playlist.hpp"
 #include "Log.hpp"
 
 int main(int argc, char** argv) {
@@ -16,24 +15,19 @@ int main(int argc, char** argv) {
 
     Log::clear();
 
-    int fps = 60;
+    int fps = 40;
     int delayMillis = 1000 / fps;
 
     Library lib = Library();
 
-    Window window = Window(lib);
-    CommandHandler commandHandler(window);
+    Window wm = Window(lib);
+    CommandHandler commandHandler(wm);
 
     for (;;) {
-        window.renderWindowTemplate();
-        window.renderWindowCursor(); 
-        window.renderWindowList();
-        window.renderWindowVisual();
-        window.refreshFrames();
-
-        int status = window.processInput();
-
-        if (status == APP_STATE_TERMINATED) break;
+        wm.renderWindow();
+        if (wm.processInput() == APP_STATE_TERMINATED) {
+            break;
+        }
 
         napms(delayMillis); // from ncurses;
     }

@@ -12,6 +12,7 @@ SRCS := Main.cpp \
         CommandHandler.cpp \
         Command.cpp \
 		Component.cpp \
+		ConsoleComponent.cpp \
 		ListComponent.cpp \
 		VisualComponent.cpp \
 		PopupComponent.cpp

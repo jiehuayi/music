@@ -8,8 +8,8 @@ Window::Window(Library& library) : _library(library) {
     noecho();
     raw();
     nodelay(stdscr, true);
-    // halfdelay(true);
     keypad(stdscr, true);
+    curs_set(0);
     // start_color();
 
     init_pair(1, COLOR_BLACK, COLOR_YELLOW);
@@ -21,53 +21,29 @@ Window::Window(Library& library) : _library(library) {
 
     _inputMode = MODE_NAVIGATE;
     
+    _consoleView = ConsoleComponent(_windowY, _windowX);
     _listView = ListComponent(_windowY, _windowX);
     _visualView = VisualComponent(_windowY, _windowX);
     _popView = PopupComponent(_windowY, _windowX);
-    _commandFrameX = _windowX;
-    _commandFrameY = 1;
-
-    _inputBuffer.str("");
-
-    WINDOW* commandFrame = newwin(_commandFrameY, _commandFrameX, _windowY - 1, 0);
-    _commandFrame = std::unique_ptr<WINDOW, FrameDeleter>(commandFrame);
-
 }
 
 Window::~Window() {
     endwin();
 }
 
-void Window::renderWindowTemplate() {
-}
-
-void Window::renderWindowList() {
-}
-
-void Window::renderWindowVisual() {
+void Window::renderWindow() {
+    _consoleView.render(_library);
     _visualView.render(_library);
     _listView.render(_library);
-    _popView.render(_library);
-}
-
-void Window::renderWindowCursor() {
-    curs_set(0);
-}
-
-void Window::refreshFrames() {
-    wrefresh(_commandFrame.get());
-}
-
-static bool isValidCommandChar(char input) {
-    return (input > 21 && input < 127) ? true : false;
 }
 
 int Window::processInput() {
     Playlist& playlist = _library.getActivePlaylist();
     char in = wgetch(stdscr);
-    std::string inputBufferString = _inputBuffer.str();
+    std::string input = "";
 
     if (_inputMode == MODE_COMMAND) {
+        input = _consoleView.getInputBuffer();
         goto CMD;
     }
 
@@ -91,9 +67,7 @@ int Window::processInput() {
 
         case ':':
             _inputMode = MODE_COMMAND;
-            _inputBuffer << in;
-            wbkgd(_commandFrame.get(), COLOR_PAIR(1)); // Command color    
-            mvwprintw(_commandFrame.get(), 0, 0, _inputBuffer.str().c_str());
+            _consoleView.setInputBuffer("");
             break;
 
         case 0x0D:
@@ -125,28 +99,16 @@ CMD:
         case 0x1B:
         case '!':
             _inputMode = MODE_NAVIGATE;
-            _inputBuffer.str("");
-            wbkgd(_commandFrame.get(), COLOR_PAIR(2)); // reset color
-            werase(_commandFrame.get());
+            _consoleView.setInputBuffer("");
             break;
 
         case 0x7F:
         case 0x08:
-            if (inputBufferString.length() > 1) {
-                _inputBuffer.str(std::string());
-                _inputBuffer << inputBufferString
-                    .substr(0, inputBufferString.length() - 1);
-            }
-
-            werase(_commandFrame.get());
-            mvwprintw(_commandFrame.get(), 0, 0, "%s", _inputBuffer.str().c_str());
+            _consoleView.setInputBuffer(input.substr(0, input.length() - 1));
             break;
 
         default:
-            if (isValidCommandChar(in)) {
-                _inputBuffer << in;
-                mvwprintw(_commandFrame.get(), 0, 0, "%s", _inputBuffer.str().c_str());
-            }  
+            _consoleView.appendInputBuffer(in);
             break;
     }
 
