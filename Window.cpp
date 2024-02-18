@@ -37,7 +37,7 @@ void Window::renderWindow() {
     _listView.render(_library);
 }
 
-int Window::processInput() {
+int Window::processInput(CommandHandler& handler) {
     Playlist& playlist = _library.getActivePlaylist();
     char in = wgetch(stdscr);
     std::string input = "";
@@ -77,7 +77,8 @@ int Window::processInput() {
             break;
 
         case ' ':
-            playlist.trigger();
+            // playlist.trigger();
+            handler.processCommand("song-toggle");
             break;
 
         case '+':

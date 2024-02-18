@@ -1,21 +1,19 @@
 #pragma once
 
+#include "Parameters.hpp"
 #include "Window.hpp"
 #include "Library.hpp"
 
-
-struct Parameters {
-    std::string name;
-    std::vector<std::string> values; 
-};
+class Window;
 
 class Command {
     public:
-        Command(Window& ctx);
-        ~Command();
+        Command(Window& ctx, Library& lib);
+        virtual ~Command() = 0;
 
         virtual void execute(Parameters args) = 0;
 
     protected:
         Window& _ctx;
+        Library& _lib;
 };

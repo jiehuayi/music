@@ -28,7 +28,11 @@ std::string CommandHandler::trim(const std::string input) {
 
 int CommandHandler::registerCommand(std::string identifier, 
         std::function<Command* ()> cmd) {
-    if (_registeredCommands.find(identifier) != _registeredCommands.end()) {
+    if (cmd == nullptr) {
+        return 1;
+    }
+
+    if (_registeredCommands.find(identifier) == _registeredCommands.end()) {
         _registeredCommands[identifier] = cmd; 
         return 0;
     }
@@ -38,6 +42,8 @@ int CommandHandler::registerCommand(std::string identifier,
 }
 
 int CommandHandler::processCommand(std::string command) {
+    _recent.name = command;
+    execute();
     return 1;
 }
 
@@ -85,4 +91,20 @@ int CommandHandler::parse(std::string raw) {
     _recent = {.name = lhs, .values = valueList};
 
     return CMD_PARSE_SUCCESS;
+}
+
+int CommandHandler::execute() {
+    if (_registeredCommands.find(_recent.name) == _registeredCommands.end()) {
+        exit(EXIT_FAILURE);
+        return 1;
+    }
+
+    Command* c = _registeredCommands[_recent.name]();
+
+    if (c == nullptr) {
+        return 2;
+    }
+
+    c->execute(_recent);
+    delete c;
 }

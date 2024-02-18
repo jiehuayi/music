@@ -23,6 +23,7 @@
 
 #include "Library.hpp"
 #include "Playlist.hpp"
+#include "CommandHandler.hpp"
 #include "ConsoleComponent.hpp"
 #include "ListComponent.hpp"
 #include "VisualComponent.hpp"
@@ -47,12 +48,14 @@ struct FrameDeleter {
     }
 };
 
+class CommandHandler;
+
 class Window {
     public:
         Window(Library& library);
         ~Window();
         void renderWindow();
-        int processInput();
+        int processInput(CommandHandler& handler);
 
     private:
         void processInputNavigateMode();

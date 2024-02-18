@@ -1,7 +1,4 @@
 // --------------- penelope ---------------
-// 
-// entry point
-//
 
 #include <iostream>
 
@@ -11,17 +8,17 @@
 #include "Library.hpp"
 #include "Log.hpp"
 
-static int initCommands(CommandHandler& handler, Window& window) {
+static int initCommands(CommandHandler& handler, Window& window, Library& library) {
     int regStatus = 0;
     regStatus |= handler.registerCommand("song-toggle", 
-            [&window]() -> Command* { return new PlayPauseCommand(window); });
+            [&window, &library]() -> Command* { return new PlayPauseCommand(window, 
+                library); });
 
     return regStatus;
 }
 
 int main(int argc, char** argv) {
-    std::cout << "Goodbye, penelope." << std::endl;
-
+    std::cout << "\033[42m\033[30mGoodbye, penelope.\033[0m" << std::endl;
     Log::clear();
 
     int fps = 40;
@@ -30,15 +27,15 @@ int main(int argc, char** argv) {
     Library lib = Library();
 
     Window wm = Window(lib);
-    CommandHandler ch(wm);
+    CommandHandler ch = CommandHandler(wm);
 
-    if (initCommands(ch, wm) > 0) {
+    if (initCommands(ch, wm, lib) > 0) {
         return EXIT_FAILURE;
     }
 
     for (;;) {
         wm.renderWindow();
-        if (wm.processInput() == APP_STATE_TERMINATED) {
+        if (wm.processInput(ch) == APP_STATE_TERMINATED) {
             break;
         }
 
