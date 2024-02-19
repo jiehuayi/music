@@ -12,8 +12,6 @@ Library::~Library() {
 
 void Library::newPlaylist(std::string path) {
     _playlists[path] = Playlist(path);
-    // _activePlaylist = path;
-
     initActivePlaylist();
 }
 
@@ -33,6 +31,10 @@ void Library::killPlaylist(std::string path) {
 void Library::killActivePlaylist() {
     killPlaylist(_activePlaylist);
     _activePlaylist = "";
+}
+
+void Library::shuffleActivePlaylist() {
+    _playlists[_activePlaylist].shuffle();
 }
 
 Playlist& Library::getActivePlaylist() {

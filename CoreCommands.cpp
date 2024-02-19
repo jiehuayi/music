@@ -18,6 +18,10 @@ void DecVolumeCommand::execute(Parameters args) {
     _lib.getActivePlaylist().decVolume();
 }
 
+void ShuffleCommand::execute(Parameters args) {
+    _lib.shuffleActivePlaylist();
+}
+
 void RotVisualClockCommand::execute(Parameters args) {
     VisualComponent& vv = getVisualView();
     vv.setOrientation((vv.getOrientation() + 1) % 4);

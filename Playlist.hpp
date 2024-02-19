@@ -4,6 +4,8 @@
 #include <vector>
 #include <string>
 #include <filesystem>
+#include <algorithm>
+#include <random>
 #include <cmath>
 #include <unistd.h>
 
@@ -38,6 +40,7 @@ class Playlist {
 
         void play(int index);
         void trigger();
+        void shuffle();
 
         std::string activeSongName();
         bool isPlaying();
@@ -52,5 +55,4 @@ class Playlist {
         bool _isTrackPlaying;
         std::vector<std::filesystem::path> _songs;
         std::shared_ptr<Track> _activeTrack;
-
 };

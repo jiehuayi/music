@@ -7,6 +7,8 @@
 #define CMD_SONG_PLAY               "song-play"
 #define CMD_VOLUME_DECREMENT        "volume-decrement"
 #define CMD_VOLUME_INCREMENT        "volume-increment"
+#define CMD_PLAYLIST_SHUFFLE        "playlist-shuffle"
+
 #define CMD_ROTATE_CLOCK            "rotate-clock"
 #define CMD_ROTATE_ANTICLOCK        "rotate-anticlock"
 #define CMD_NAVIGATE_DOWN           "move-down"
@@ -38,6 +40,7 @@ COMMAND_DEFINITION_BUILDER(PlayPauseCommand);
 COMMAND_DEFINITION_BUILDER(PlayCommand);
 COMMAND_DEFINITION_BUILDER(IncVolumeCommand);
 COMMAND_DEFINITION_BUILDER(DecVolumeCommand);
+COMMAND_DEFINITION_BUILDER(ShuffleCommand);
 COMMAND_DEFINITION_BUILDER(RotVisualClockCommand);
 COMMAND_DEFINITION_BUILDER(RotVisualAntiClockCommand);
 COMMAND_DEFINITION_BUILDER(NavigateDownCommand);

@@ -10,9 +10,10 @@
 
 static void initCommands(CommandHandler& handler, Window& window, Library& library) {
     handler.registerCommand(CMD_SONG_TOGGLE, COMMAND_DEFINE(PlayPauseCommand));
+    handler.registerCommand(CMD_SONG_PLAY, COMMAND_DEFINE(PlayCommand));
     handler.registerCommand(CMD_VOLUME_INCREMENT, COMMAND_DEFINE(IncVolumeCommand));
     handler.registerCommand(CMD_VOLUME_DECREMENT, COMMAND_DEFINE(DecVolumeCommand));
-    handler.registerCommand(CMD_SONG_PLAY, COMMAND_DEFINE(PlayCommand));
+    handler.registerCommand(CMD_PLAYLIST_SHUFFLE, COMMAND_DEFINE(ShuffleCommand));
     handler.registerCommand(CMD_NAVIGATE_DOWN, COMMAND_DEFINE(NavigateDownCommand));
     handler.registerCommand(CMD_NAVIGATE_UP, COMMAND_DEFINE(NavigateUpCommand));
 }

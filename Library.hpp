@@ -17,6 +17,7 @@ class Library {
         void newPlaylist();
         void killPlaylist(std::string path);
         void killActivePlaylist();
+        void shuffleActivePlaylist();
         Playlist& getActivePlaylist();
 
         int playlistCount();

@@ -1,7 +1,6 @@
 #include "Playlist.hpp"
 
 Playlist::Playlist() {
-    // BASS_Init(-1, 44100, 0, nullptr, nullptr);
     _songs = {};
     _volume = 0.5;
     _path = std::string(getenv("HOME")) + "/Music/";
@@ -99,6 +98,12 @@ void Playlist::trigger() {
     }
 
     _isTrackPlaying = !_isTrackPlaying;
+}
+
+void Playlist::shuffle() {
+    auto rd = std::random_device {}; 
+    auto rng = std::default_random_engine { rd() };
+    std::shuffle(_songs.begin(), _songs.end(), rng);
 }
 
 std::string Playlist::activeSongName() {

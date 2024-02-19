@@ -45,7 +45,8 @@ void ConsoleComponent::appendInputBuffer(char inputCharacter) {
 }
 
 void ConsoleComponent::setInputBuffer(std::string input) {
-    _inputBuffer.str(input);
+    _inputBuffer.str("");
+    _inputBuffer << input;
 }
 
 void ConsoleComponent::setConsoleState(int state) {
