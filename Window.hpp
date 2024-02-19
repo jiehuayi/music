@@ -24,6 +24,8 @@
 #include "Library.hpp"
 #include "Playlist.hpp"
 #include "CommandHandler.hpp"
+
+#include "Component.hpp"
 #include "ConsoleComponent.hpp"
 #include "ListComponent.hpp"
 #include "VisualComponent.hpp"
@@ -35,10 +37,10 @@
 #define APP_STATE_TERMINATED	    0
 #define APP_STATE_RUNNING			1
 
-#define V_TOP    0
-#define V_RIGHT  1
-#define V_BOTTOM 2
-#define V_LEFT   3
+#define V_TOP                       0
+#define V_RIGHT                     1
+#define V_BOTTOM                    2
+#define V_LEFT                      3
 
 #define FORMAT_PTR(char_ptr) ("%s", char_ptr)
 
@@ -49,11 +51,15 @@ struct FrameDeleter {
 };
 
 class CommandHandler;
+class Command;
 
 class Window {
+    friend class Command;
+
     public:
         Window(Library& library);
         ~Window();
+
         void renderWindow();
         int processInput(CommandHandler& handler);
 
@@ -61,14 +67,15 @@ class Window {
         void processInputNavigateMode();
         void processInputCommandMode();
 
-    private:
+    protected:
         Library& _library;
         ConsoleComponent _consoleView;
         ListComponent _listView;
         VisualComponent _visualView;
         PopupComponent _popView;
-
-        int _windowX, _windowY;
-        
+ 
         int _inputMode;
+
+    private:
+        int _windowX, _windowY;
 };

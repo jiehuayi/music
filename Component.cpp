@@ -13,10 +13,5 @@ ComponentBase::ComponentBase(int winy, int winx) {
     _winx = winx;
 }
 
-int ComponentBase::getHeight() {
-    return _y;
-}
-
-int ComponentBase::getWidth() {
-    return _x;
-}
+int ComponentBase::getHeight() { return _y; }
+int ComponentBase::getWidth() { return _x; }

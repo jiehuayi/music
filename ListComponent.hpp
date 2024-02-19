@@ -1,3 +1,5 @@
+#pragma once
+
 #include "Component.hpp"
 
 class ListComponent : public ComponentBase {
@@ -6,7 +8,7 @@ class ListComponent : public ComponentBase {
         ListComponent(int winy, int winx);
 
         void render(Library& library) override;
-
+        
         int getSelectedPosition();
         int getFrom();
 

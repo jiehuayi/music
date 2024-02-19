@@ -3,6 +3,10 @@
 #include "Parameters.hpp"
 #include "Window.hpp"
 #include "Library.hpp"
+#include "VisualComponent.hpp"
+#include "ListComponent.hpp"
+#include "ConsoleComponent.hpp"
+#include "Log.hpp"
 
 class Window;
 
@@ -14,6 +18,13 @@ class Command {
         virtual void execute(Parameters args) = 0;
 
     protected:
-        Window& _ctx;
+        VisualComponent& getVisualView();
+        ListComponent& getListView();
+        ConsoleComponent& getConsoleView();
+
+    protected:
         Library& _lib;
+
+    private:
+        Window& _ctx;
 };

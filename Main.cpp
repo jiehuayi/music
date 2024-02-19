@@ -8,17 +8,16 @@
 #include "Library.hpp"
 #include "Log.hpp"
 
-static int initCommands(CommandHandler& handler, Window& window, Library& library) {
-    int regStatus = 0;
-    regStatus |= handler.registerCommand("song-toggle", 
-            [&window, &library]() -> Command* { return new PlayPauseCommand(window, 
-                library); });
-
-    return regStatus;
+static void initCommands(CommandHandler& handler, Window& window, Library& library) {
+    handler.registerCommand(CMD_SONG_TOGGLE, COMMAND_DEFINE(PlayPauseCommand));
+    handler.registerCommand(CMD_VOLUME_INCREMENT, COMMAND_DEFINE(IncVolumeCommand));
+    handler.registerCommand(CMD_VOLUME_DECREMENT, COMMAND_DEFINE(DecVolumeCommand));
+    handler.registerCommand(CMD_SONG_PLAY, COMMAND_DEFINE(PlayCommand));
+    handler.registerCommand(CMD_NAVIGATE_DOWN, COMMAND_DEFINE(NavigateDownCommand));
+    handler.registerCommand(CMD_NAVIGATE_UP, COMMAND_DEFINE(NavigateUpCommand));
 }
 
 int main(int argc, char** argv) {
-    std::cout << "\033[42m\033[30mGoodbye, penelope.\033[0m" << std::endl;
     Log::clear();
 
     int fps = 40;
@@ -29,9 +28,7 @@ int main(int argc, char** argv) {
     Window wm = Window(lib);
     CommandHandler ch = CommandHandler(wm);
 
-    if (initCommands(ch, wm, lib) > 0) {
-        return EXIT_FAILURE;
-    }
+    initCommands(ch, wm, lib);
 
     for (;;) {
         wm.renderWindow();

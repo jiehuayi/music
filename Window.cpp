@@ -10,7 +10,7 @@ Window::Window(Library& library) : _library(library) {
     nodelay(stdscr, true);
     keypad(stdscr, true);
     curs_set(0);
-    // start_color();
+    use_default_colors();
 
     init_pair(1, COLOR_BLACK, COLOR_YELLOW);
     init_pair(2, COLOR_WHITE, COLOR_BLACK);
@@ -29,6 +29,11 @@ Window::Window(Library& library) : _library(library) {
 
 Window::~Window() {
     endwin();
+
+    std::string goodByeMessage = "Goodbye, penelope.";
+    std::cout << "\033[42m\033[30m" 
+        << goodByeMessage << std::string( _windowX - goodByeMessage.size(), ' ')
+        << "\033[0m" << std::endl;
 }
 
 void Window::renderWindow() {
@@ -50,15 +55,12 @@ int Window::processInput(CommandHandler& handler) {
     switch(in) {
         case 'k':
         case 0x10:
-            _listView.setSelectedPosition(
-                    std::max(_listView.getSelectedPosition() - 1, 0));
+            handler.processCommand("move-up");
             break;
 
         case 'j':
         case 0x0E:
-            _listView.setSelectedPosition(
-                    std::min(_listView.getSelectedPosition() + 1, 
-                        _listView.getHeight() - 3));
+            handler.processCommand("move-down");
             break;
 
         case 'r':
@@ -67,26 +69,24 @@ int Window::processInput(CommandHandler& handler) {
 
         case ':':
             _inputMode = MODE_COMMAND;
-            _consoleView.setInputBuffer("");
+            _consoleView.setConsoleState(CONSOLE_STATE_OPEN);
             break;
 
         case 0x0D:
         case 'q':
-            playlist.play(_listView.getFrom() + _listView.getSelectedPosition());
-            _visualView.setRunningMaxFrequency(0.25);
+            handler.processCommand("song-play");
             break;
 
         case ' ':
-            // playlist.trigger();
             handler.processCommand("song-toggle");
             break;
 
         case '+':
-            playlist.incVolume();
+            handler.processCommand("volume-increment");
             break;
 
         case '-':
-            playlist.decVolume();
+            handler.processCommand("volume-decrement");
             break;
 
         case 0x1B:
@@ -99,13 +99,20 @@ CMD:
     switch(in) {
         case 0x1B:
         case '!':
+            _consoleView.setConsoleState(CONSOLE_STATE_CLOSE);
             _inputMode = MODE_NAVIGATE;
-            _consoleView.setInputBuffer("");
             break;
 
         case 0x7F:
         case 0x08:
             _consoleView.setInputBuffer(input.substr(0, input.length() - 1));
+            break;
+
+        case 0x0A:
+            handler.processCommand(_consoleView.getInputBuffer());
+
+            _consoleView.setConsoleState(CONSOLE_STATE_CLOSE);
+            _inputMode = MODE_NAVIGATE;
             break;
 
         default:

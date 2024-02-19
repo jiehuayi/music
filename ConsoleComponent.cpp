@@ -15,11 +15,15 @@ ConsoleComponent::ConsoleComponent(int winy, int winx) : ComponentBase(winy, win
             newwin(_y, _x, _oy, _ox), windowDeleter);
 
     _inputBuffer = std::stringstream("");
+    _state = CONSOLE_STATE_CLOSE;
 }
 
 void ConsoleComponent::render(Library& library) {
+    std::string consolePrefix = _state == CONSOLE_STATE_OPEN ? "> " : "";
+
     werase(_frame.get());
-    mvwprintw(_frame.get(), 0, 0, "%s", _inputBuffer.str().c_str());
+    mvwprintw(_frame.get(), 0, 0, "%s", 
+            (consolePrefix + _inputBuffer.str()).c_str());
 
     wrefresh(_frame.get());
 }
@@ -42,4 +46,12 @@ void ConsoleComponent::appendInputBuffer(char inputCharacter) {
 
 void ConsoleComponent::setInputBuffer(std::string input) {
     _inputBuffer.str(input);
+}
+
+void ConsoleComponent::setConsoleState(int state) {
+    if (state == CONSOLE_STATE_CLOSE) {
+        setInputBuffer("");
+    }
+
+    _state = state;
 }
