@@ -20,10 +20,21 @@ ConsoleComponent::ConsoleComponent(int winy, int winx) : ComponentBase(winy, win
 
 void ConsoleComponent::render(Library& library) {
     std::string consolePrefix = _state == CONSOLE_STATE_OPEN ? "> " : "";
+    std::string consolePadding = std::string(
+            _x - consolePrefix.length() - _inputBuffer.str().length(), ' ');
+
+    if (_state == CONSOLE_STATE_OPEN) {
+        WRAP_COLOR(_frame.get(), PColor::ColorConsoleText); 
+        WRAP_HIGHLIGHT(_frame.get());
+    }
 
     werase(_frame.get());
-    mvwprintw(_frame.get(), 0, 0, "%s", 
-            (consolePrefix + _inputBuffer.str()).c_str());
+    mvwprintw(_frame.get(), 0, 0, "%s%s", 
+            (consolePrefix + _inputBuffer.str()).c_str(),
+            consolePadding.c_str());
+
+    UNWRAP_COLOR(_frame.get(), PColor::ColorConsoleText);
+    UNWRAP_HIGHLIGHT(_frame.get());
 
     wrefresh(_frame.get());
 }

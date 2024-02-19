@@ -1,5 +1,4 @@
 #include "Window.hpp"
-#include "Log.hpp"
 
 Window::Window(Library& library) : _library(library) {
     setlocale(LC_ALL, "");  
@@ -10,12 +9,12 @@ Window::Window(Library& library) : _library(library) {
     nodelay(stdscr, true);
     keypad(stdscr, true);
     curs_set(0);
-    use_default_colors();
 
-    init_pair(1, COLOR_BLACK, COLOR_YELLOW);
-    init_pair(2, COLOR_WHITE, COLOR_BLACK);
-    init_pair(3, COLOR_BLUE, COLOR_BLACK);
-    init_pair(4, COLOR_CYAN, COLOR_BLACK);
+    if (has_colors()) {
+        use_default_colors();
+        start_color();
+        PColor::setDefaultColor();
+    }
 
     getmaxyx(stdscr, _windowY, _windowX);
 
@@ -25,6 +24,7 @@ Window::Window(Library& library) : _library(library) {
     _listView = ListComponent(_windowY, _windowX);
     _visualView = VisualComponent(_windowY, _windowX);
     _popView = PopupComponent(_windowY, _windowX);
+
 }
 
 Window::~Window() {

@@ -5,6 +5,7 @@
 #include <cmath>
 
 #include "Component.hpp"
+#include "Color.hpp"
 #include "Log.hpp"
 
 #define V_TOP    0

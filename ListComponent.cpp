@@ -36,10 +36,14 @@ void ListComponent::render(Library& library) {
     cchar_t vline, hline;
     setcchar(&vline, L"\u2502", COLOR_PAIR(0), 0, nullptr);  // Vertical line
     setcchar(&hline, L"\u2500", COLOR_PAIR(0), 0, nullptr);  // Horizontal line
+    
+    WRAP_COLOR(_frame.get(), PColor::ColorListBorder);
 
     wborder_set(_frame.get(), &vline, &vline, &hline, &hline,
             &left_upper_corner, &right_upper_corner, 
             &left_bottom_corner, &right_bottom_corner);
+
+    UNWRAP_COLOR(_frame.get(), PColor::ColorListBorder);
 
     std::vector<std::string> listItems = library.getActivePlaylist()
         .getPlaylistSongs();
@@ -57,7 +61,8 @@ void ListComponent::render(Library& library) {
 
     auto entryIt = listItems.begin() + _from;
     int pos  = 0;
-
+    
+    WRAP_COLOR(_frame.get(), PColor::ColorListText);
     for (auto it = entryIt; it != listItems.end(); ++it) {
         // no more space (pos is zero indexed, so stop when ==)
         if (pos >= renderY) {
@@ -67,7 +72,7 @@ void ListComponent::render(Library& library) {
         auto& entry = *it; 
         std::string display = "";
         std::string prefix = "";
-
+        
         if (_numbered) {
            prefix = "[" + std::to_string(pos + _from + 1) + "] ";
         }
@@ -80,17 +85,22 @@ void ListComponent::render(Library& library) {
             display = entry.substr(0, _x - 6 
                     - prefix.size()) += "...";
         }
+        
+        if (pos == _selectedPos) {
+            WRAP_HIGHLIGHT(_frame.get());
+        }
 
-        (pos == _selectedPos) ? wattron(_frame.get(), A_REVERSE) : 0;
         std::string clearLine = std::string(_x - 2, ' ');
         mvwprintw(_frame.get(), pos + 1, 1, clearLine.c_str());
 
         display = prefix + display;
         mvwprintw(_frame.get(), pos + 1, 1, display.c_str());
-        wattroff(_frame.get(), A_REVERSE);
-
         pos++;
+
+        UNWRAP_HIGHLIGHT(_frame.get());
+
     }
+    UNWRAP_COLOR(_frame.get(), PColor::ColorListText);
 
     wrefresh(_frame.get());
 }

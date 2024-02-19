@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Component.hpp"
+#include "Color.hpp"
 
 class ListComponent : public ComponentBase {
     public:

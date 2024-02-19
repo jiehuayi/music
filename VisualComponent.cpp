@@ -32,10 +32,12 @@ void VisualComponent::render(Library& library) {
     cchar_t vline, hline;
     setcchar(&vline, L"\u2502", COLOR_PAIR(0), 0, nullptr);  // Vertical line
     setcchar(&hline, L"\u2500", COLOR_PAIR(0), 0, nullptr);  // Horizontal line
-
+    
+    WRAP_COLOR(_frame.get(), PColor::ColorVisualBorder)
     wborder_set(_frame.get(), &vline, &vline, &hline, &hline,
             &left_upper_corner, &right_upper_corner, 
             &left_bottom_corner, &right_bottom_corner);
+    UNWRAP_COLOR(_frame.get(), PColor::ColorVisualBorder)
 
     Playlist& playlist = library.getActivePlaylist();
     renderVisualizer(playlist);
@@ -44,7 +46,8 @@ void VisualComponent::render(Library& library) {
     wrefresh(_frame.get());
 }
 
-void VisualComponent::renderVisualizer(Playlist& playlist) { 
+void VisualComponent::renderVisualizer(Playlist& playlist) {
+    WRAP_COLOR(_frame.get(), PColor::ColorVisualBar)
     if (playlist.isPlaying()) {
         int visualizerY = _y - 6;
         int visualizerX = _x - 2;
@@ -57,16 +60,13 @@ void VisualComponent::renderVisualizer(Playlist& playlist) {
         for (auto& line : visFrame) {
             const wchar_t* cstr = line.c_str();
             if (cur % 2) {
-                wattron(_frame.get(), COLOR_PAIR(4));
                 mvwaddwstr(_frame.get(), cur++, 1, cstr);
-                wattroff(_frame.get(), COLOR_PAIR(4));
             } else {
-                wattron(_frame.get(), COLOR_PAIR(3));
                 mvwaddwstr(_frame.get(), cur++, 1, cstr);
-                wattroff(_frame.get(), COLOR_PAIR(3));
             }
         }
     }
+    UNWRAP_COLOR(_frame.get(), PColor::ColorVisualBar)
 }
 
 void VisualComponent::renderControls(Playlist& playlist) {
@@ -115,6 +115,7 @@ void VisualComponent::renderControls(Playlist& playlist) {
         }
     }
 
+    WRAP_COLOR(_frame.get(), PColor::ColorVisualText);
     mvwprintw(_frame.get(),
             _y - 4, 1, "\u258c%s\u2590", progressBarBuffer.str().c_str());
 
@@ -132,7 +133,8 @@ void VisualComponent::renderControls(Playlist& playlist) {
             _y - 2, 1, "> %s...",
             playlist.activeSongName()
             .substr(0, _x - 18).c_str());
-    
+
+    UNWRAP_COLOR(_frame.get(), PColor::ColorVisualText); 
 }
 
 int VisualComponent::getOrientation() {
@@ -182,6 +184,8 @@ std::vector<std::wstring> VisualComponent::visualize(int cy, int cx,
         int bl;
         
         bool eol = false;
+        
+        // Bar construction
         for (int g = 0; g < growMax && !eol; ++g) {
             wchar_t px;
             int gl;
@@ -197,7 +201,11 @@ std::vector<std::wstring> VisualComponent::visualize(int cy, int cx,
             if (g <= whole && whole != 0.0) {
                 px = L'\u2590';
             } else if (g == std::ceil(height) || whole == 0.0) {
-                px = L'\u2597'; // Need change because orientation matters now...
+                if (frac > 0.35) {
+                    px = L'\u2597'; // Need change because orientation matters now...
+                } else {
+                    px = whole == 0.0 ? L'_' : L' ';
+                }
                 eol = true;
             } else {
                 break;

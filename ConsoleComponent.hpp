@@ -4,6 +4,7 @@
 #include <sstream>
 
 #include "Component.hpp"
+#include "Color.hpp"
 
 #define CONSOLE_STATE_OPEN  0
 #define CONSOLE_STATE_CLOSE 1

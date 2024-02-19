@@ -5,6 +5,7 @@ LDFLAGS := -D_XOPEN_SOURCE_EXTENDED -L/usr/local/Cellar/ncurses/6.4/lib -lncurse
 # List of source files
 SRCS := Main.cpp \
         Window.cpp \
+		Color.cpp \
         Track.cpp \
         Playlist.cpp \
         Library.cpp \
