@@ -25,7 +25,7 @@
 #include "Playlist.hpp"
 #include "CommandHandler.hpp"
 #include "Log.hpp"
-#include "Color.hpp":
+#include "Color.hpp"
 
 #include "Component.hpp"
 #include "ConsoleComponent.hpp"

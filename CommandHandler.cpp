@@ -16,14 +16,14 @@ CommandHandler::split(std::string input, char delim) {
 }
 
 std::string CommandHandler::trim(const std::string input) {
-    size_t start = input.find_first_not_of(" \t\n\r\f\v");
-    size_t end = input.find_last_not_of(" \t\n\r\f\v");
+    size_t start = input.find_first_not_of(" \f\t\n\r");
 
-    if (start == std::string::npos || end == std::string::npos) {
+    if (start == std::string::npos) {
         return "";
-    } else {
-        return input.substr(start, end - start + 1);
     }
+
+    size_t end = input.find_last_not_of(" \t\n\r");
+    return input.substr(start, end - start + 1);
 }
 
 int CommandHandler::registerCommand(std::string identifier, 
@@ -77,8 +77,7 @@ int CommandHandler::parse(std::string raw) {
 
     size_t bStart = rhs.find('[');
     size_t bEnd = rhs.find(']');
-
-    if (bStart == std::string::npos ||
+if (bStart == std::string::npos ||
             bEnd == std::string::npos) {
         // TODO: error handling
         return CMD_PARSE_FAILURE;
@@ -87,7 +86,7 @@ int CommandHandler::parse(std::string raw) {
         return CMD_PARSE_FAILURE;
     } 
 
-    valueList = split(rhs.substr(bStart + 1, bEnd), ',');
+    valueList = split(rhs.substr(bStart + 1, bEnd - 1), ',');
     _recent = {.name = lhs, .values = valueList};
 
     return CMD_PARSE_SUCCESS;

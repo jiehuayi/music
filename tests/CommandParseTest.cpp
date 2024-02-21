@@ -32,6 +32,30 @@ void as(int want, int expected) {
     }
 }
 
+void as(Args want, Args expected) {
+    if (want.name == expected.name) {
+        std::cout << "ok!\n";
+    } else {
+        std::cout << "assert failure: expected " << expected.name;
+    }
+    
+    std::vector<std::string> v1 = want.values;
+    std::vector<std::string> v2 = expected.values;
+   
+    // If the sizes are different, the vectors are not equal
+    if (v1.size() != v2.size()) {
+        std::cout << "assert failure\n";
+    }
+
+    // Iterate over each element and compare
+    for (size_t i = 0; i < v1.size(); ++i) {
+        if (v1[i] != v2[i]) {
+            std::cout << "assert failure: got " << v1[i] << " instead of "
+                << v2[i] << "\n";
+        }
+    }
+}
+
 int main() {
     std::string h = "hello";
     std::string s1 = "hello";
@@ -83,7 +107,21 @@ int main() {
     as(v[2], ""); //strip is called
     as(v.size(), 3);
 
+#define v std::vector<std::string>
+#define s std::string
+
     std::string a1 = "hello=[world]";
+    v v1 = v();
+    v1.push_back("world");
+    Args ae1 = {.name="hello", .values=v1};
+    as(parse(a1), ae1); 
+
+    std::string a2 = "hello sussy=[world    , order   , jor ] []";
+    v v2 = v1;
+    v2.push_back("order");
+    v2.push_back("jor");
+    Args ae2 = {.name="hello sussy", .values=v2};
+    as(parse(a2),ae2);
 
     return 0;
 }
@@ -144,7 +182,7 @@ Args parse(std::string raw) {
         return e;
     } 
 
-    valueList = split(rhs.substr(bStart + 1, bEnd), ',');
+    valueList = split(rhs.substr(bStart + 1, bEnd - 1), ',');
     Args a = {.name = lhs, .values = valueList};
 
     return a;
