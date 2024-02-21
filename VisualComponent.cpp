@@ -9,7 +9,7 @@ VisualComponent::VisualComponent(int winy, int winx) : ComponentBase(winy, winx)
     _oy = winy * 0.4;
     _ox = 0;
 
-    _y = winy * 0.6 - 1;
+    _y = std::ceil((winy - 1) * 0.6);
     _x = winx;
 
     _frame = std::shared_ptr<WINDOW>(

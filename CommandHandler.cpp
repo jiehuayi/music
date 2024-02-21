@@ -95,7 +95,6 @@ int CommandHandler::parse(std::string raw) {
 
 int CommandHandler::execute() {
     if (_registeredCommands.find(_recent.name) == _registeredCommands.end()) {
-        exit(EXIT_FAILURE);
         return 1;
     }
 

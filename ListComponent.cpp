@@ -12,7 +12,7 @@ ListComponent::ListComponent(int winy, int winx) : ComponentBase(winy, winx) {
     _oy = 0;
     _ox = 0;
 
-    _y = winy * 0.4;
+    _y = std::floor((winy - 1) * 0.4);
     _x = winx;
 
     _frame = std::shared_ptr<WINDOW>(
