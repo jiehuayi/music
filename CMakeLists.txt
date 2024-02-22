@@ -59,14 +59,20 @@ set(TESTS
     tests/CommandParserTest.cpp
 )
 
+set(TEST_CLASSES
+    CommandParser.cpp
+)
+
 enable_testing()
 
-add_executable(tests.out ${TESTS})
+add_executable(tests.out ${TESTS} ${TEST_CLASSES})
 
 target_link_libraries(
     tests.out
     GTest::gtest_main
 )
+
+target_include_directories(tests.out PRIVATE ./)
 
 include(GoogleTest)
 gtest_discover_tests(tests.out)

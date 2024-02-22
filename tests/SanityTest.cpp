@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
 
-TEST(SanityTest, BasicAssertions) {
+TEST(SanityTest, Sanity) {
     ASSERT_EQ(1 + 1, 2);
 }
