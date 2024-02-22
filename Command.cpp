@@ -1,6 +1,6 @@
 #include "Command.hpp"
 
-Command::Command(Window& ctx, Library& lib) : _ctx(ctx), _lib(lib) {
+Command::Command(Window& ctx, Library& lib) : _lib(lib), _ctx(ctx) {
     Log::append("Initializing Command Base\n"); 
 }
 

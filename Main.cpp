@@ -27,7 +27,7 @@ int main(int argc, char** argv) {
     Library lib = Library();
 
     Window wm = Window(lib);
-    CommandHandler ch = CommandHandler(wm);
+    CommandHandler ch = CommandHandler();
 
     initCommands(ch, wm, lib);
 

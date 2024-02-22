@@ -1,10 +1,10 @@
 #include "CommandHandler.hpp"
 
-CommandHandler::CommandHandler(Window& ctx) : _ctx(ctx) {}
+CommandHandler::CommandHandler() {}
 
 CommandHandler::~CommandHandler() {}
 
-std::vector<std::string> 
+std::vector<std::string>
 CommandHandler::split(std::string input, char delim) {
     std::vector<std::string> pieces;
     std::string token;
@@ -105,4 +105,6 @@ int CommandHandler::execute() {
 
     c->execute(_recent);
     delete c;
+
+    return 0;
 }

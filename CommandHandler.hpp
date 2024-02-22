@@ -7,7 +7,7 @@
 
 #include "Parameters.hpp"
 #include "Command.hpp"
-#include "Window.hpp"
+#include "CommandParser.hpp"
 
 #define CMD_PARSE_SUCCESS 1
 #define CMD_PARSE_FAILURE 0
@@ -17,7 +17,7 @@ class Command;
 
 class CommandHandler {
     public:
-        CommandHandler(Window& ctx);
+        CommandHandler();
         ~CommandHandler();
 
         static std::vector<std::string> split(std::string input, char delim);
@@ -33,7 +33,6 @@ class CommandHandler {
         int execute();
 
     private:
-        Window& _ctx;
         Parameters _recent;
         std::string _error;
         std::unordered_map<std::string, 

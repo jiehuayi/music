@@ -2,6 +2,7 @@
 
 #include "Window.hpp"
 #include "Command.hpp"
+#include "Log.hpp"
 
 #define CMD_SONG_TOGGLE             "song-toggle"
 #define CMD_SONG_PLAY               "song-play"
@@ -30,6 +31,11 @@
             using Command::Command; \
             void execute(Parameters args) override; \
     };
+
+#define __COMMAND__ args.name
+
+#define TRACE_COMMAND() \
+    Log::append("Executing Command: " + __COMMAND__);
 
 // An extra semicolon is included in macro definition to be compatible with tne
 // auto-indentation of my editor
