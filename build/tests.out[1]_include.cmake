@@ -1,0 +1,5 @@
+if(EXISTS "/Users/jason/Folder/code/cpp/music/build/tests.out[1]_tests.cmake")
+  include("/Users/jason/Folder/code/cpp/music/build/tests.out[1]_tests.cmake")
+else()
+  add_test(tests.out_NOT_BUILT tests.out_NOT_BUILT)
+endif()
