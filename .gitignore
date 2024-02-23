@@ -8,6 +8,9 @@
 
 bass24-osx/
 
+# Clangd
+compile_flags.txt
+
 CMakeLists.txt.user
 CMakeCache.txt
 CMakeFiles

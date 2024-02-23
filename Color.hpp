@@ -8,6 +8,9 @@
 #define WRAP_HIGHLIGHT(w)   wattron(w, A_REVERSE);
 #define UNWRAP_HIGHLIGHT(w) wattroff(w, A_REVERSE);
 
+#define WRAP_BOLD(w)        wattron(w, A_BOLD);
+#define UNWRAP_BOLD(w)      wattroff(w, A_BOLD);
+
 #define COLOR_NEUT -1
     
 namespace PColor {

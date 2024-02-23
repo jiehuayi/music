@@ -33,11 +33,11 @@ void VisualComponent::render(Library& library) {
     setcchar(&vline, L"\u2502", COLOR_PAIR(0), 0, nullptr);  // Vertical line
     setcchar(&hline, L"\u2500", COLOR_PAIR(0), 0, nullptr);  // Horizontal line
     
-    WRAP_COLOR(_frame.get(), PColor::ColorVisualBorder)
+    WRAP_COLOR(_frame.get(), PColor::ColorVisualBorder);
     wborder_set(_frame.get(), &vline, &vline, &hline, &hline,
             &left_upper_corner, &right_upper_corner, 
             &left_bottom_corner, &right_bottom_corner);
-    UNWRAP_COLOR(_frame.get(), PColor::ColorVisualBorder)
+    UNWRAP_COLOR(_frame.get(), PColor::ColorVisualBorder);
 
     Playlist& playlist = library.getActivePlaylist();
     renderVisualizer(playlist);
@@ -47,6 +47,7 @@ void VisualComponent::render(Library& library) {
 }
 
 void VisualComponent::renderVisualizer(Playlist& playlist) {
+    WRAP_BOLD(_frame.get());
     WRAP_COLOR(_frame.get(), PColor::ColorVisualBar)
     if (playlist.isPlaying()) {
         int visualizerY = _y - 6;
@@ -66,7 +67,8 @@ void VisualComponent::renderVisualizer(Playlist& playlist) {
             }
         }
     }
-    UNWRAP_COLOR(_frame.get(), PColor::ColorVisualBar)
+    UNWRAP_COLOR(_frame.get(), PColor::ColorVisualBar);
+    UNWRAP_BOLD(_frame.get());
 }
 
 void VisualComponent::renderControls(Playlist& playlist) {
