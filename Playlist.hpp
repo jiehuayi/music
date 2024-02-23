@@ -44,6 +44,7 @@ class Playlist {
 
         std::string activeSongName();
         bool isPlaying();
+        bool isFinished();
 
         std::vector<float> getFFT();
         double getDuration();

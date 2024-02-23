@@ -43,7 +43,7 @@ void VisualComponent::render(Library& library) {
     renderVisualizer(playlist);
     renderControls(playlist);
         
-    wrefresh(_frame.get());
+    wnoutrefresh(_frame.get());
 }
 
 void VisualComponent::renderVisualizer(Playlist& playlist) {

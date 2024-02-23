@@ -24,7 +24,19 @@ namespace PColor {
         ColorConsoleBackground,
         ColorConsoleHighlight,
         ColorConsoleText,
+        ColorCount,
     };
 
-    void setDefaultColor();
 }
+
+class Color {
+    public:
+        Color();
+        ~Color();
+
+        void setDefaultColor();
+
+        void setColor(PColor::ColorSections section, 
+                int colorF, int colorB);
+    private:
+};

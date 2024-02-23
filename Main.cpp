@@ -24,15 +24,17 @@ int main(int argc, char** argv) {
     int fps = 40;
     int delayMillis = 1000 / fps;
 
-    Library lib = Library();
+    Library pm = Library();
 
-    Window wm = Window(lib);
+    Window wm = Window(pm);
     CommandHandler ch = CommandHandler();
 
-    initCommands(ch, wm, lib);
+    initCommands(ch, wm, pm);
 
     for (;;) {
-        wm.renderWindow();
+        wm.processRender();
+        wm.processUpdate(ch);
+
         if (wm.processInput(ch) == APP_STATE_TERMINATED) {
             break;
         }

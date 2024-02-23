@@ -33,5 +33,5 @@ void PopupComponent::render(Library& library) {
 
     mvwprintw(_frame.get(), 1, 1, "Hello World");
 
-    wrefresh(_frame.get());
+    wnoutrefresh(_frame.get());
 }

@@ -78,7 +78,6 @@ float Playlist::getVolume() {
 
 void Playlist::play(int index) {
     std::filesystem::path selectedTrack = _songs[index];
-
     _isTrackPlaying = true;
 
     if (_activeTrack == nullptr || selectedTrack != _activeTrack->path()) {
@@ -116,6 +115,10 @@ std::string Playlist::activeSongName() {
 
 bool Playlist::isPlaying() {
     return _isTrackPlaying;
+}
+
+bool Playlist::isFinished() {
+    return _activeTrack ? _activeTrack->isEnd() : false;
 }
 
 std::vector<float> Playlist::getFFT() {

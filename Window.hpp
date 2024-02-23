@@ -62,7 +62,8 @@ class Window {
         Window(Library& library);
         ~Window();
 
-        void renderWindow();
+        void processRender();
+        void processUpdate(CommandHandler& handler);
         int processInput(CommandHandler& handler);
 
     private:
@@ -75,6 +76,7 @@ class Window {
         ListComponent _listView;
         VisualComponent _visualView;
         PopupComponent _popView;
+        Color _colorManager;
  
         int _inputMode;
 

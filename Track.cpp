@@ -32,6 +32,13 @@ void Track::setVolume(float volume) {
             BASS_ATTRIB_VOL, volume);
 }
 
+bool Track::isEnd() {
+    const double threshold = 0.999;
+    QWORD pos = BASS_ChannelGetPosition(_channel, BASS_POS_BYTE);
+    QWORD total = BASS_ChannelGetLength(_channel, BASS_POS_BYTE);
+    return (pos / total) >= threshold;
+}
+
 std::filesystem::path Track::path() {
     return _path;
 }

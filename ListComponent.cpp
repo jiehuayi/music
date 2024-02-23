@@ -102,7 +102,7 @@ void ListComponent::render(Library& library) {
     }
     UNWRAP_COLOR(_frame.get(), PColor::ColorListText);
 
-    wrefresh(_frame.get());
+    wnoutrefresh(_frame.get());
 }
 
 int ListComponent::getSelectedPosition() {
