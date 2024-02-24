@@ -17,7 +17,9 @@ class ComponentBase {
     public:
         ComponentBase(int winy, int winx);
 
+        virtual void setFrame(int winy, int winx) = 0;
         virtual void render(Library& library) = 0;
+        virtual void clear();
 
         virtual int getHeight();
         virtual int getWidth();

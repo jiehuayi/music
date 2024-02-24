@@ -11,6 +11,14 @@ void windowDeleter(WINDOW* win) {
 ComponentBase::ComponentBase(int winy, int winx) {
     _winy = winy;
     _winx = winx;
+    _frame = nullptr;
+}
+
+void ComponentBase::clear() {
+    if (_frame) {
+        wclear(_frame.get());
+        wrefresh(_frame.get());
+    }
 }
 
 int ComponentBase::getHeight() { return _y; }

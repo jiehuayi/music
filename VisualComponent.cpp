@@ -6,6 +6,22 @@ VisualComponent::VisualComponent() : ComponentBase(-1, -1) {
 }
 
 VisualComponent::VisualComponent(int winy, int winx) : ComponentBase(winy, winx) {
+    setFrame(winy, winx);
+    keypad(_frame.get(), true);
+    nodelay(_frame.get(), true);
+
+    _orientation = V_BOTTOM;
+    _runningMaxFrequency = 0.25;
+}
+
+void VisualComponent::setFrame(int winy, int winx) {
+    if (winy != _winy || winx != _winx) {
+        _winy = winy;
+        _winx = winx;
+    } 
+
+    wclear(_frame.get());
+
     _oy = winy * 0.4;
     _ox = 0;
 
@@ -14,12 +30,6 @@ VisualComponent::VisualComponent(int winy, int winx) : ComponentBase(winy, winx)
 
     _frame = std::shared_ptr<WINDOW>(
             newwin(_y, _x, _oy, _ox), windowDeleter);
-
-    keypad(_frame.get(), true);
-    nodelay(_frame.get(), true);
-
-    _orientation = V_BOTTOM;
-    _runningMaxFrequency = 0.25;
 }
 
 void VisualComponent::render(Library& library) { 

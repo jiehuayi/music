@@ -9,7 +9,6 @@
 #include <cwchar>
 #include <cstdlib>
 #include <cmath>
-#include <csignal>
 #include <cctype>
 #include <wchar.h>
 #include <unistd.h>
@@ -46,12 +45,6 @@
 
 #define FORMAT_PTR(char_ptr) ("%s", char_ptr)
 
-struct FrameDeleter {
-    void operator()(WINDOW* frame) {
-        delwin(frame);
-    }
-};
-
 class CommandHandler;
 class Command;
 
@@ -62,6 +55,7 @@ class Window {
         Window(Library& library);
         ~Window();
 
+        void processResize();
         void processRender();
         void processUpdate(CommandHandler& handler);
         int processInput(CommandHandler& handler);
@@ -69,6 +63,9 @@ class Window {
     private:
         void processInputNavigateMode();
         void processInputCommandMode();
+
+    public:
+        static Window* inst;
 
     protected:
         Library& _library;

@@ -16,6 +16,8 @@ PopupComponent::PopupComponent(int winy, int winx) : ComponentBase(winy, winx) {
             newwin(_y, _x, _oy, _ox), windowDeleter);
 }
 
+void PopupComponent::setFrame(int winy, int winx) { }
+
 void PopupComponent::render(Library& library) { 
     cchar_t left_upper_corner, right_upper_corner, left_bottom_corner, right_bottom_corner;
     setcchar(&left_upper_corner, L"\u256d", COLOR_PAIR(0), 0, nullptr);

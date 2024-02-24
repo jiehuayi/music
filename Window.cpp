@@ -36,11 +36,25 @@ Window::~Window() {
         << "\033[0m" << std::endl;
 }
 
+void Window::processResize() { 
+    getmaxyx(stdscr, _windowY, _windowX);
+    clear();
+    resizeterm(_windowY, _windowX);
+
+    _consoleView.clear();
+    _listView.clear();
+    _visualView.clear();
+
+    _consoleView.setFrame(_windowY, _windowX);
+    _listView.setFrame(_windowY, _windowX);
+    _visualView.setFrame(_windowY, _windowX);
+    refresh();
+}
+
 void Window::processRender() {
     _visualView.render(_library);
     _listView.render(_library);
     _consoleView.render(_library);
-    
     // Write all data from curses virtual screen to physical screen
     doupdate();
 }

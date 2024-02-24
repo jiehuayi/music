@@ -6,6 +6,20 @@ ConsoleComponent::ConsoleComponent() : ComponentBase(0, 0) {
 }
 
 ConsoleComponent::ConsoleComponent(int winy, int winx) : ComponentBase(winy, winx) {
+    _inputBuffer = std::stringstream("");
+    _state = CONSOLE_STATE_CLOSE;
+
+    setFrame(winy, winx);
+}
+
+void ConsoleComponent::setFrame(int winy, int winx) {
+    if (winy != _winy || winx != _winx) {
+        _winy = winy;
+        _winx = winx;
+    }
+
+    wclear(_frame.get());
+
     _oy = winy - 1;
     _ox = 0;
     _y = 1;
@@ -13,9 +27,6 @@ ConsoleComponent::ConsoleComponent(int winy, int winx) : ComponentBase(winy, win
 
     _frame = std::shared_ptr<WINDOW>(
             newwin(_y, _x, _oy, _ox), windowDeleter);
-
-    _inputBuffer = std::stringstream("");
-    _state = CONSOLE_STATE_CLOSE;
 }
 
 void ConsoleComponent::render(Library& library) {
@@ -36,7 +47,7 @@ void ConsoleComponent::render(Library& library) {
 
     UNWRAP_COLOR(_frame.get(), PColor::ColorConsoleText);
     UNWRAP_HIGHLIGHT(_frame.get());
-
+    
     wnoutrefresh(_frame.get());
 }
 

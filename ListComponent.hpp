@@ -8,6 +8,7 @@ class ListComponent : public ComponentBase {
         ListComponent();
         ListComponent(int winy, int winx);
 
+        void setFrame(int winy, int winx) override;
         void render(Library& library) override;
         
         int getSelectedPosition();

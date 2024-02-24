@@ -1,12 +1,18 @@
 // --------------- penelope ---------------
 
 #include <iostream>
+#include <csignal>
 
 #include "Window.hpp"
 #include "CommandHandler.hpp"
 #include "CoreCommands.hpp"
 #include "Library.hpp"
 #include "Log.hpp"
+
+Window* Window::inst = nullptr;
+
+constexpr int TARGET_FPS = 60;
+constexpr int SLEEP_DURATION = 1000 / TARGET_FPS; // Milliseconds
 
 static void initCommands(CommandHandler& handler, Window& window, Library& library) {
     handler.registerCommand(CMD_SONG_TOGGLE, COMMAND_DEFINE(PlayPauseCommand));
@@ -18,15 +24,21 @@ static void initCommands(CommandHandler& handler, Window& window, Library& libra
     handler.registerCommand(CMD_NAVIGATE_UP, COMMAND_DEFINE(NavigateUpCommand));
 }
 
+static void onResize(int sig) {
+    if (Window::inst) {
+        Window::inst->processResize();
+    }
+
+    signal(SIGWINCH, onResize);
+}
+
 int main(int argc, char** argv) {
     Log::clear();
-
-    int fps = 40;
-    int delayMillis = 1000 / fps;
+    std::signal(SIGWINCH, onResize);
 
     Library pm = Library();
-
     Window wm = Window(pm);
+    Window::inst = &wm;
     CommandHandler ch = CommandHandler();
 
     initCommands(ch, wm, pm);
@@ -39,7 +51,7 @@ int main(int argc, char** argv) {
             break;
         }
 
-        napms(delayMillis); // from ncurses;
+        napms(SLEEP_DURATION); 
     }
 
     return EXIT_SUCCESS;

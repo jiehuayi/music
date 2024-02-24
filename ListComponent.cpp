@@ -9,21 +9,31 @@ ListComponent::ListComponent() : ComponentBase(0, 0) {
 }
 
 ListComponent::ListComponent(int winy, int winx) : ComponentBase(winy, winx) {
-    _oy = 0;
-    _ox = 0;
-
-    _y = std::floor((winy - 1) * 0.4);
-    _x = winx;
-
-    _frame = std::shared_ptr<WINDOW>(
-            newwin(_y, _x, _oy, _ox), windowDeleter);
-
     _from = 0;
     _selectedPos = 0;
     _numbered = true;
 
+    setFrame(winy, winx);
+
     keypad(_frame.get(), true);
     nodelay(_frame.get(), true);
+}
+
+void ListComponent::setFrame(int winy, int winx) {
+    if (winy != _winy || winx != _winx) {
+        _winy = winy;
+        _winx = winx;
+    }
+
+    wclear(_frame.get());
+
+    _oy = 0;
+    _ox = 0;
+    _y = std::floor((winy - 1) * 0.4);
+    _x = winx;
+    _frame.reset();
+    _frame = std::shared_ptr<WINDOW>(
+            newwin(_y, _x, _oy, _ox), windowDeleter);
 }
 
 void ListComponent::render(Library& library) {
