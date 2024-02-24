@@ -28,13 +28,10 @@ static void onResize(int sig) {
     if (Window::inst) {
         Window::inst->processResize();
     }
-
-    signal(SIGWINCH, onResize);
 }
 
 int main(int argc, char** argv) {
     Log::clear();
-    std::signal(SIGWINCH, onResize);
 
     Library pm = Library();
     Window wm = Window(pm);

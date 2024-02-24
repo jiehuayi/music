@@ -37,18 +37,9 @@ Window::~Window() {
 }
 
 void Window::processResize() { 
-    getmaxyx(stdscr, _windowY, _windowX);
-    clear();
-    resizeterm(_windowY, _windowX);
-
-    _consoleView.clear();
-    _listView.clear();
-    _visualView.clear();
-
     _consoleView.setFrame(_windowY, _windowX);
     _listView.setFrame(_windowY, _windowX);
     _visualView.setFrame(_windowY, _windowX);
-    refresh();
 }
 
 void Window::processRender() {
@@ -70,8 +61,13 @@ void Window::processUpdate(CommandHandler& handler) {
 
 int Window::processInput(CommandHandler& handler) {
     Playlist& playlist = _library.getActivePlaylist();
-    char in = wgetch(stdscr);
+    int in = wgetch(stdscr);
     std::string input = "";
+
+    if (in == KEY_RESIZE) {
+        processResize();
+        Log::append("RS\n");
+    }
 
     if (_inputMode == MODE_COMMAND) {
         input = _consoleView.getInputBuffer();

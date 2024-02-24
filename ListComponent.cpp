@@ -25,15 +25,15 @@ void ListComponent::setFrame(int winy, int winx) {
         _winx = winx;
     }
 
-    wclear(_frame.get());
+    winy = LINES;
+    winx = COLS;
 
     _oy = 0;
     _ox = 0;
     _y = std::floor((winy - 1) * 0.4);
     _x = winx;
-    _frame.reset();
-    _frame = std::shared_ptr<WINDOW>(
-            newwin(_y, _x, _oy, _ox), windowDeleter);
+
+    makeFrame();
 }
 
 void ListComponent::render(Library& library) {

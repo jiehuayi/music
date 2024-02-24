@@ -25,6 +25,9 @@ class ComponentBase {
         virtual int getWidth();
 
     protected:
+        void makeFrame();
+
+    protected:
         std::shared_ptr<WINDOW> _frame;
         int _y;
         int _x;

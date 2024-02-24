@@ -18,15 +18,12 @@ void ConsoleComponent::setFrame(int winy, int winx) {
         _winx = winx;
     }
 
-    wclear(_frame.get());
-
     _oy = winy - 1;
     _ox = 0;
     _y = 1;
     _x = winx;
 
-    _frame = std::shared_ptr<WINDOW>(
-            newwin(_y, _x, _oy, _ox), windowDeleter);
+    makeFrame();
 }
 
 void ConsoleComponent::render(Library& library) {

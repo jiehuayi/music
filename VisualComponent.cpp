@@ -20,16 +20,13 @@ void VisualComponent::setFrame(int winy, int winx) {
         _winx = winx;
     } 
 
-    wclear(_frame.get());
-
     _oy = winy * 0.4;
     _ox = 0;
 
     _y = std::ceil((winy - 1) * 0.6);
     _x = winx;
 
-    _frame = std::shared_ptr<WINDOW>(
-            newwin(_y, _x, _oy, _ox), windowDeleter);
+    makeFrame();
 }
 
 void VisualComponent::render(Library& library) { 
