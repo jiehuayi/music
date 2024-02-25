@@ -2,8 +2,8 @@
 
 Library::Library() {
     BASS_Init(-1, 44100, 0, nullptr, nullptr);
-    std::string defaultPath = std::string(getenv("HOME")) + "/Music/";
-    initActivePlaylist();
+    newPlaylist();
+    newPlaylist(std::string(getenv("HOME")) + "/Music/in/");
 }
 
 Library::~Library() {
@@ -12,6 +12,7 @@ Library::~Library() {
 
 void Library::newPlaylist(std::string path) {
     _playlists[path] = Playlist(path);
+    _activePlaylist = path;
     initActivePlaylist();
 }
 
@@ -22,6 +23,17 @@ void Library::newPlaylist() {
     _activePlaylist = defPlaylist.path();
 
     initActivePlaylist();
+}
+
+void Library::circulateActivePlaylist() {
+    auto playlistIt = _playlists.find(_activePlaylist);
+    playlistIt++;
+
+    if (playlistIt == _playlists.end()) {
+        _activePlaylist = _playlists.begin()->first;
+    } else {
+        _activePlaylist = playlistIt->first;
+    }
 }
 
 void Library::killActivePlaylist(std::string path) {

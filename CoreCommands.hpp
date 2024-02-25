@@ -14,6 +14,7 @@
 #define CMD_ROTATE_ANTICLOCK        "rotate-anticlock"
 #define CMD_NAVIGATE_DOWN           "move-down"
 #define CMD_NAVIGATE_UP             "move-up"
+#define CMD_NAVIGATE_NEXT_PLAYLIST  "next-playlist"
 
 // This macro should ONLY be used within initCommands
 //
@@ -51,3 +52,4 @@ COMMAND_DEFINITION_BUILDER(RotVisualClockCommand);
 COMMAND_DEFINITION_BUILDER(RotVisualAntiClockCommand);
 COMMAND_DEFINITION_BUILDER(NavigateDownCommand);
 COMMAND_DEFINITION_BUILDER(NavigateUpCommand);
+COMMAND_DEFINITION_BUILDER(NavigateNextPlaylistCommand);

@@ -40,12 +40,19 @@ void RotVisualAntiClockCommand::execute(Parameters args) {
 void NavigateDownCommand::execute(Parameters args) {
     TRACE_COMMAND();
     ListComponent& lv = getListView();
-    lv.setSelectedPosition(std::min(lv.getSelectedPosition() + 1, 
-                lv.getHeight() - 3));
+    lv.setSelectedPosition(std::min(
+                std::min(lv.getSelectedPosition() + 1,  lv.getHeight() - 3), 
+                _lib.getActivePlaylist().size() - 1));
 }
 
 void NavigateUpCommand::execute(Parameters args) {
     TRACE_COMMAND();
     ListComponent& lv = getListView();
     lv.setSelectedPosition(std::max(lv.getSelectedPosition() - 1, 0));
+}
+
+void NavigateNextPlaylistCommand::execute(Parameters args) {
+    TRACE_COMMAND();
+    getListView().clear();
+    _lib.circulateActivePlaylist();
 }

@@ -3,7 +3,7 @@
 #include <iostream>
 #include <string>
 #include <memory>
-#include <unordered_map>
+#include <map>
 #include <bass.h>
 
 #include "Playlist.hpp"
@@ -15,7 +15,9 @@ class Library {
 
         void newPlaylist(std::string path);
         void newPlaylist();
+        void circulateActivePlaylist();
         void killActivePlaylist(std::string path);
+
         void shuffleActivePlaylist();
         Playlist& getActivePlaylist();
 
@@ -26,5 +28,5 @@ class Library {
 
     private:
         std::string _activePlaylist;
-        std::unordered_map<std::string, Playlist> _playlists;
+        std::map<std::string, Playlist> _playlists;
 };
