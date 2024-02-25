@@ -24,13 +24,7 @@ static void initCommands(CommandHandler& handler, Window& window, Library& libra
     handler.registerCommand(CMD_NAVIGATE_UP, COMMAND_DEFINE(NavigateUpCommand));
 }
 
-static void onResize(int sig) {
-    if (Window::inst) {
-        Window::inst->processResize();
-    }
-}
-
-int main(int argc, char** argv) {
+int main() {
     Log::clear();
 
     Library pm = Library();

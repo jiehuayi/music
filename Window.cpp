@@ -58,7 +58,6 @@ void Window::processUpdate(CommandHandler& handler) {
 }
 
 int Window::processInput(CommandHandler& handler) {
-    Playlist& playlist = _library.getActivePlaylist();
     int in = wgetch(stdscr);
     std::string input = "";
 

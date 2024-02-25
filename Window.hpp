@@ -43,8 +43,6 @@
 #define V_BOTTOM                    2
 #define V_LEFT                      3
 
-#define FORMAT_PTR(char_ptr) ("%s", char_ptr)
-
 class CommandHandler;
 class Command;
 

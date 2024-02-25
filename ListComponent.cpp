@@ -45,7 +45,7 @@ void ListComponent::render(Library& library) {
     int renderY = _y - 2;
 
     if (_selectedPos >= renderY - 5 &&
-            _from + renderY < listItems.size()) {
+            _from + renderY < static_cast<int>(listItems.size())) {
         _from++;
         _selectedPos--;
     } else if (_selectedPos <= 5 && _from > 0) {
@@ -72,7 +72,7 @@ void ListComponent::render(Library& library) {
         }
 
         // account for extension
-        if (entry.length() < _x - 4) {
+        if (static_cast<int>(entry.length()) < _x - 4) {
             display = entry;
         } else {
             // display song file title in short form
@@ -85,10 +85,10 @@ void ListComponent::render(Library& library) {
         }
 
         std::string clearLine = std::string(_x - 2, ' ');
-        mvwprintw(_frame.get(), pos + 1, 1, clearLine.c_str());
+        mvwprintw(_frame.get(), pos + 1, 1, FORMAT_CSTR(clearLine.c_str()));
 
         display = prefix + display;
-        mvwprintw(_frame.get(), pos + 1, 1, display.c_str());
+        mvwprintw(_frame.get(), pos + 1, 1, FORMAT_CSTR(display.c_str()));
         pos++;
 
         UNWRAP_HIGHLIGHT(_frame.get());

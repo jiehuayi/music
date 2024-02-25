@@ -11,6 +11,7 @@
 
 #include "Library.hpp"
 
+#define FORMAT_CSTR(cp) "%s", cp
 void windowDeleter(WINDOW* win);
 
 class ComponentBase {

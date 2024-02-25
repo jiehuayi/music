@@ -24,12 +24,8 @@ void Library::newPlaylist() {
     initActivePlaylist();
 }
 
-void Library::killPlaylist(std::string path) {
-
-}
-
-void Library::killActivePlaylist() {
-    killPlaylist(_activePlaylist);
+void Library::killActivePlaylist(std::string path) {
+    _playlists.erase(path);
     _activePlaylist = "";
 }
 
