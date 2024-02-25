@@ -93,7 +93,7 @@ std::vector<float> Track::getChannelFFT() {
             break;
     }
 
-    if (BASS_ChannelGetData(_channel, fftBuffer, lengthFFT) == -1) {
+    if (BASS_ChannelGetData(_channel, fftBuffer, lengthFFT) == 0b11111111) {
         fftBufferLite = std::vector<float>(BUFF_SZ, 0.0);
         goto RET;
     }

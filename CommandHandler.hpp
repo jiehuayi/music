@@ -24,8 +24,11 @@ class CommandHandler {
         static std::string trim(const std::string input);
 
         int registerCommand(std::string identifier, std::function<Command* ()> cmd);
+        int registerAlias(std::string identifier, std::string alias);
 
         int processCommand(std::string command);
+        int processRecentCommand();
+
         std::string getHandlerError();
 
     private:
@@ -37,4 +40,5 @@ class CommandHandler {
         std::string _error;
         std::unordered_map<std::string, 
             std::function<Command*()>> _registeredCommands; 
+        std::unordered_map<std::string, std::string> _registeredAliases;
 };

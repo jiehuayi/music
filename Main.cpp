@@ -1,7 +1,6 @@
 // --------------- penelope ---------------
 
 #include <iostream>
-#include <csignal>
 
 #include "Window.hpp"
 #include "CommandHandler.hpp"
@@ -22,6 +21,8 @@ static void initCommands(CommandHandler& handler, Window& window, Library& libra
     handler.registerCommand(CMD_PLAYLIST_SHUFFLE, COMMAND_DEFINE(ShuffleCommand));
     handler.registerCommand(CMD_NAVIGATE_DOWN, COMMAND_DEFINE(NavigateDownCommand));
     handler.registerCommand(CMD_NAVIGATE_UP, COMMAND_DEFINE(NavigateUpCommand));
+
+    handler.registerAlias(CMD_PLAYLIST_SHUFFLE, "shuffle,sh");
 }
 
 int main() {

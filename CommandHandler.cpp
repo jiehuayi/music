@@ -1,6 +1,9 @@
 #include "CommandHandler.hpp"
 
-CommandHandler::CommandHandler() {}
+CommandHandler::CommandHandler() {
+    _recent = {.name = "", .values = {}};
+    _error = "";
+}
 
 CommandHandler::~CommandHandler() {}
 
@@ -41,10 +44,37 @@ int CommandHandler::registerCommand(std::string identifier,
     return 1;
 }
 
-int CommandHandler::processCommand(std::string command) {
-    _recent.name = command;
-    execute();
+int CommandHandler::registerAlias(std::string identifier, std::string aliasList) {
+    std::vector<std::string> aliases = split(aliasList, ',');
+    for (const auto& alias : aliases) {
+        if (alias == "") {
+            continue;
+        }
+
+        if (_registeredAliases.find(alias) == _registeredAliases.end()) {
+            _registeredAliases[alias] = identifier;
+        }
+    }
+    
+    // TODO: error handling
     return 1;
+}
+
+int CommandHandler::processCommand(std::string command) {
+    auto fullCommandIter = _registeredAliases.find(command);
+
+    // The entered command may be a alias, if not, treat it as a real command
+    if (fullCommandIter != _registeredAliases.end()) {
+        _recent.name = fullCommandIter->second;
+    } else {
+        _recent.name = command;
+    }
+
+    return execute();
+}
+
+int CommandHandler::processRecentCommand() {
+    return processCommand(_recent.name); 
 }
 
 std::string CommandHandler::getHandlerError() {

@@ -72,6 +72,9 @@ int Window::processInput(CommandHandler& handler) {
     }
 
     switch(in) {
+        case ';':
+            handler.processRecentCommand();
+            break;
         case 'k': case 0x10:
             handler.processCommand("move-up");
             break;
