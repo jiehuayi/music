@@ -25,9 +25,6 @@ void ListComponent::setFrame(int winy, int winx) {
         _winx = winx;
     }
 
-    winy = LINES;
-    winx = COLS;
-
     _oy = 0;
     _ox = 0;
     _y = std::floor((winy - 1) * 0.4);

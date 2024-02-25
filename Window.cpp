@@ -16,7 +16,8 @@ Window::Window(Library& library) : _library(library) {
         _colorManager.setDefaultColor();
     }
 
-    getmaxyx(stdscr, _windowY, _windowX);
+    _windowY = LINES;
+    _windowX = COLS;
 
     _inputMode = MODE_NAVIGATE;
     
@@ -36,7 +37,9 @@ Window::~Window() {
         << "\033[0m" << std::endl;
 }
 
-void Window::processResize() { 
+void Window::processResize() {
+    _windowY = LINES;
+    _windowX = COLS;
     _consoleView.setFrame(_windowY, _windowX);
     _listView.setFrame(_windowY, _windowX);
     _visualView.setFrame(_windowY, _windowX);
