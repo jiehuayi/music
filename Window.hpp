@@ -76,7 +76,4 @@ class Window {
         Color _colorManager;
  
         int _inputMode;
-
-    private:
-        int _windowX, _windowY;
 };

@@ -15,9 +15,9 @@ void windowDeleter(WINDOW* win);
 
 class ComponentBase {
     public:
-        ComponentBase(int winy, int winx);
+        ComponentBase();
 
-        virtual void setFrame(int winy, int winx) = 0;
+        virtual void setFrame() = 0;
         virtual void render(Library& library) = 0;
         virtual void clear();
 
@@ -34,7 +34,4 @@ class ComponentBase {
 
         int _oy;
         int _ox;
-
-        int _winy;
-        int _winx;
 };

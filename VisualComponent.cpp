@@ -1,12 +1,7 @@
 #include "VisualComponent.hpp"
 
-VisualComponent::VisualComponent() : ComponentBase(-1, -1) {
-    _oy = 0; _ox = 0; _y = 0; _x = 0;
-    _frame = nullptr;
-}
-
-VisualComponent::VisualComponent(int winy, int winx) : ComponentBase(winy, winx) {
-    setFrame(winy, winx);
+VisualComponent::VisualComponent() : ComponentBase() {
+    setFrame();
     keypad(_frame.get(), true);
     nodelay(_frame.get(), true);
 
@@ -14,17 +9,12 @@ VisualComponent::VisualComponent(int winy, int winx) : ComponentBase(winy, winx)
     _runningMaxFrequency = 0.25;
 }
 
-void VisualComponent::setFrame(int winy, int winx) {
-    if (winy != _winy || winx != _winx) {
-        _winy = winy;
-        _winx = winx;
-    } 
-
-    _oy = winy * 0.4;
+void VisualComponent::setFrame() {
+    _oy = LINES * 0.4;
     _ox = 0;
 
-    _y = std::ceil((winy - 1) * 0.6);
-    _x = winx;
+    _y = std::ceil((LINES - 1) * 0.6);
+    _x = COLS;
 
     makeFrame();
 }

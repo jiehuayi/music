@@ -1,11 +1,6 @@
 #include "PopupComponent.hpp"
 
-PopupComponent::PopupComponent() : ComponentBase(0, 0) {
-    _oy = 0; _ox = 0; _y = 0; _x = 0;
-    _frame = nullptr;
-}
-
-PopupComponent::PopupComponent(int winy, int winx) : ComponentBase(winy, winx) {
+PopupComponent::PopupComponent() : ComponentBase() {
     _oy = 10;
     _ox = 10;
 
@@ -16,7 +11,7 @@ PopupComponent::PopupComponent(int winy, int winx) : ComponentBase(winy, winx) {
             newwin(_y, _x, _oy, _ox), windowDeleter);
 }
 
-void PopupComponent::setFrame(int winy, int winx) { }
+void PopupComponent::setFrame() { }
 
 void PopupComponent::render(Library& library) { 
     cchar_t left_upper_corner, right_upper_corner, left_bottom_corner, right_bottom_corner;

@@ -16,15 +16,12 @@ Window::Window(Library& library) : _library(library) {
         _colorManager.setDefaultColor();
     }
 
-    _windowY = LINES;
-    _windowX = COLS;
-
     _inputMode = MODE_NAVIGATE;
     
-    _consoleView = ConsoleComponent(_windowY, _windowX);
-    _listView = ListComponent(_windowY, _windowX);
-    _visualView = VisualComponent(_windowY, _windowX);
-    _popView = PopupComponent(_windowY, _windowX);
+    _consoleView = ConsoleComponent();
+    _listView = ListComponent();
+    _visualView = VisualComponent();
+    _popView = PopupComponent();
 
 }
 
@@ -33,16 +30,14 @@ Window::~Window() {
 
     std::string goodByeMessage = "Goodbye, penelope.";
     std::cout << "\033[42m\033[30m" 
-        << goodByeMessage << std::string( _windowX - goodByeMessage.size(), ' ')
+        << goodByeMessage << std::string(COLS - goodByeMessage.size(), ' ')
         << "\033[0m" << std::endl;
 }
 
 void Window::processResize() {
-    _windowY = LINES;
-    _windowX = COLS;
-    _consoleView.setFrame(_windowY, _windowX);
-    _listView.setFrame(_windowY, _windowX);
-    _visualView.setFrame(_windowY, _windowX);
+    _consoleView.setFrame();
+    _listView.setFrame();
+    _visualView.setFrame();
 }
 
 void Window::processRender() {

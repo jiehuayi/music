@@ -1,27 +1,17 @@
 #include "ConsoleComponent.hpp"
 
-ConsoleComponent::ConsoleComponent() : ComponentBase(0, 0) {
-    _oy = 0; _ox = 0; _y = 0; _x = 0;
-    _frame = nullptr;
-}
-
-ConsoleComponent::ConsoleComponent(int winy, int winx) : ComponentBase(winy, winx) {
+ConsoleComponent::ConsoleComponent() : ComponentBase() {
     _inputBuffer = std::stringstream("");
     _state = CONSOLE_STATE_CLOSE;
 
-    setFrame(winy, winx);
+    setFrame();
 }
 
-void ConsoleComponent::setFrame(int winy, int winx) {
-    if (winy != _winy || winx != _winx) {
-        _winy = winy;
-        _winx = winx;
-    }
-
-    _oy = winy - 1;
+void ConsoleComponent::setFrame() {
+    _oy = LINES - 1;
     _ox = 0;
     _y = 1;
-    _x = winx;
+    _x = COLS;
 
     makeFrame();
 }

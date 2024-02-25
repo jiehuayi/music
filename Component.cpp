@@ -8,9 +8,7 @@ void windowDeleter(WINDOW* win) {
     delwin(win);
 }
 
-ComponentBase::ComponentBase(int winy, int winx) {
-    _winy = winy;
-    _winx = winx;
+ComponentBase::ComponentBase() {
     _frame = nullptr;
 }
 

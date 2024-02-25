@@ -1,34 +1,21 @@
 #include "ListComponent.hpp"
 
-ListComponent::ListComponent() : ComponentBase(0, 0) {
-    _oy = 0; _ox = 0; _y = 0; _x = 0;
-    _from = -1;
-    _selectedPos = -1;
-    _numbered = -1;
-    _frame = nullptr;
-}
-
-ListComponent::ListComponent(int winy, int winx) : ComponentBase(winy, winx) {
+ListComponent::ListComponent() : ComponentBase() {
     _from = 0;
     _selectedPos = 0;
     _numbered = true;
 
-    setFrame(winy, winx);
+    setFrame();
 
     keypad(_frame.get(), true);
     nodelay(_frame.get(), true);
 }
 
-void ListComponent::setFrame(int winy, int winx) {
-    if (winy != _winy || winx != _winx) {
-        _winy = winy;
-        _winx = winx;
-    }
-
+void ListComponent::setFrame() {
     _oy = 0;
     _ox = 0;
-    _y = std::floor((winy - 1) * 0.4);
-    _x = winx;
+    _y = std::floor((LINES - 1) * 0.4);
+    _x = COLS;
 
     makeFrame();
 }

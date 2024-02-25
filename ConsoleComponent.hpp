@@ -12,9 +12,8 @@
 class ConsoleComponent : public ComponentBase {
     public:
         ConsoleComponent();
-        ConsoleComponent(int winy, int winx);
 
-        void setFrame(int winy, int winx) override;
+        void setFrame() override;
         void render(Library& library) override;
 
         std::string getInputBuffer();
