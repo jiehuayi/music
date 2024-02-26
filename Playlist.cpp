@@ -48,11 +48,11 @@ std::vector<std::string> Playlist::getPlaylistSongs() {
     return ret;
 }
 
-int Playlist::size() {
+int Playlist::getSize() {
     return _songs.size();
 }
 
-std::string Playlist::path() {
+std::string Playlist::getPath() {
     return _path;
 }
 
@@ -80,7 +80,7 @@ void Playlist::play(int index) {
     std::filesystem::path selectedTrack = _songs[index];
     _isTrackPlaying = true;
 
-    if (_activeTrack == nullptr || selectedTrack != _activeTrack->path()) {
+    if (_activeTrack == nullptr || selectedTrack != _activeTrack->getPath()) {
         _activeTrack = std::make_shared<Track>(selectedTrack);
         _activeTrack->play();
         _activeTrack->setVolume(_volume);
@@ -107,7 +107,7 @@ void Playlist::shuffle() {
 
 std::string Playlist::activeSongName() {
     if (_activeTrack) {
-        return _activeTrack->name();
+        return _activeTrack->getName();
     }
 
     return "?";

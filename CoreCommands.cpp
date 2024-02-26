@@ -2,24 +2,24 @@
 
 void PlayPauseCommand::execute(Parameters args) {
     TRACE_COMMAND();
-    _lib.getActivePlaylist().trigger();
+    _lib.getDisplayPlaylist().trigger();
 }
 
 void PlayCommand::execute(Parameters args) {
     TRACE_COMMAND();
-    _lib.getActivePlaylist().play(getListView().getFrom() +
+    _lib.getDisplayPlaylist().play(getListView().getFrom() +
             getListView().getSelectedPosition());
     getVisualView().setRunningMaxFrequency(0.25);
 }
 
 void IncVolumeCommand::execute(Parameters args) {
     TRACE_COMMAND();
-    _lib.getActivePlaylist().incVolume();
+    _lib.getDisplayPlaylist().incVolume();
 }
 
 void DecVolumeCommand::execute(Parameters args) {
     TRACE_COMMAND();
-    _lib.getActivePlaylist().decVolume();
+    _lib.getDisplayPlaylist().decVolume();
 }
 
 void ShuffleCommand::execute(Parameters args) {
@@ -42,7 +42,7 @@ void NavigateDownCommand::execute(Parameters args) {
     ListComponent& lv = getListView();
     lv.setSelectedPosition(std::min(
                 std::min(lv.getSelectedPosition() + 1,  lv.getHeight() - 3), 
-                _lib.getActivePlaylist().size() - 1));
+                _lib.getDisplayPlaylist().getSize() - 1));
 }
 
 void NavigateUpCommand::execute(Parameters args) {
@@ -54,5 +54,5 @@ void NavigateUpCommand::execute(Parameters args) {
 void NavigateNextPlaylistCommand::execute(Parameters args) {
     TRACE_COMMAND();
     getListView().clear();
-    _lib.circulateActivePlaylist();
+    _lib.nextPlaylist();
 }

@@ -39,7 +39,7 @@ void ListComponent::render(Library& library) {
 
     UNWRAP_COLOR(_frame.get(), PColor::ColorListBorder);
 
-    std::vector<std::string> listItems = library.getActivePlaylist()
+    std::vector<std::string> listItems = library.getDisplayPlaylist()
         .getPlaylistSongs();
     
     int renderY = _y - 2;

@@ -27,9 +27,9 @@ class Playlist {
         ~Playlist();
 
         int readPlaylist();
-        int size();
+        int getSize();
 
-        std::string path();
+        std::string getPath();
 
         void incVolume();
         void decVolume();

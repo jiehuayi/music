@@ -15,18 +15,18 @@ class Library {
 
         void newPlaylist(std::string path);
         void newPlaylist();
-        void circulateActivePlaylist();
-        void killActivePlaylist(std::string path);
+        void nextPlaylist();
+        void killPlaylist(std::string path);
 
         void shuffleActivePlaylist();
-        Playlist& getActivePlaylist();
+        Playlist& getDisplayPlaylist();
 
         int playlistCount();
 
     private:
-        void initActivePlaylist();
+        void initDisplayPlaylist();
 
     private:
-        std::string _activePlaylist;
+        std::string _displayPlaylist;
         std::map<std::string, Playlist> _playlists;
 };

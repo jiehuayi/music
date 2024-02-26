@@ -39,11 +39,11 @@ bool Track::isEnd() {
     return (pos / total) >= threshold;
 }
 
-std::filesystem::path Track::path() {
+std::filesystem::path Track::getPath() {
     return _path;
 }
 
-std::string Track::name() {
+std::string Track::getName() {
     return _trackName;
 }
 

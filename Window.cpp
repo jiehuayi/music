@@ -49,7 +49,7 @@ void Window::processRender() {
 }
 
 void Window::processUpdate(CommandHandler& handler) {
-    Playlist& playlist = _library.getActivePlaylist();
+    Playlist& playlist = _library.getDisplayPlaylist();
 
     if (playlist.isFinished()) {
         handler.processCommand("move-down");

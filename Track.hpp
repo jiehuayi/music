@@ -19,8 +19,8 @@ class Track {
 
         bool isEnd();
 
-        std::filesystem::path path();
-        std::string name();
+        std::filesystem::path getPath();
+        std::string getName();
         void setVolume(float volume);
         double getDuration();
         double getPosition();

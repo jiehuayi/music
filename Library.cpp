@@ -12,47 +12,47 @@ Library::~Library() {
 
 void Library::newPlaylist(std::string path) {
     _playlists[path] = Playlist(path);
-    _activePlaylist = path;
-    initActivePlaylist();
+    _displayPlaylist = path;
+    initDisplayPlaylist();
 }
 
 void Library::newPlaylist() {
     Playlist defPlaylist = Playlist();
 
-    _playlists[defPlaylist.path()] = defPlaylist;
-    _activePlaylist = defPlaylist.path();
+    _playlists[defPlaylist.getPath()] = defPlaylist;
+    _displayPlaylist = defPlaylist.getPath();
 
-    initActivePlaylist();
+    initDisplayPlaylist();
 }
 
-void Library::circulateActivePlaylist() {
-    auto playlistIt = _playlists.find(_activePlaylist);
+void Library::nextPlaylist() {
+    auto playlistIt = _playlists.find(_displayPlaylist);
     playlistIt++;
 
     if (playlistIt == _playlists.end()) {
-        _activePlaylist = _playlists.begin()->first;
+        _displayPlaylist = _playlists.begin()->first;
     } else {
-        _activePlaylist = playlistIt->first;
+        _displayPlaylist = playlistIt->first;
     }
 }
 
-void Library::killActivePlaylist(std::string path) {
+void Library::killPlaylist(std::string path) {
     _playlists.erase(path);
-    _activePlaylist = "";
+    _displayPlaylist = "";
 }
 
 void Library::shuffleActivePlaylist() {
-    _playlists[_activePlaylist].shuffle();
+    _playlists[_displayPlaylist].shuffle();
 }
 
-Playlist& Library::getActivePlaylist() {
-    return _playlists[_activePlaylist];
+Playlist& Library::getDisplayPlaylist() {
+    return _playlists[_displayPlaylist];
 }
 
 int Library::playlistCount() {
     return _playlists.size();
 }
 
-void Library::initActivePlaylist() {
-    _playlists[_activePlaylist].readPlaylist(); 
+void Library::initDisplayPlaylist() {
+    _playlists[_displayPlaylist].readPlaylist(); 
 }
