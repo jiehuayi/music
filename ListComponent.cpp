@@ -20,7 +20,7 @@ void ListComponent::setFrame() {
     makeFrame();
 }
 
-void ListComponent::render(Library& library) {
+void ListComponent::render(PlaylistManager& library) {
     cchar_t left_upper_corner, right_upper_corner, left_bottom_corner, right_bottom_corner;
     setcchar(&left_upper_corner, L"\u256d", COLOR_PAIR(0), 0, nullptr);
     setcchar(&right_upper_corner, L"\u256e", COLOR_PAIR(0), 0, nullptr);

@@ -8,10 +8,10 @@
 
 #include "Playlist.hpp"
 
-class Library {
+class PlaylistManager {
     public:
-        Library();
-        ~Library();
+        PlaylistManager();
+        ~PlaylistManager();
 
         void newPlaylist(std::string path);
         void newPlaylist();

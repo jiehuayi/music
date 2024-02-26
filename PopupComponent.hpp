@@ -5,5 +5,5 @@ class PopupComponent : public ComponentBase {
         PopupComponent();
     
         void setFrame() override;
-        void render(Library& library) override;
+        void render(PlaylistManager& library) override;
 };

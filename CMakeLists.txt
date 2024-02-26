@@ -44,10 +44,10 @@ set(SRCS
     ListComponent.cpp
     VisualComponent.cpp
     PopupComponent.cpp
-    Log.cpp
 )
-
 add_executable(main.out ${SRCS})
+
+target_precompile_headers(main.out PRIVATE Log.hpp)
 
 target_link_libraries(main.out
     ncurses

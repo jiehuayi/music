@@ -36,7 +36,7 @@
 #define __COMMAND__ args.name
 
 #define TRACE_COMMAND() \
-    Log::append("Executing Command: " + __COMMAND__);
+    TRACE3("Executing command: " + __COMMAND__);
 
 // An extra semicolon is included in macro definition to be compatible with tne
 // auto-indentation of my editor

@@ -12,7 +12,7 @@ class Window;
 
 class Command {
     public:
-        Command(Window& ctx, Library& lib);
+        Command(Window& ctx, PlaylistManager& lib);
         virtual ~Command() = 0;
 
         virtual void execute(Parameters args) = 0;
@@ -23,7 +23,7 @@ class Command {
         ConsoleComponent& getConsoleView();
 
     protected:
-        Library& _lib;
+        PlaylistManager& _lib;
 
     private:
         Window& _ctx;

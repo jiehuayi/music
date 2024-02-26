@@ -18,7 +18,7 @@ class VisualComponent : public ComponentBase {
         VisualComponent();
 
         void setFrame() override;
-        void render(Library& library) override;
+        void render(PlaylistManager& library) override;
 
         int getOrientation();
 

@@ -32,10 +32,10 @@ namespace PColor {
 
 }
 
-class Color {
+class ColorManager {
     public:
-        Color();
-        ~Color();
+        ColorManager();
+        ~ColorManager();
 
         void setDefaultColor();
 

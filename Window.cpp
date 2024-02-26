@@ -1,6 +1,6 @@
 #include "Window.hpp"
 
-Window::Window(Library& library) : _library(library) {
+Window::Window(PlaylistManager& library) : _library(library) {
     setlocale(LC_ALL, "");  
     initscr();
     cbreak();
@@ -62,8 +62,8 @@ int Window::processInput(CommandHandler& handler) {
     std::string input = "";
 
     if (in == KEY_RESIZE) {
+        TRACE3("Resizing terminal");
         processResize();
-        Log::append("RS\n");
     }
 
     if (_inputMode == MODE_COMMAND) {

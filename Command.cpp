@@ -1,7 +1,7 @@
 #include "Command.hpp"
 
-Command::Command(Window& ctx, Library& lib) : _lib(lib), _ctx(ctx) {
-    Log::append("Initializing Command Base\n"); 
+Command::Command(Window& ctx, PlaylistManager& lib) : _lib(lib), _ctx(ctx) {
+    TRACE1("Initializing Base Command");
 }
 
 Command::~Command() {}

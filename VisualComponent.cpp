@@ -19,7 +19,7 @@ void VisualComponent::setFrame() {
     makeFrame();
 }
 
-void VisualComponent::render(Library& library) { 
+void VisualComponent::render(PlaylistManager& library) { 
     cchar_t left_upper_corner, right_upper_corner, left_bottom_corner, right_bottom_corner;
     setcchar(&left_upper_corner, L"\u256d", COLOR_PAIR(0), 0, nullptr);
     setcchar(&right_upper_corner, L"\u256e", COLOR_PAIR(0), 0, nullptr);
@@ -163,8 +163,6 @@ std::vector<std::wstring> VisualComponent::visualize(int cy, int cx,
         dataBufferCompact.push_back(data[i]);
     }
 
-    Log::append("\n ------------------------------------------------------- \n");
-
     _runningMaxFrequency = maxMagnitude > _runningMaxFrequency ? maxMagnitude :
         _runningMaxFrequency;
 
@@ -175,10 +173,8 @@ std::vector<std::wstring> VisualComponent::visualize(int cy, int cx,
     for (auto& freq : dataBufferCompact) {
         float height = freq * (growMax)/ _runningMaxFrequency;
         float whole, frac;
-        frac = std::modf(height, &whole);
+        frac = std::modf(height, &whole); 
 
-        Log::append(std::to_string(height) + "\n");
-        
         // Base logical index
         int bl;
         

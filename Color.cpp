@@ -1,9 +1,9 @@
 #include "Color.hpp"
 
-Color::Color() {}
-Color::~Color() {}
+ColorManager::ColorManager() {}
+ColorManager::~ColorManager() {}
 
-void Color::setDefaultColor() {
+void ColorManager::setDefaultColor() {
     using namespace PColor;
     init_pair(ColorMainBackground, COLOR_BLUE, COLOR_NEUT);
     init_pair(ColorListBackground, COLOR_BLUE, COLOR_NEUT);

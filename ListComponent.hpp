@@ -8,7 +8,7 @@ class ListComponent : public ComponentBase {
         ListComponent();
 
         void setFrame() override;
-        void render(Library& library) override;
+        void render(PlaylistManager& library) override;
         
         int getSelectedPosition();
         int getFrom();

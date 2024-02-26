@@ -50,7 +50,7 @@ class Window {
     friend class Command;
 
     public:
-        Window(Library& library);
+        Window(PlaylistManager& library);
         ~Window();
 
         void processResize();
@@ -66,12 +66,12 @@ class Window {
         static Window* inst;
 
     protected:
-        Library& _library;
+        PlaylistManager& _library;
         ConsoleComponent _consoleView;
         ListComponent _listView;
         VisualComponent _visualView;
         PopupComponent _popView;
-        Color _colorManager;
+        ColorManager _colorManager;
  
         int _inputMode;
 };

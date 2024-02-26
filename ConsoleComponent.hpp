@@ -14,7 +14,7 @@ class ConsoleComponent : public ComponentBase {
         ConsoleComponent();
 
         void setFrame() override;
-        void render(Library& library) override;
+        void render(PlaylistManager& library) override;
 
         std::string getInputBuffer();
 

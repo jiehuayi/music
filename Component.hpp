@@ -19,7 +19,7 @@ class ComponentBase {
         ComponentBase();
 
         virtual void setFrame() = 0;
-        virtual void render(Library& library) = 0;
+        virtual void render(PlaylistManager& library) = 0;
         virtual void clear();
 
         virtual int getHeight();

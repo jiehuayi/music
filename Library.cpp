@@ -1,22 +1,22 @@
 #include "Library.hpp"
 
-Library::Library() {
+PlaylistManager::PlaylistManager() {
     BASS_Init(-1, 44100, 0, nullptr, nullptr);
     newPlaylist();
     newPlaylist(std::string(getenv("HOME")) + "/Music/in/");
 }
 
-Library::~Library() {
+PlaylistManager::~PlaylistManager() {
     BASS_Free();
 }
 
-void Library::newPlaylist(std::string path) {
+void PlaylistManager::newPlaylist(std::string path) {
     _playlists[path] = Playlist(path);
     _displayPlaylist = path;
     initDisplayPlaylist();
 }
 
-void Library::newPlaylist() {
+void PlaylistManager::newPlaylist() {
     Playlist defPlaylist = Playlist();
 
     _playlists[defPlaylist.getPath()] = defPlaylist;
@@ -25,7 +25,7 @@ void Library::newPlaylist() {
     initDisplayPlaylist();
 }
 
-void Library::nextPlaylist() {
+void PlaylistManager::nextPlaylist() {
     auto playlistIt = _playlists.find(_displayPlaylist);
     playlistIt++;
 
@@ -36,23 +36,23 @@ void Library::nextPlaylist() {
     }
 }
 
-void Library::killPlaylist(std::string path) {
+void PlaylistManager::killPlaylist(std::string path) {
     _playlists.erase(path);
     _displayPlaylist = "";
 }
 
-void Library::shuffleActivePlaylist() {
+void PlaylistManager::shuffleActivePlaylist() {
     _playlists[_displayPlaylist].shuffle();
 }
 
-Playlist& Library::getDisplayPlaylist() {
+Playlist& PlaylistManager::getDisplayPlaylist() {
     return _playlists[_displayPlaylist];
 }
 
-int Library::playlistCount() {
+int PlaylistManager::playlistCount() {
     return _playlists.size();
 }
 
-void Library::initDisplayPlaylist() {
+void PlaylistManager::initDisplayPlaylist() {
     _playlists[_displayPlaylist].readPlaylist(); 
 }

@@ -10,10 +10,10 @@
 
 Window* Window::inst = nullptr;
 
-constexpr int TARGET_FPS = 60;
+constexpr int TARGET_FPS = 120;
 constexpr int SLEEP_DURATION = 1000 / TARGET_FPS; // Milliseconds
 
-static void initCommands(CommandHandler& handler, Window& window, Library& library) {
+static void initCommands(CommandHandler& handler, Window& window, PlaylistManager& library) {
     handler.registerCommand(CMD_SONG_TOGGLE, COMMAND_DEFINE(PlayPauseCommand));
     handler.registerCommand(CMD_SONG_PLAY, COMMAND_DEFINE(PlayCommand));
     handler.registerCommand(CMD_VOLUME_INCREMENT, COMMAND_DEFINE(IncVolumeCommand));
@@ -28,9 +28,9 @@ static void initCommands(CommandHandler& handler, Window& window, Library& libra
 }
 
 int main() {
-    Log::clear();
+    TRACE_INIT();
 
-    Library pm = Library();
+    PlaylistManager pm = PlaylistManager();
     Window wm = Window(pm);
     Window::inst = &wm;
     CommandHandler ch = CommandHandler();
