@@ -19,10 +19,11 @@ void ColorManager::setDefaultColor() {
     init_pair(ColorConsoleText, COLOR_YELLOW, COLOR_NEUT);
 }
 
-void setColor(PColor::ColorSections section,
+void ColorManager::setColor(PColor::ColorSections section,
         int colorF, int colorB) {
     if (static_cast<int>(section) >= PColor::ColorCount) {
         return;
     }
+    init_pair(section, colorF, colorB);
 }
 

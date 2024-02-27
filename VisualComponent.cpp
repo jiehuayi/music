@@ -169,52 +169,30 @@ std::vector<std::wstring> VisualComponent::visualize(int cy, int cx,
     int b = 0;
     bool isRB = _orientation == V_BOTTOM ||
         _orientation == V_RIGHT;
-
+    
+    pthread_t* threads = new pthread_t[baseMax];
+    VisualThreadArg* threadArgs = new VisualThreadArg[baseMax];
     for (auto& freq : dataBufferCompact) {
-        float height = freq * (growMax)/ _runningMaxFrequency;
-        float whole, frac;
-        frac = std::modf(height, &whole); 
+        VisualThreadArg* arg = threadArgs + b;
+        arg->freq = freq;
+        arg->maxFrequency = _runningMaxFrequency;
+        arg->orientation = _orientation;
+        arg->growMax = growMax;
+        arg->baseMax = baseMax;
+        arg->b = b;
+        arg->isRB = isRB;
+        arg->canvas = &canvas;
 
-        // Base logical index
-        int bl;
-        
-        bool eol = false;
-        
-        // Bar construction
-        for (int g = 0; g < growMax && !eol; ++g) {
-            wchar_t px;
-            int gl;
-
-            if (isRB) {
-                bl = b;
-                gl = growMax - 1 - g;
-            } else {
-                bl = baseMax - 1 - b;
-                gl = g;
-            }
-
-            if (g <= whole && whole != 0.0) {
-                px = L'\u2590';
-            } else if (g == std::ceil(height) || whole == 0.0) {
-                if (frac > 0.35) {
-                    px = L'\u2597'; // Need change because orientation matters now...
-                } else {
-                    px = whole == 0.0 ? L'_' : L' ';
-                }
-                eol = true;
-            } else {
-                break;
-            }
-
-            if (_orientation == V_LEFT || _orientation == V_RIGHT) {
-                canvas[bl][gl] = px;
-            } else {
-                canvas[gl][bl] = px;
-            }
-        }
+        pthread_create(threads + b, NULL, visualizerWorker, arg);
         ++b;
     }
 
+    for (unsigned long i = 0; i < baseMax; ++i) {
+        (void) pthread_join(threads + i, NULL);
+    }
+    
+    delete[] threads;
+    delete[] threadArgs;
     return canvas; 
 }
 
@@ -238,3 +216,58 @@ std::string VisualComponent::getTimeStamp(double timeInSeconds) {
 
     return ssFormat.str();
 }
+
+void* visualizerWorker(void* args) {
+    VisualThreadArg* vta = static_cast<VisualThreadArg*>(args); 
+    float freq = vta->freq;
+    float maxFrequency = vta->maxFrequency;
+    int orientation = vta->orientation;
+    int growMax = vta->growMax;
+    int baseMax = vta->baseMax;
+    int b = vta->b;
+    bool isRB = vta->isRB;
+    std::vector<std::string>* canvas = vta->canvas;
+    
+    float height = freq * (growMax) / maxFrequency;
+    float whole, frac;
+    frac = std::modf(height, &whole); 
+
+    // Base logical index
+    int bl;
+
+    bool eol = false;
+
+    // Bar construction
+    for (int g = 0; g < growMax && !eol; ++g) {
+        wchar_t px;
+        int gl;
+
+        if (isRB) {
+            bl = b;
+            gl = growMax - 1 - g;
+        } else {
+            bl = baseMax - 1 - b;
+            gl = g;
+        }
+
+        if (g <= whole && whole != 0.0) {
+            px = L'\u2590';
+        } else if (g == std::ceil(height) || whole == 0.0) {
+            if (frac > 0.35) {
+                px = L'\u2597'; // Need change because orientation matters now...
+            } else {
+                px = whole == 0.0 ? L'_' : L' ';
+            }
+            eol = true;
+        } else {
+            break;
+        }
+
+        if (orientation == V_LEFT || orientation == V_RIGHT) {
+            canvas[bl][gl] = px;
+        } else {
+            canvas[gl][bl] = px;
+        }
+    }
+}
+

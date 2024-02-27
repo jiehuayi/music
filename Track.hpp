@@ -7,7 +7,7 @@
 
 #include <bass.h>
 
-#define BUFF_SZ 2048
+#define BUFF_SZ 2048 
 
 class Track {
     public:

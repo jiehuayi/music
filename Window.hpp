@@ -12,6 +12,7 @@
 #include <cctype>
 #include <wchar.h>
 #include <unistd.h>
+#include <pthread.h>
 
 #ifdef __APPLE__
 

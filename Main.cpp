@@ -10,7 +10,7 @@
 
 Window* Window::inst = nullptr;
 
-constexpr int TARGET_FPS = 120;
+constexpr int TARGET_FPS = 45;
 constexpr int SLEEP_DURATION = 1000 / TARGET_FPS; // Milliseconds
 
 static void initCommands(CommandHandler& handler, Window& window, PlaylistManager& library) {
@@ -27,8 +27,10 @@ static void initCommands(CommandHandler& handler, Window& window, PlaylistManage
     handler.registerAlias(CMD_PLAYLIST_SHUFFLE, "shuffle,sh");
 }
 
-int main() {
+int main(int argc, char** argv) {
     TRACE_INIT();
+    TRACE1("Executing: " + std::string(*argv));
+    TRACE1("Number of arguments given: " + std::to_string(argc));
 
     PlaylistManager pm = PlaylistManager();
     Window wm = Window(pm);
