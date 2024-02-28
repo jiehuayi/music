@@ -126,6 +126,7 @@ void VisualComponent::renderControls(Playlist& playlist) {
             getTimeStamp(posEnd).c_str(),
             static_cast<int>(std::ceil(playlist.getVolume() * 100)));
 
+    mvwprintw(_frame.get(), _y - 2, 1, "%s", std::string(_x - 2, ' ').c_str());
     mvwprintw(_frame.get(),
             _y - 2, 1, "> %s...",
             playlist.activeSongName()
