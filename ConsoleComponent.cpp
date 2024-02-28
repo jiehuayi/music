@@ -16,7 +16,7 @@ void ConsoleComponent::setFrame() {
     makeFrame();
 }
 
-void ConsoleComponent::render(PlaylistManager& library) {
+void ConsoleComponent::render(PlaylistManager& library __attribute__((unused))) {
     std::string consolePrefix = _state == CONSOLE_STATE_OPEN ? "> " : "";
     std::string consolePostfix = _state == CONSOLE_STATE_OPEN ? "█" : "";
     std::string consolePadding = std::string(

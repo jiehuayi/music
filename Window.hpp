@@ -3,16 +3,17 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <thread>
+#include <chrono>
 #include <memory>
+#include <cstdlib>
 #include <vector>
 #include <string>
 #include <cwchar>
-#include <cstdlib>
 #include <cmath>
 #include <cctype>
 #include <wchar.h>
 #include <unistd.h>
-#include <pthread.h>
 
 #ifdef __APPLE__
 

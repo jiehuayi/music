@@ -3,7 +3,6 @@
 #include <string>
 #include <sstream>
 #include <cmath>
-#include <pthread.h>
 
 #include "Component.hpp"
 #include "Color.hpp"

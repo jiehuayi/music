@@ -35,6 +35,7 @@ Window::~Window() {
 }
 
 void Window::processResize() {
+    std::this_thread::sleep_for(std::chrono::milliseconds(200));
     _consoleView.setFrame();
     _listView.setFrame();
     _visualView.setFrame();
