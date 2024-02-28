@@ -14,19 +14,6 @@
 #define V_BOTTOM 2
 #define V_LEFT   3
 
-struct VisualThreadArg {
-    float freq;
-    float maxFrequency;
-    int orientation;
-    int growMax;
-    int baseMax;
-    int b;
-    bool isRB;
-    std::vector<std::wstring>* canvas;
-};
-
-void* visualizerWorker(void* args);
-
 class VisualComponent : public ComponentBase {
     public:
         VisualComponent();
