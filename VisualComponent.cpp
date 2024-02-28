@@ -37,33 +37,32 @@ void VisualComponent::render(PlaylistManager& library) {
     UNWRAP_COLOR(_frame.get(), PColor::ColorVisualBorder);
 
     Playlist& playlist = library.getDisplayPlaylist();
-    renderVisualizer(playlist);
     renderControls(playlist);
+    renderVisualizer(playlist);
         
     wnoutrefresh(_frame.get());
 }
 
 void VisualComponent::renderVisualizer(Playlist& playlist) {
+    if (!playlist.isPlaying()) {
+        return;
+    }
+
     WRAP_BOLD(_frame.get());
     WRAP_COLOR(_frame.get(), PColor::ColorVisualBar)
-    if (playlist.isPlaying()) {
         int visualizerY = _y - 6;
-        int visualizerX = _x - 2;
-        std::vector<float> databuffer = playlist.getFFT();
+    int visualizerX = _x - 2;
+    std::vector<float> databuffer = playlist.getFFT();
 
-        std::vector<std::wstring> visFrame = 
-            visualize(visualizerY, visualizerX, databuffer);
+    std::vector<std::wstring> visFrame = 
+        visualize(visualizerY, visualizerX, databuffer);
 
-        int cur = 1;
-        for (auto& line : visFrame) {
-            const wchar_t* cstr = line.c_str();
-            if (cur % 2) {
-                mvwaddwstr(_frame.get(), cur++, 1, cstr);
-            } else {
-                mvwaddwstr(_frame.get(), cur++, 1, cstr);
-            }
-        }
+    int cur = 1;
+    for (auto& line : visFrame) {
+        const wchar_t* cstr = line.c_str();
+        mvwaddwstr(_frame.get(), cur++, 1, cstr);
     }
+
     UNWRAP_COLOR(_frame.get(), PColor::ColorVisualBar);
     UNWRAP_BOLD(_frame.get());
 }
@@ -149,7 +148,7 @@ void VisualComponent::setRunningMaxFrequency(float freq) {
 }
 
 std::vector<std::wstring> VisualComponent::visualize(int cy, int cx, 
-        std::vector<float>& data) { 
+        std::vector<float>& data) {
     std::vector<std::wstring> canvas(cy, std::wstring(cx, L' '));
     std::vector<float> dataBufferCompact;
 
@@ -188,7 +187,7 @@ std::vector<std::wstring> VisualComponent::visualize(int cy, int cx,
     }
 
     for (unsigned long i = 0; i < baseMax; ++i) {
-        (void) pthread_join(threads + i, NULL);
+        (void) pthread_join(threads[i], NULL);
     }
     
     delete[] threads;
@@ -226,8 +225,8 @@ void* visualizerWorker(void* args) {
     int baseMax = vta->baseMax;
     int b = vta->b;
     bool isRB = vta->isRB;
-    std::vector<std::string>* canvas = vta->canvas;
-    
+    std::vector<std::wstring>* canvas = vta->canvas;
+
     float height = freq * (growMax) / maxFrequency;
     float whole, frac;
     frac = std::modf(height, &whole); 
@@ -264,10 +263,9 @@ void* visualizerWorker(void* args) {
         }
 
         if (orientation == V_LEFT || orientation == V_RIGHT) {
-            canvas[bl][gl] = px;
+            (*canvas)[bl][gl] = px;
         } else {
-            canvas[gl][bl] = px;
+            (*canvas)[gl][bl] = px;
         }
     }
 }
-

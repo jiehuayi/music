@@ -22,7 +22,7 @@ struct VisualThreadArg {
     int baseMax;
     int b;
     bool isRB;
-    std::vector<std::string>* canvas;
+    std::vector<std::wstring>* canvas;
 };
 
 void* visualizerWorker(void* args);
