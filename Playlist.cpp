@@ -1,5 +1,13 @@
 #include "Playlist.hpp"
 
+bool Playlist::operator==(const Playlist& other) const {
+    return this->_path == other._path;
+}
+
+bool Playlist::operator!=(const Playlist& other) const {
+    return this->_path != other._path;
+}
+
 Playlist::Playlist() {
     _songs = {};
     _volume = 0.5;

@@ -36,7 +36,7 @@ void VisualComponent::render(PlaylistManager& library) {
             &left_bottom_corner, &right_bottom_corner);
     UNWRAP_COLOR(_frame.get(), PColor::ColorVisualBorder);
 
-    Playlist& playlist = library.getDisplayPlaylist();
+    Playlist& playlist = library.getActivePlaylist();
     renderControls(playlist);
     renderVisualizer(playlist);
         

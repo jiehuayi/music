@@ -22,6 +22,9 @@
 
 class Playlist {
     public:
+        bool operator==(const Playlist& other) const;
+        bool operator!=(const Playlist& other) const;
+
         Playlist();
         Playlist(std::string path);
         ~Playlist();

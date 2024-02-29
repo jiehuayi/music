@@ -7,6 +7,16 @@ void PlayPauseCommand::execute(Parameters args) {
 
 void PlayCommand::execute(Parameters args) {
     TRACE_COMMAND();
+    // This should be moved into PlaylistManager instead...
+    Playlist& active = _lib.getActivePlaylist();
+    Playlist& display = _lib.getDisplayPlaylist();
+    if (active != display) {    
+        if (active.isPlaying()) {
+            active.trigger();
+        }
+        _lib.setDisplayAsActive();
+    }
+
     _lib.getDisplayPlaylist().play(getListView().getFrom() +
             getListView().getSelectedPosition());
     getVisualView().setRunningMaxFrequency(0.25);

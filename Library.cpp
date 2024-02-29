@@ -2,8 +2,15 @@
 
 PlaylistManager::PlaylistManager() {
     BASS_Init(-1, 44100, 0, nullptr, nullptr);
-    newPlaylist();
-    newPlaylist(std::string(getenv("HOME")) + "/Music/in/");
+    Playlist defPlaylist = Playlist();
+
+    _playlists[defPlaylist.getPath()] = defPlaylist;
+    _displayPlaylist = defPlaylist.getPath();
+    _activePlaylist = _displayPlaylist;
+    initDisplayPlaylist();
+    
+    newPlaylist(_activePlaylist);
+    newPlaylist(_activePlaylist + "/in/");
 }
 
 PlaylistManager::~PlaylistManager() {
@@ -13,15 +20,6 @@ PlaylistManager::~PlaylistManager() {
 void PlaylistManager::newPlaylist(std::string path) {
     _playlists[path] = Playlist(path);
     _displayPlaylist = path;
-    initDisplayPlaylist();
-}
-
-void PlaylistManager::newPlaylist() {
-    Playlist defPlaylist = Playlist();
-
-    _playlists[defPlaylist.getPath()] = defPlaylist;
-    _displayPlaylist = defPlaylist.getPath();
-
     initDisplayPlaylist();
 }
 
@@ -46,7 +44,19 @@ void PlaylistManager::shuffleActivePlaylist() {
 }
 
 Playlist& PlaylistManager::getDisplayPlaylist() {
-    return _playlists[_displayPlaylist];
+    return getPlaylist(_displayPlaylist);
+}
+
+Playlist& PlaylistManager::getActivePlaylist() {
+    return getPlaylist(_activePlaylist);
+}
+
+Playlist& PlaylistManager::getPlaylist(std::string identifier) {
+    return _playlists[identifier];
+}
+
+void PlaylistManager::setDisplayAsActive() {
+    _activePlaylist = _displayPlaylist;
 }
 
 int PlaylistManager::playlistCount() {
