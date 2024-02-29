@@ -31,32 +31,31 @@ class Playlist {
 
         int readPlaylist();
         int getSize();
-
         std::string getPath();
+        std::vector<std::string> getPlaylistSongs();
+        std::vector<float> getFFT();
+        double getposition();
+        double getDuration();
+        std::string activeSongName();
+        bool isPlaying();
+        bool isFinished();
 
         void incVolume();
         void decVolume();
         void setVolume(float volume);
         float getVolume();
 
-        std::vector<std::string> getPlaylistSongs();
-
         void play(int index);
         void trigger();
         void shuffle();
-
-        std::string activeSongName();
-        bool isPlaying();
-        bool isFinished();
-
-        std::vector<float> getFFT();
-        double getDuration();
-        double getPosition();
-
+    private:
+        void init();
     private:
         float _volume;
         std::string _path;
         bool _isTrackPlaying;
-        std::vector<std::filesystem::path> _songs;
         std::shared_ptr<Track> _activeTrack;
+
+        std::vector<std::filesystem::path> _songs;
+        std::vector<std::filesystem::path> _songsBase;
 };

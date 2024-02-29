@@ -9,17 +9,19 @@ bool Playlist::operator!=(const Playlist& other) const {
 }
 
 Playlist::Playlist() {
-    _songs = {};
-    _volume = 0.5;
     _path = std::string(getenv("HOME")) + "/Music/";
-    _activeTrack = nullptr;
-    _isTrackPlaying = false;
+    init();
 }
 
 Playlist::Playlist(std::string path) {
-    _songs = {};
-    _volume = 0.5;
     _path = path;
+    init();
+}
+
+void Playlist::init() {
+    _songs = {};
+    _songsBase = {};
+    _volume = 0.5;
     _activeTrack = nullptr;
     _isTrackPlaying = false;
 }
@@ -46,6 +48,14 @@ int Playlist::readPlaylist() {
     return READ_DIR_SUCCESS;
 }
 
+int Playlist::getSize() {
+    return _songs.size();
+}
+
+std::string Playlist::getPath() {
+    return _path;
+}
+
 std::vector<std::string> Playlist::getPlaylistSongs() {
     std::vector<std::string> ret = {};
 
@@ -54,14 +64,6 @@ std::vector<std::string> Playlist::getPlaylistSongs() {
     }
 
     return ret;
-}
-
-int Playlist::getSize() {
-    return _songs.size();
-}
-
-std::string Playlist::getPath() {
-    return _path;
 }
 
 void Playlist::incVolume() {
@@ -96,7 +98,9 @@ void Playlist::play(int index) {
 }
 
 void Playlist::trigger() {
-    if (!_activeTrack) return;
+    if (!_activeTrack) {
+        return;
+    }
 
     if (_isTrackPlaying) {
         _activeTrack->pause();
