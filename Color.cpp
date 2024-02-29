@@ -17,6 +17,7 @@ void ColorManager::setDefaultColor() {
     init_pair(ColorConsoleBackground, COLOR_BLUE, COLOR_NEUT);
     init_pair(ColorConsoleHighlight, COLOR_BLUE, COLOR_NEUT);
     init_pair(ColorConsoleText, COLOR_YELLOW, COLOR_NEUT);
+    init_pair(ColorTitleText, COLOR_MAGENTA, COLOR_NEUT);
 }
 
 void ColorManager::setColor(PColor::ColorSections section,

@@ -27,6 +27,7 @@ namespace PColor {
         ColorConsoleBackground,
         ColorConsoleHighlight,
         ColorConsoleText,
+        ColorTitleText,
         ColorCount,
     };
 

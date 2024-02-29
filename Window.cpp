@@ -21,6 +21,7 @@ Window::Window(PlaylistManager& library) : _library(library) {
     _consoleView = ConsoleComponent();
     _listView = ListComponent();
     _visualView = VisualComponent();
+    _titleView = TitleComponent();
     _popView = PopupComponent();
 
 }
@@ -39,12 +40,15 @@ void Window::processResize() {
     _consoleView.setFrame();
     _listView.setFrame();
     _visualView.setFrame();
+    _titleView.setFrame();
 }
 
 void Window::processRender() {
     _visualView.render(_library);
     _listView.render(_library);
     _consoleView.render(_library);
+    _titleView.render(_library);
+
     // Write all data from curses virtual screen to physical screen
     doupdate();
 }

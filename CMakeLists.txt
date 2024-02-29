@@ -43,6 +43,7 @@ set(SRCS
     ConsoleComponent.cpp
     ListComponent.cpp
     VisualComponent.cpp
+    TitleComponent.cpp
     PopupComponent.cpp
 )
 add_executable(main.out ${SRCS})

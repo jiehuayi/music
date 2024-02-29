@@ -2,18 +2,18 @@
 
 VisualComponent::VisualComponent() : ComponentBase() {
     setFrame();
-    keypad(_frame.get(), true);
-    nodelay(_frame.get(), true);
+    keypad(FRAME_PTR, true);
+    nodelay(FRAME_PTR, true);
 
     _orientation = V_BOTTOM;
     _runningMaxFrequency = 0.25;
 }
 
 void VisualComponent::setFrame() {
-    _oy = LINES * 0.4;
+    _oy = std::floor((LINES - 2) * 0.4) + 1;
     _ox = 0;
 
-    _y = std::ceil((LINES - 1) * 0.6);
+    _y = std::ceil((LINES - 2) * 0.6);
     _x = COLS;
 
     makeFrame();
@@ -30,17 +30,17 @@ void VisualComponent::render(PlaylistManager& library) {
     setcchar(&vline, L"\u2502", COLOR_PAIR(0), 0, nullptr);  // Vertical line
     setcchar(&hline, L"\u2500", COLOR_PAIR(0), 0, nullptr);  // Horizontal line
     
-    WRAP_COLOR(_frame.get(), PColor::ColorVisualBorder);
-    wborder_set(_frame.get(), &vline, &vline, &hline, &hline,
+    WRAP_COLOR(FRAME_PTR, PColor::ColorVisualBorder);
+    wborder_set(FRAME_PTR, &vline, &vline, &hline, &hline,
             &left_upper_corner, &right_upper_corner, 
             &left_bottom_corner, &right_bottom_corner);
-    UNWRAP_COLOR(_frame.get(), PColor::ColorVisualBorder);
+    UNWRAP_COLOR(FRAME_PTR, PColor::ColorVisualBorder);
 
     Playlist& playlist = library.getActivePlaylist();
     renderControls(playlist);
     renderVisualizer(playlist);
         
-    wnoutrefresh(_frame.get());
+    wnoutrefresh(FRAME_PTR);
 }
 
 void VisualComponent::renderVisualizer(Playlist& playlist) {
@@ -48,8 +48,8 @@ void VisualComponent::renderVisualizer(Playlist& playlist) {
         return;
     }
 
-    WRAP_BOLD(_frame.get());
-    WRAP_COLOR(_frame.get(), PColor::ColorVisualBar)
+    WRAP_BOLD(FRAME_PTR);
+    WRAP_COLOR(FRAME_PTR, PColor::ColorVisualBar)
         int visualizerY = _y - 6;
     int visualizerX = _x - 2;
     std::vector<float> databuffer = playlist.getFFT();
@@ -59,11 +59,11 @@ void VisualComponent::renderVisualizer(Playlist& playlist) {
     int cur = 1;
     for (auto& line : visFrame) {
         const wchar_t* cstr = line.c_str();
-        mvwaddwstr(_frame.get(), cur++, 1, cstr);
+        mvwaddwstr(FRAME_PTR, cur++, 1, cstr);
     }
 
-    UNWRAP_COLOR(_frame.get(), PColor::ColorVisualBar);
-    UNWRAP_BOLD(_frame.get());
+    UNWRAP_COLOR(FRAME_PTR, PColor::ColorVisualBar);
+    UNWRAP_BOLD(FRAME_PTR);
 }
 
 void VisualComponent::renderControls(Playlist& playlist) {
@@ -112,27 +112,27 @@ void VisualComponent::renderControls(Playlist& playlist) {
         }
     }
 
-    WRAP_COLOR(_frame.get(), PColor::ColorVisualText);
-    mvwprintw(_frame.get(),
+    WRAP_COLOR(FRAME_PTR, PColor::ColorVisualText);
+    mvwprintw(FRAME_PTR,
             _y - 4, 1, "\u258c%s\u2590", progressBarBuffer.str().c_str());
 
     // Add extra space in the back of formatted string
     // because it will override (visually) the extra % sign
     // if volume goes up to 100%, then going back down
     // (3 digit to 2 digit number without clearing line)
-    mvwprintw(_frame.get(),
+    mvwprintw(FRAME_PTR,
             _y - 3, 1, "[ %s / %s ] VOL: %d%% ",
             getTimeStamp(posNow).c_str(),
             getTimeStamp(posEnd).c_str(),
             static_cast<int>(std::ceil(playlist.getVolume() * 100)));
 
-    mvwprintw(_frame.get(), _y - 2, 1, "%s", std::string(_x - 2, ' ').c_str());
-    mvwprintw(_frame.get(),
+    mvwprintw(FRAME_PTR, _y - 2, 1, "%s", std::string(_x - 2, ' ').c_str());
+    mvwprintw(FRAME_PTR,
             _y - 2, 1, "> %s...",
             playlist.activeSongName()
             .substr(0, _x - 18).c_str());
 
-    UNWRAP_COLOR(_frame.get(), PColor::ColorVisualText); 
+    UNWRAP_COLOR(FRAME_PTR, PColor::ColorVisualText); 
 }
 
 int VisualComponent::getOrientation() {

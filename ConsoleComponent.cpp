@@ -23,19 +23,19 @@ void ConsoleComponent::render(PlaylistManager& library __attribute__((unused))) 
             _x - consolePrefix.length() - _inputBuffer.str().length(), ' ');
 
     if (_state == CONSOLE_STATE_OPEN) {
-        WRAP_COLOR(_frame.get(), PColor::ColorConsoleText); 
-        WRAP_HIGHLIGHT(_frame.get());
+        WRAP_COLOR(FRAME_PTR, PColor::ColorConsoleText); 
+        WRAP_HIGHLIGHT(FRAME_PTR);
     }
 
-    werase(_frame.get());
-    mvwprintw(_frame.get(), 0, 0, "%s%s", 
+    werase(FRAME_PTR);
+    mvwprintw(FRAME_PTR, 0, 0, "%s%s", 
             (consolePrefix + _inputBuffer.str() + consolePostfix).c_str(),
             consolePadding.c_str());
 
-    UNWRAP_COLOR(_frame.get(), PColor::ColorConsoleText);
-    UNWRAP_HIGHLIGHT(_frame.get());
+    UNWRAP_COLOR(FRAME_PTR, PColor::ColorConsoleText);
+    UNWRAP_HIGHLIGHT(FRAME_PTR);
     
-    wnoutrefresh(_frame.get());
+    wnoutrefresh(FRAME_PTR);
 }
 
 bool ConsoleComponent::isValidCommandChar(char inputCharacter) {

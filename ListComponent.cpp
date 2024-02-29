@@ -6,15 +6,12 @@ ListComponent::ListComponent() : ComponentBase() {
     _numbered = true;
 
     setFrame();
-
-    keypad(_frame.get(), true);
-    nodelay(_frame.get(), true);
 }
 
 void ListComponent::setFrame() {
-    _oy = 0;
+    _oy = 1;
     _ox = 0;
-    _y = std::floor((LINES - 1) * 0.4);
+    _y = std::floor((LINES - 2) * 0.4);
     _x = COLS;
 
     makeFrame();
@@ -31,13 +28,13 @@ void ListComponent::render(PlaylistManager& library) {
     setcchar(&vline, L"\u2502", COLOR_PAIR(0), 0, nullptr);  // Vertical line
     setcchar(&hline, L"\u2500", COLOR_PAIR(0), 0, nullptr);  // Horizontal line
     
-    WRAP_COLOR(_frame.get(), PColor::ColorListBorder);
+    WRAP_COLOR(FRAME_PTR, PColor::ColorListBorder);
 
-    wborder_set(_frame.get(), &vline, &vline, &hline, &hline,
+    wborder_set(FRAME_PTR, &vline, &vline, &hline, &hline,
             &left_upper_corner, &right_upper_corner, 
             &left_bottom_corner, &right_bottom_corner);
 
-    UNWRAP_COLOR(_frame.get(), PColor::ColorListBorder);
+    UNWRAP_COLOR(FRAME_PTR, PColor::ColorListBorder);
 
     std::vector<std::string> listItems = library.getDisplayPlaylist()
         .getPlaylistSongs();
@@ -56,7 +53,7 @@ void ListComponent::render(PlaylistManager& library) {
     auto entryIt = listItems.begin() + _from;
     int pos  = 0;
     
-    WRAP_COLOR(_frame.get(), PColor::ColorListText);
+    WRAP_COLOR(FRAME_PTR, PColor::ColorListText);
     for (auto it = entryIt; it != listItems.end(); ++it) {
         // no more space (pos is zero indexed, so stop when ==)
         if (pos >= renderY) {
@@ -81,22 +78,22 @@ void ListComponent::render(PlaylistManager& library) {
         }
         
         if (pos == _selectedPos) {
-            WRAP_HIGHLIGHT(_frame.get());
+            WRAP_HIGHLIGHT(FRAME_PTR);
         }
 
         std::string clearLine = std::string(_x - 2, ' ');
-        mvwprintw(_frame.get(), pos + 1, 1, FORMAT_CSTR(clearLine.c_str()));
+        mvwprintw(FRAME_PTR, pos + 1, 1, FORMAT_CSTR(clearLine.c_str()));
 
         display = prefix + display;
-        mvwprintw(_frame.get(), pos + 1, 1, FORMAT_CSTR(display.c_str()));
+        mvwprintw(FRAME_PTR, pos + 1, 1, FORMAT_CSTR(display.c_str()));
         pos++;
 
-        UNWRAP_HIGHLIGHT(_frame.get());
+        UNWRAP_HIGHLIGHT(FRAME_PTR);
 
     }
-    UNWRAP_COLOR(_frame.get(), PColor::ColorListText);
+    UNWRAP_COLOR(FRAME_PTR, PColor::ColorListText);
 
-    wnoutrefresh(_frame.get());
+    wnoutrefresh(FRAME_PTR);
 }
 
 int ListComponent::getSelectedPosition() {

@@ -34,7 +34,7 @@ class Playlist {
         std::string getPath();
         std::vector<std::string> getPlaylistSongs();
         std::vector<float> getFFT();
-        double getposition();
+        double getPosition();
         double getDuration();
         std::string activeSongName();
         bool isPlaying();

@@ -32,6 +32,7 @@
 #include "ConsoleComponent.hpp"
 #include "ListComponent.hpp"
 #include "VisualComponent.hpp"
+#include "TitleComponent.hpp"
 #include "PopupComponent.hpp"
 
 #define MODE_COMMAND 				0
@@ -72,6 +73,7 @@ class Window {
         ConsoleComponent _consoleView;
         ListComponent _listView;
         VisualComponent _visualView;
+        TitleComponent _titleView;
         PopupComponent _popView;
         ColorManager _colorManager;
  

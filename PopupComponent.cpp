@@ -24,11 +24,11 @@ void PopupComponent::render(PlaylistManager& library __attribute__((unused))) {
     setcchar(&vline, L"\u2502", COLOR_PAIR(0), 0, nullptr);  // Vertical line
     setcchar(&hline, L"\u2500", COLOR_PAIR(0), 0, nullptr);  // Horizontal line
 
-    wborder_set(_frame.get(), &vline, &vline, &hline, &hline,
+    wborder_set(FRAME_PTR, &vline, &vline, &hline, &hline,
             &left_upper_corner, &right_upper_corner, 
             &left_bottom_corner, &right_bottom_corner);
 
-    mvwprintw(_frame.get(), 1, 1, "Hello World");
+    mvwprintw(FRAME_PTR, 1, 1, "Hello World");
 
-    wnoutrefresh(_frame.get());
+    wnoutrefresh(FRAME_PTR);
 }
