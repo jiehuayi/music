@@ -86,6 +86,12 @@ int Window::processInput(CommandHandler& handler) {
         case 'j': case 0x0E:
             handler.processCommand("move-down");
             break;
+        case 'K':
+            handler.processCommand("move-up=[5]");
+            break;
+        case 'J':
+            handler.processCommand("move-down=[5]");
+            break;
         case 'r':
             _visualView.setOrientation((_visualView.getOrientation() + 1) % 4);
             break;

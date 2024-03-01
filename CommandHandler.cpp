@@ -69,7 +69,7 @@ int CommandHandler::processCommand(std::string command) {
     } else {
         _recent.name = command;
     }
-
+    parse(command);
     return execute();
 }
 
@@ -88,6 +88,7 @@ std::string CommandHandler::getHandlerError() {
 // [<value1>,<value2>, ... ,<valueN>]
 int CommandHandler::parse(std::string raw) {
     _error = "";
+    _recent.values = {};
 
     size_t delimPosition = raw.find('=');
     if (delimPosition == std::string::npos) {
@@ -107,7 +108,7 @@ int CommandHandler::parse(std::string raw) {
 
     size_t bStart = rhs.find('[');
     size_t bEnd = rhs.find(']');
-if (bStart == std::string::npos ||
+    if (bStart == std::string::npos ||
             bEnd == std::string::npos) {
         // TODO: error handling
         return CMD_PARSE_FAILURE;

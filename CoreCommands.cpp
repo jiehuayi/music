@@ -1,5 +1,23 @@
 #include "CoreCommands.hpp"
 
+static int getRepetition(std::vector<std::string> values) { 
+    int iterations = 1;
+
+    try {
+        if (values.size() > 0) {
+            iterations = std::stoi(values[0]);
+        }
+    } catch(const std::invalid_argument& e) {
+        // TODO
+        return -1;
+    } catch(const std::out_of_range& e) {
+        // TODO
+        return -1;
+    }
+
+    return std::max(-1, iterations);
+}
+
 void PlayPauseCommand::execute(Parameters args) {
     TRACE_COMMAND();
     _lib.getDisplayPlaylist().trigger();
@@ -50,15 +68,19 @@ void RotVisualAntiClockCommand::execute(Parameters args) {
 void NavigateDownCommand::execute(Parameters args) {
     TRACE_COMMAND();
     ListComponent& lv = getListView();
-    lv.setSelectedPosition(std::min(
-                std::min(lv.getSelectedPosition() + 1,  lv.getHeight() - 3), 
-                _lib.getDisplayPlaylist().getSize() - 1));
+    for (int i = 0; i < getRepetition(args.values); ++i) {
+        lv.setSelectedPosition(std::min(
+                    std::min(lv.getSelectedPosition() + 1,  lv.getHeight() - 3), 
+                    _lib.getDisplayPlaylist().getSize() - 1));
+    }
 }
 
 void NavigateUpCommand::execute(Parameters args) {
     TRACE_COMMAND();
     ListComponent& lv = getListView();
-    lv.setSelectedPosition(std::max(lv.getSelectedPosition() - 1, 0));
+    for (int i = 0; i < getRepetition(args.values); ++i) {
+        lv.setSelectedPosition(std::max(lv.getSelectedPosition() - 1, 0));
+    }
 }
 
 void NavigateNextPlaylistCommand::execute(Parameters args) {
