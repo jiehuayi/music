@@ -87,40 +87,26 @@ std::string CommandHandler::getHandlerError() {
 // Value list structure:
 // [<value1>,<value2>, ... ,<valueN>]
 int CommandHandler::parse(std::string raw) {
-    _error = "";
-    _recent.values = {};
+    std::string clean = trim(raw);
+    std::string name;
+    std::string values;
 
-    size_t delimPosition = raw.find('=');
-    if (delimPosition == std::string::npos) {
-        // TODO: error handling
-        return CMD_PARSE_FAILURE;
-    } else if (delimPosition == raw.length() - 1) {
-        // TODO: error handling
-        return CMD_PARSE_FAILURE;
-    } else if (delimPosition == 0) {
-        // TODO: error handling
-        return CMD_PARSE_FAILURE;
+    try {
+        name = _parser.parseCommandName(clean);
+        values = _parser.parseCommandValueList(clean);
+    } catch (const std::runtime_error& err) {
+        _error = err.what();
+        TRACE1(_error);
     }
-    // NOTE: commands are (and should be) case sensitive
-    std::string lhs = raw.substr(0, delimPosition);
-    std::string rhs = raw.substr(delimPosition + 1);
-    std::vector<std::string> valueList;
 
-    size_t bStart = rhs.find('[');
-    size_t bEnd = rhs.find(']');
-    if (bStart == std::string::npos ||
-            bEnd == std::string::npos) {
-        // TODO: error handling
-        return CMD_PARSE_FAILURE;
-    } else if (bStart >= bEnd - 1) {
-        // TODO: error handling
-        return CMD_PARSE_FAILURE;
-    } 
+    if (values == "") {
+        _recent.name = name;
+        _recent.values = {};
+        return 0;
+    }
 
-    valueList = split(rhs.substr(bStart + 1, bEnd - 1), ',');
-    _recent = {.name = lhs, .values = valueList};
+    // TODO 
 
-    return CMD_PARSE_SUCCESS;
 }
 
 int CommandHandler::execute() {

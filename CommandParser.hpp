@@ -3,6 +3,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <stdexcept>
 #include <sstream>
 
 #define PARSE_OK                            0

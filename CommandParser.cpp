@@ -38,30 +38,36 @@ std::string CommandParser::parseCommandName(std::string& command) {
     }
 
     size_t wSpace = rv.find_first_of(" \f\t\n\r");
-    if (wSpace <= nameEnd) {
-        _status = PARSE_ERROR_ILLEGAL_CHAR_NAME;
+    if (wSpace < nameEnd) {
+        throw std::runtime_error("ERROR: command name should not contain spaces");
     }
-    
+
+    size_t illChar = rv.find_first_of("[]");
+    if (illChar < nameEnd) {
+        throw std::runtime_error("ERROR: command name contains illegal characters");
+    }
+
     return rv;
 }
 
 std::string
 CommandParser::parseCommandValueList(std::string& command) {
-    _status = PARSE_OK;
-
-    std::string rv;
+    std::string rv = "";
     size_t operatorStart = command.find("=");
     size_t valuesStart = command.find("[") + 1;
     size_t valuesEnd = command.find("]");
 
-    if (valuesStart == std::string::npos || valuesEnd == std::string::npos) {
-        _status = PARSE_ERROR_ILLEGAL_BRACKETS;
+    if (operatorStart == std::string::npos) {
         return rv;
     }
 
+    if (valuesStart == std::string::npos || valuesEnd == std::string::npos) {
+        throw std::runtime_error("ERROR: no matching brackets \
+                in argument-based command");
+    }
+
     if (!(valuesStart > operatorStart)) {
-        _status = PARSE_ERROR_ILLEGAL_CHAR_VALUES;
-        return rv;
+        throw std::runtime_error("ERROR: illegal character in value list");
     }
     
     return command.substr(valuesStart, valuesStart - valuesEnd);

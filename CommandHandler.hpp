@@ -36,6 +36,7 @@ class CommandHandler {
         int execute();
 
     private:
+        CommandParser _parser;
         Parameters _recent;
         std::string _error;
         std::unordered_map<std::string, 
