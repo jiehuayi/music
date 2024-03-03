@@ -6,6 +6,7 @@
 #include "VisualComponent.hpp"
 #include "ListComponent.hpp"
 #include "ConsoleComponent.hpp"
+#include "TitleComponent.hpp"
 #include "Log.hpp"
 
 class Window;
@@ -21,6 +22,7 @@ class Command {
         VisualComponent& getVisualView();
         ListComponent& getListView();
         ConsoleComponent& getConsoleView();
+        TitleComponent& getTitleView();
 
     protected:
         PlaylistManager& _lib;

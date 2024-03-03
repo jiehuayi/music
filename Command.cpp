@@ -16,3 +16,7 @@ ListComponent& Command::getListView() {
 ConsoleComponent& Command::getConsoleView() { 
     return _ctx._consoleView;
 }
+
+TitleComponent& Command::getTitleView() {
+    return _ctx._titleView;
+}

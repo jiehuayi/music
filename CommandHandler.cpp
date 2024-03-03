@@ -77,8 +77,9 @@ int CommandHandler::parse(std::string raw) {
         name = _parser.parseCommandName(clean);
         values = _parser.parseCommandValueList(clean);
     } catch (const std::runtime_error& err) {
-        _error = err.what();
-        TRACE1(_error);
+        _recent.name = "err";
+        _recent.values = { std::string(err.what()) };
+        execute();
         return 1;
     }
 

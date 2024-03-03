@@ -5,6 +5,7 @@ project(Penelope)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -O2")
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # Include directories
 include_directories(
@@ -45,6 +46,7 @@ set(SRCS
     VisualComponent.cpp
     TitleComponent.cpp
     PopupComponent.cpp
+    Clock.cpp
 )
 add_executable(main.out ${SRCS})
 

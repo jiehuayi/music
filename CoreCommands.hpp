@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Window.hpp"
 #include "Command.hpp"
 #include "Log.hpp"
 

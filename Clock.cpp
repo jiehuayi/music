@@ -11,9 +11,9 @@ void Clock::start() {
 double Clock::elapsed() {
     std::chrono::time_point<std::chrono::high_resolution_clock> check =
         std::chrono::high_resolution_clock::now();
-    return std::chrono::duration<double, std::milli>(_clock - check).count();
+    return std::chrono::duration<double, std::milli>(check - _clock).count();
 }
 
 bool Clock::hasElapsed(double ms) {
-    return  ms >= elapsed();
+    return elapsed() >= ms;
 }
