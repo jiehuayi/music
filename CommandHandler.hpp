@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <unordered_map>
+#include <algorithm>
 #include <functional>
 
 #include "Parameters.hpp"
@@ -19,9 +20,6 @@ class CommandHandler {
     public:
         CommandHandler();
         ~CommandHandler();
-
-        static std::vector<std::string> split(std::string input, char delim);
-        static std::string trim(const std::string input);
 
         int registerCommand(std::string identifier, std::function<Command* ()> cmd);
         int registerAlias(std::string identifier, std::string alias);

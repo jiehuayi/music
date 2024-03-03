@@ -7,28 +7,6 @@ CommandHandler::CommandHandler() {
 
 CommandHandler::~CommandHandler() {}
 
-std::vector<std::string>
-CommandHandler::split(std::string input, char delim) {
-    std::vector<std::string> pieces;
-    std::string token;
-    std::istringstream iss(input);
-    while (std::getline(iss, token, delim)) {
-        pieces.push_back(token);
-    }
-    return pieces;
-}
-
-std::string CommandHandler::trim(const std::string input) {
-    size_t start = input.find_first_not_of(" \f\t\n\r");
-
-    if (start == std::string::npos) {
-        return "";
-    }
-
-    size_t end = input.find_last_not_of(" \t\n\r");
-    return input.substr(start, end - start + 1);
-}
-
 int CommandHandler::registerCommand(std::string identifier, 
         std::function<Command* ()> cmd) {
     if (cmd == nullptr) {
@@ -45,7 +23,7 @@ int CommandHandler::registerCommand(std::string identifier,
 }
 
 int CommandHandler::registerAlias(std::string identifier, std::string aliasList) {
-    std::vector<std::string> aliases = split(aliasList, ',');
+    std::vector<std::string> aliases = _parser.split(aliasList, ',');
     for (const auto& alias : aliases) {
         if (alias == "") {
             continue;
@@ -69,7 +47,11 @@ int CommandHandler::processCommand(std::string command) {
     } else {
         _recent.name = command;
     }
-    parse(command);
+
+    if (parse(command)) {
+        return 1;
+    }
+
     return execute();
 }
 
@@ -87,7 +69,7 @@ std::string CommandHandler::getHandlerError() {
 // Value list structure:
 // [<value1>,<value2>, ... ,<valueN>]
 int CommandHandler::parse(std::string raw) {
-    std::string clean = trim(raw);
+    std::string clean = _parser.trim(raw);
     std::string name;
     std::string values;
 
@@ -97,16 +79,19 @@ int CommandHandler::parse(std::string raw) {
     } catch (const std::runtime_error& err) {
         _error = err.what();
         TRACE1(_error);
+        return 1;
     }
 
+    _recent.name = name;
+
     if (values == "") {
-        _recent.name = name;
         _recent.values = {};
         return 0;
     }
-
-    // TODO 
-
+    std::vector<std::string> valueList = _parser.split(values, ',');
+    std::for_each(valueList.begin(), valueList.end(), _parser.trim);
+    _recent.values = valueList;
+    return 0;
 }
 
 int CommandHandler::execute() {

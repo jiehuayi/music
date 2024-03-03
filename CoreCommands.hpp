@@ -4,6 +4,8 @@
 #include "Command.hpp"
 #include "Log.hpp"
 
+#define CMD_ERROR                   "err"
+
 #define CMD_SONG_TOGGLE             "song-toggle"
 #define CMD_SONG_PLAY               "song-play"
 #define CMD_VOLUME_DECREMENT        "volume-decrement"
@@ -43,6 +45,7 @@
 //
 // But the class builder  macro should inherently include a semicolon at the
 // end of its definition
+COMMAND_DEFINITION_BUILDER(Error);
 COMMAND_DEFINITION_BUILDER(PlayPauseCommand);
 COMMAND_DEFINITION_BUILDER(PlayCommand);
 COMMAND_DEFINITION_BUILDER(IncVolumeCommand);

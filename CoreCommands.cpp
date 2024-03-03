@@ -1,5 +1,13 @@
 #include "CoreCommands.hpp"
 
+void Error::execute(Parameters args) {
+    if (args.values.size() == 0) {
+        return;
+    }
+
+    std::string errorMessage = args.values[0]; 
+}
+
 static int getRepetition(std::vector<std::string> values) { 
     int iterations = 1;
 
