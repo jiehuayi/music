@@ -32,6 +32,7 @@ class CommandHandler {
     private:
         int parse(std::string raw);
         int execute();
+        void signalError(std::string message);
 
     private:
         CommandParser _parser;

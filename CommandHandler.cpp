@@ -80,6 +80,7 @@ int CommandHandler::parse(std::string raw) {
         _recent.name = "err";
         _recent.values = { std::string(err.what()) };
         execute();
+        TRACE1(_error);
         return 1;
     }
 
@@ -97,12 +98,14 @@ int CommandHandler::parse(std::string raw) {
 
 int CommandHandler::execute() {
     if (_registeredCommands.find(_recent.name) == _registeredCommands.end()) {
+        signalError("ERROR: command named \"" + _recent.name + "\" not found.");
         return 1;
     }
 
     Command* c = _registeredCommands[_recent.name]();
 
     if (c == nullptr) {
+        signalError("ERROR: command named \"" + _recent.name + "\" is null");
         return 2;
     }
 
@@ -110,4 +113,11 @@ int CommandHandler::execute() {
     delete c;
 
     return 0;
+}
+
+void CommandHandler::signalError(std::string message) {
+    Command* e = _registeredCommands["err"]();
+    e->execute({ .name="err", .values={ std::string(message) } });
+    delete e;
+
 }

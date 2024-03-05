@@ -23,7 +23,7 @@ void TitleComponent::render(PlaylistManager& library) {
         WRAP_COLOR(FRAME_PTR, PColor::ColorTitleHighlight);
         WRAP_HIGHLIGHT(FRAME_PTR);
         mvwprintw(FRAME_PTR, 0, 0, "%s", std::string(_x, ' ').c_str());
-        mvwprintw(FRAME_PTR, 0, 0, "%s", _alertMessage.c_str());
+        mvwprintw(FRAME_PTR, 0, 0, " %s", _alertMessage.c_str());
         UNWRAP_HIGHLIGHT(FRAME_PTR);
         UNWRAP_COLOR(FRAME_PTR, PColor::ColorTitleHighlight);
     } else {
