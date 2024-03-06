@@ -10,6 +10,8 @@ bass24-osx/
 
 # Clangd
 compile_flags.txt
+.cache/
+build/.cache/
 
 CMakeLists.txt.user
 CMakeCache.txt
