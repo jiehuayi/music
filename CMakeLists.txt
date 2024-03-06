@@ -60,10 +60,26 @@ target_link_libraries(main.out
 set(TESTS
     tests/SanityTest.cpp
     tests/CommandParserTest.cpp
+    tests/CommandHandlerTest.cpp
 )
 
 set(TEST_CLASSES
+    Window.cpp
+    Library.cpp
+    Playlist.cpp
+    Track.cpp
+    Color.cpp
+    CommandHandler.cpp
+    Command.cpp
     CommandParser.cpp
+    CoreCommands.cpp
+    Component.cpp
+    ConsoleComponent.cpp
+    ListComponent.cpp
+    VisualComponent.cpp
+    TitleComponent.cpp
+    PopupComponent.cpp
+    Clock.cpp
 )
 
 enable_testing()
@@ -73,6 +89,8 @@ add_executable(tests.out ${TESTS} ${TEST_CLASSES})
 target_link_libraries(
     tests.out
     GTest::gtest_main
+    ncurses
+    bass
 )
 
 target_include_directories(tests.out PRIVATE ./)
