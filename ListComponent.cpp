@@ -40,12 +40,13 @@ void ListComponent::render(PlaylistManager& library) {
         .getPlaylistSongs();
     
     int renderY = _y - 2;
+    int scrollPadding = renderY < 6 ? 1 : 5;
 
-    if (_selectedPos >= renderY - 5 &&
+    if (_selectedPos >= renderY - scrollPadding &&
             _from + renderY < static_cast<int>(listItems.size())) {
         _from++;
         _selectedPos--;
-    } else if (_selectedPos <= 5 && _from > 0) {
+    } else if (_selectedPos <= scrollPadding && _from > 0) {
         _from--;
         _selectedPos++;
     }

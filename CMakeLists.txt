@@ -61,6 +61,7 @@ set(TESTS
     tests/SanityTest.cpp
     tests/CommandParserTest.cpp
     tests/CommandHandlerTest.cpp
+    tests/PlaylistTest.cpp
 )
 
 set(TEST_CLASSES
