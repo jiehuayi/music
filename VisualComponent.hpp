@@ -32,6 +32,9 @@ class VisualComponent : public ComponentBase {
         void renderControls(Playlist& playlist);
 
         std::string getTimeStamp(double timeInSeconds);
+        wchar_t getBar();
+        wchar_t getPartialBar();
+        wchar_t getBase();
 
     private:
         int _orientation;

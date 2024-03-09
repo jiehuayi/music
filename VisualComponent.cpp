@@ -127,10 +127,8 @@ void VisualComponent::renderControls(Playlist& playlist) {
             static_cast<int>(std::ceil(playlist.getVolume() * 100)));
 
     mvwprintw(FRAME_PTR, _y - 2, 1, "%s", std::string(_x - 2, ' ').c_str());
-    mvwprintw(FRAME_PTR,
-            _y - 2, 1, "> %s...",
-            playlist.activeSongName()
-            .substr(0, _x - 18).c_str());
+    mvwprintw(FRAME_PTR, _y - 2, 1, "> %s...",
+            playlist.activeSongName().substr(0, _x - 18).c_str());
 
     UNWRAP_COLOR(FRAME_PTR, PColor::ColorVisualText); 
 }
@@ -186,12 +184,12 @@ std::vector<std::wstring> VisualComponent::visualize(int cy, int cx,
             }
 
             if (g <= whole && whole != 0.0) {
-                px = L'\u2590';
+                px = getBar();
             } else if (g == std::ceil(height) || whole == 0.0) {
                 if (frac > 0.35) {
-                    px = L'\u2597'; // Need change because orientation matters now...
+                    px = getPartialBar(); 
                 } else {
-                    px = whole == 0.0 ? L'_' : L' ';
+                    px = whole == 0.0 ? getBase() : L' ';
                 }
                 eol = true;
             } else {
@@ -231,4 +229,47 @@ std::string VisualComponent::getTimeStamp(double timeInSeconds) {
     ssFormat << std::setw(2) << std::setfill('0') << seconds;
 
     return ssFormat.str();
+}
+
+wchar_t VisualComponent::getBar() {
+    switch(_orientation) {
+        case V_BOTTOM:
+            return L'\u2590';
+        case V_TOP:
+            return L'\u2590';
+        case V_LEFT:
+            return L'\u2580';
+        case V_RIGHT:
+            return L'\u2580';
+    }
+    return ' ';
+}
+
+
+wchar_t VisualComponent::getPartialBar() {
+    switch(_orientation) {
+        case V_BOTTOM:
+            return L'\u2597';
+        case V_TOP:
+            return L'\u259d';
+        case V_LEFT:
+            return L'\u2598';
+        case V_RIGHT:
+            return L'\u259d';
+    }
+    return ' ';
+}
+
+wchar_t VisualComponent::getBase() {
+    switch(_orientation) {
+        case V_BOTTOM:
+            return L'_';
+        case V_TOP:
+            return L' ';
+        case V_LEFT:
+            return L' ';
+        case V_RIGHT:
+            return L' ';
+    }
+    return L' ';
 }
