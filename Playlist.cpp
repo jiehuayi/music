@@ -30,21 +30,25 @@ Playlist::~Playlist() {
 }
 
 int Playlist::readPlaylist() {
-    try {
-        if (std::filesystem::exists(_path) && std::filesystem::is_directory(_path)) {
-            for (const auto& entry : std::filesystem::directory_iterator(_path)) {
-                std::filesystem::path ext = entry.path().extension();
-                std::string extension = ext.u8string();
-                if (extension == ".ogg" || extension == ".wav" || extension == ".mp3") {
-                    _songs.push_back(entry.path());
-                }
-            }
-        }
-
-    } catch (const std::exception& e) {
-        std::cerr << "EXCEPTION: " << e.what() << std::endl;
+    if (!std::filesystem::exists(_path)) {
+        throw std::runtime_error("ERROR: no such directory");
     }
 
+    if (!std::filesystem::is_directory(_path)) {
+        throw std::runtime_error("ERROR: the given path is not a directory"); 
+    }
+    
+    try {
+        for (const auto& entry : std::filesystem::directory_iterator(_path)) {
+            std::filesystem::path ext = entry.path().extension();
+            std::string extension = ext.u8string();
+            if (extension == ".ogg" || extension == ".wav" || extension == ".mp3") {
+                _songs.push_back(entry.path());
+            }
+        }
+    } catch(std::exception& err) {
+        throw std::runtime_error(err.what());
+    }
     return READ_DIR_SUCCESS;
 }
 
