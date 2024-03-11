@@ -29,7 +29,7 @@ void TitleComponent::render(PlaylistManager& library) {
     } else {
         WRAP_COLOR(FRAME_PTR, PColor::ColorTitleText);
         mvwprintw(FRAME_PTR, 0, 0, "%s", std::string(_x, ' ').c_str());
-        mvwprintw(FRAME_PTR, 0, 0, " PWD: %s",
+        mvwprintw(FRAME_PTR, 0, 0, " > %s",
                 library.getDisplayPlaylist().getPath().c_str());
         UNWRAP_COLOR(FRAME_PTR, PColor::ColorTitleText);
     }
