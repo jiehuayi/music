@@ -1,4 +1,5 @@
 #include <filesystem>
+#include <vector>
 
 class Directory {
     public:
@@ -9,6 +10,9 @@ class Directory {
 
         std::string queryNextSubdirectory();
         std::string getDirectoryName();
+        std::filesystem::path parseDirectoryFromString();
     private:
-        std::filesystem::path selectedDirectory();
+        std::filesystem::path _selectedDirectory;
+        std::vector<std::filesystem::path> _subdirectories;
+        unsigned int _subdirectoryQueryIndex;
 };
