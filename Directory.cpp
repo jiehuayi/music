@@ -30,9 +30,9 @@ std::filesystem::path Directory::parseDirectoryFromString(std::string str) {
     std::filesystem::path extractedPath;
 
     if (quoteStart != quoteEnd) {
-        extractedPath = str.substr(quoteStart, quoteEnd - quoteStart);
+        extractedPath = str.substr(quoteStart + 1, quoteEnd - quoteStart - 1);
     } else {
-        extractedPath = str.substr(quoteStart);
+        extractedPath = str.substr(quoteStart + 1);
     }
     
     _selectedDirectory = extractedPath.parent_path();

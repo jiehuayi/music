@@ -36,6 +36,7 @@ set(SRCS
     Playlist.cpp
     Track.cpp
     Color.cpp
+    Directory.cpp
     CommandHandler.cpp
     Command.cpp
     CommandParser.cpp
@@ -62,6 +63,7 @@ set(TESTS
     tests/CommandParserTest.cpp
     tests/CommandHandlerTest.cpp
     tests/PlaylistTest.cpp
+    tests/DirectoryTest.cpp
 )
 
 set(TEST_CLASSES
@@ -70,6 +72,7 @@ set(TEST_CLASSES
     Playlist.cpp
     Track.cpp
     Color.cpp
+    Directory.cpp
     CommandHandler.cpp
     Command.cpp
     CommandParser.cpp

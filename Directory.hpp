@@ -2,7 +2,7 @@
 #include <string>
 #include <vector>
 
-#define PATH_IDENTIFIER '"'
+#define PATH_IDENTIFIER '\''
 
 class Directory {
     public:
